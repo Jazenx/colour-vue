@@ -8,6 +8,11 @@ import Layout from '../views/layout/Layout'
 
 export const constantRouterMap = [
   {
+    path: '/login',
+    component: _import('login/index'),
+    hidden: true
+  },
+  {
     path: '/404',
     component: _import('error/404'),
     hidden: true
@@ -45,9 +50,15 @@ export const asyncRouterMap = [
     redirect: '/dashboard/index',
     name: '首页',
     icon: 'zujian',
-    children: [
-      { path: 'index', component: _import('dashboard/index'), name: '介绍 ' },
-    ]
+    children: [{
+      path: 'index',
+      component: _import('dashboard/index'),
+      name: '介绍 '
+    }]
   },
-  { path: '*', redirect: '/404', hidden: true }
+  {
+    path: '*',
+    redirect: '/404',
+    hidden: true
+  }
 ];
