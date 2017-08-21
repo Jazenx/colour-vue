@@ -25,8 +25,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import Levelbar from './Levelbar';
-import TabsView from './TabsView';
+import Levelbar from './levelbar';
+import TabsView from './tabsView';
 import Hamburger from 'components/Hamburger';
 import Screenfull from 'components/Screenfull';
 export default {
