@@ -5,16 +5,17 @@ import App from './App';
 import router from './router';
 import store from './store';
 import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-default/index.css';
 import NProgress from 'nprogress'; // Progress 进度条
 import 'nprogress/nprogress.css';// Progress 进度条 样式
 import 'normalize.css/normalize.css';// normalize.css 样式格式化
 import 'assets/iconfont/iconfont'; // iconfont
 import { getToken } from 'utils/auth';
 import * as filters from './filters'; // 全局vue filter
-
-
+import vueWaves from './directive/waves';// 水波纹指令
 
 Vue.use(ElementUI)
+Vue.use(vueWaves);
 Vue.config.productionTip = false
 
 // register global utility filters.
