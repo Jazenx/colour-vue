@@ -1,7 +1,7 @@
 {
   "name": "colour-vue",
   "version": "1.0.0",
-  "description": "colourdata bigdata platform",
+  "description": "bigdata platform",
   "author": "Jason <jason.zhour@gmail.com>",
   "private": true,
   "scripts": {
@@ -12,17 +12,29 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
-    "axios": "^0.16.2",
-    "echarts": "^3.6.2",
-    "element-ui": "^1.4.2",
-    "js-cookie": "^2.1.4",
-    "ngprogress": "^1.1.1",
-    "normalize.css": "^7.0.0",
-    "nprogress": "^0.2.0",
-    "screenfull": "^3.2.2",
-    "vue": "^2.4.2",
-    "vue-router": "^2.6.0",
-    "vuex": "2.3.1"
+    "axios": "0.16.2",
+    "codemirror": "5.26.0",
+    "dropzone": "5.1.0",
+    "echarts": "3.6.2",
+    "element-ui": "1.4.2",
+    "file-saver": "1.3.3",
+    "jquery": "3.1.1",
+    "js-cookie": "2.1.4",
+    "jsonlint": "1.6.2",
+    "mockjs": "1.0.1-beta3",
+    "normalize.css": "3.0.2",
+    "nprogress": "0.2.0",
+    "screenfull": "3.2.2",
+    "showdown": "1.7.1",
+    "simplemde": "1.11.2",
+    "sortablejs": "1.5.1",
+    "vue": "2.4.2",
+    "vue-count-to": "1.0.5",
+    "vue-multiselect": "2.0.2",
+    "vue-router": "2.7.0",
+    "vuedraggable": "2.14.1",
+    "vuex": "2.3.1",
+    "xlsx": "^0.10.8"
   },
   "devDependencies": {
     "autoprefixer": "7.1.1",
@@ -76,7 +88,7 @@
     "node": ">= 4.0.0",
     "npm": ">= 3.0.0"
   },
-  "browserslist": [
+  "browserlist": [
     "> 1%",
     "last 2 versions",
     "not ie <= 8"

@@ -1,13 +1,10 @@
 .DS_Store
 node_modules/
 dist/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Editor directories and files
+static/ckeditor
+gifs/
+npm-debug.log
+test/unit/coverage
+test/e2e/reports
+selenium-debug.log
 .idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln

@@ -1,6 +1,5 @@
 <template>
-	<div class="app-wrapper">
-	<!-- <div class="app-wrapper" :class="{hideSidebar:!sidebar.opened}"> -->
+	<div class="app-wrapper" :class="{hideSidebar:!sidebar.opened}">
 		<sidebar class="sidebar-container"></sidebar>
 		<div class="main-container">
 			<navbar></navbar>
@@ -18,12 +17,12 @@
       Navbar,
       Sidebar,
       AppMain
+    },
+    computed: {
+      sidebar() {
+        return this.$store.state.app.sidebar;
+      }
     }
-    // computed: {
-    //   sidebar() {
-    //     return this.$store.state.app.sidebar;
-    //   }
-    // }
   }
 </script>
 

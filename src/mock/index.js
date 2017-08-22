@@ -22,5 +22,4 @@ Mock.mock(/\/article_table\/p/, 'get', article_tableAPI.getPv);
 Mock.mock(/\/search\/user/, 'get', remoteSearchAPI.searchUser);
 
 
-
 export default Mock;
