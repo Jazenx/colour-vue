@@ -13,7 +13,10 @@ import 'assets/iconfont/iconfont'; // iconfont
 import { getToken } from 'utils/auth';
 import * as filters from './filters'; // 全局vue filter
 import vueWaves from './directive/waves';// 水波纹指令
+import IconSvg from 'components/Icon-svg';// svg 组件
 
+
+Vue.component('icon-svg', IconSvg)
 Vue.use(ElementUI)
 Vue.use(vueWaves);
 Vue.config.productionTip = false

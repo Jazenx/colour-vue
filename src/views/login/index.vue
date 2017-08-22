@@ -25,12 +25,10 @@
       </el-form-item>
   
     </el-form>
-  
     <el-dialog title="第三方验证" :visible.sync="showDialog">
       邮箱登录成功,请选择第三方验证
       <social-sign></social-sign>
     </el-dialog>
-  
   </div>
 </template>
 
