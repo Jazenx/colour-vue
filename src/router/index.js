@@ -66,12 +66,6 @@ export const asyncRouterMap = [
     icon: 'shuju',
     children: [
       {
-        path: 'index',
-        component: _import('automatic/index'),
-        icon: 'jiankong',
-        name: '介绍 '
-      },
-      {
         path: 'grapMonitor',
         component: _import('automatic/grapMonitor'),
         icon: 'jiankong',
