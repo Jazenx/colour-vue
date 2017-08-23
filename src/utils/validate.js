@@ -4,7 +4,7 @@
 
 /* 是否是公司邮箱*/
 export function isWscnEmail(str) {
-  const reg = /^[a-z0-9](?:[-_.+]?[a-z0-9]+)*@wallstreetcn\.com$/i;
+  const reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/i;
   return reg.test(str.trim());
 }
 
@@ -37,5 +37,3 @@ export function validatAlphabets(str) {
   const reg = /^[A-Za-z]+$/;
   return reg.test(str);
 }
-
-

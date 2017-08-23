@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import tigerChinaMap from '../tiger/echart/map/china.vue';
+import tigerChinaMap from './map/china.vue';
 export default {
   components: { tigerChinaMap }
 }

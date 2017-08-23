@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import todo from '../tiger/todolist/index.vue';
+import todo from './todolist/index.vue';
 export default {
   components: { todo }
 }

@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import { isWscnEmail } from 'utils/validate';
 import socialSign from './socialsignin';
 
 export default {
@@ -39,7 +38,9 @@ export default {
   name: 'login',
   data() {
     const validateEmail = (rule, value, callback) => {
-      if (!isWscnEmail(value)) {
+      if (!value) {
+        console.log(rule);
+        console.log(value);
         callback(new Error('请输入正确的合法邮箱'));
       } else {
         callback();
@@ -54,7 +55,7 @@ export default {
     };
     return {
       loginForm: {
-        email: 'chen.zhou@colourdata.com',
+        email: 'admin@colourdata.com.cn',
         password: ''
       },
       loginRules: {
@@ -72,6 +73,7 @@ export default {
   created() {
     // window.addEventListener('hashchange', this.afterQRScan);
   },
+
   destroyed() {
     // window.removeEventListener('hashchange', this.afterQRScan);
   },

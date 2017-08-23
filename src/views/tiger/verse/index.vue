@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import verse from '../tiger/verse';
+import verse from './verse';
 export default {
   components: { verse }
 }
