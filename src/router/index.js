@@ -39,12 +39,12 @@ export const constantRouterMap = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/banned',
     name: '首页',
     hidden: true,
     children: [{
-      path: 'dashboard',
-      component: _import('dashboard/index')
+      path: 'banned',
+      component: _import('banned/index')
     }]
   }
 ]
@@ -59,41 +59,41 @@ export default new Router({
 
 export const asyncRouterMap = [
   {
-    path: '/automatic',
+    path: '/banned',
     component: Layout,
-    redirect: '/automatic/index',
-    name: '自动数据抓取',
+    redirect: '/banned/index',
+    name: '汽车之家',
     icon: 'shuju',
     children: [
       {
-        path: 'grapMonitor',
-        component: _import('automatic/grapMonitor'),
-        icon: 'jiankong',
-        name: '爬虫监控'
-      }
-    ]
-  },
-  {
-    path: '/semantic',
-    component: Layout,
-    redirect: '/semantic/index',
-    name: '语义分析工具',
-    icon: 'semantics',
-    children: [
-      {
         path: 'index',
-        component: _import('semantic/index'),
-        icon: 'fenxi',
-        name: '语义分析'
-      },
-      {
-        path: 'grapMonitor',
-        component: _import('semantic/w2v'),
-        icon: 'zhinengsuanfa',
-        name: 'w2v'
+        component: _import('banned/index'),
+        icon: 'jiankong',
+        name: '违禁词'
       }
     ]
   },
+  // {
+  //   path: '/semantic',
+  //   component: Layout,
+  //   redirect: '/semantic/index',
+  //   name: '语义分析工具',
+  //   icon: 'semantics',
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: _import('semantic/index'),
+  //       icon: 'fenxi',
+  //       name: '语义分析'
+  //     },
+  //     {
+  //       path: 'grapMonitor',
+  //       component: _import('semantic/w2v'),
+  //       icon: 'zhinengsuanfa',
+  //       name: 'w2v'
+  //     }
+  //   ]
+  // },
   {
     path: '*',
     redirect: '/404',
