@@ -19,14 +19,7 @@
           登录
         </el-button>
       </el-form-item>
-  
     </el-form>
-  
-    <!-- <el-dialog title="第三方验证" :visible.sync="showDialog">
-      邮箱登录成功,请选择第三方验证
-      <social-sign></social-sign>
-    </el-dialog> -->
-  
   </div>
 </template>
 
@@ -145,7 +138,7 @@ export default {
     position: absolute;
     left: 0;
     right: 0;
-    width: 400px;
+    width: 300px;
     padding: 35px 35px 15px 35px;
     margin: 120px auto;
   }
