@@ -22,7 +22,6 @@
     </el-form>
   </div>
 </template>
-
 <script>
 import socialSign from './socialsignin';
 
