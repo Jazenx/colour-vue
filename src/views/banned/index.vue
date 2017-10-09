@@ -1,99 +1,130 @@
 <template>
   <div class="app-container calendar-list-container">
-    <div class="filter-container">
-      <el-input @keyup.enter.native="handleFilter" style="width: 250px;" class="filter-item" placeholder="关键词" v-model="listQuery.title">
-      </el-input>
-      <!-- <el-select clearable style="width: 120px" class="filter-item" v-model="listQuery.importance" placeholder="范围">
-              <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item">
+    <el-tabs v-model="activeName">
+      <el-tab-pane label="关键词" name="first">
+        <div class="filter-container">
+          <el-input @keyup.enter.native="handleFilter" style="width: 250px;" class="filter-item" placeholder="关键词" v-model="listQuery.title">
+          </el-input>
+          <el-select clearable style="width: 200px" class="filter-item" v-model="searchLocation" multiple placeholder="请选择范围">
+            <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
+              <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
-            </el-select> -->
-      <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">搜索</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="edit">添加</el-button>
-      <!-- <el-button class="filter-item" type="primary" icon="document" @click="handleDownload">导出</el-button> -->
-    </div>
-    <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="加载中..." border fit highlight-current-row style="width: 100%">
+            </el-option-group>
+          </el-select>
+          <el-button class="filter-item" type="primary" v-waves icon="search">搜索</el-button>
+          <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="plus">添加</el-button>
+          <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="minus">删除</el-button>
+          <el-button class="filter-item" type="primary" icon="document">导出</el-button>
+        </div>
+        <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="努力加载中..." border fit highlight-current-row style="width: 100%">
+          <el-table-column type="selection" width="55">
+          </el-table-column>
+          <el-table-column align="center" label="关键词">
+            <template scope="scope">
+              <el-input v-show="scope.row.edit" size="small" v-model="scope.row.keywords"></el-input>
+              <span v-show="!scope.row.edit">{{ scope.row.keywords }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="范围" style="width: 10%">
+            <template v-show="!scope.row.edit" scope="scope">
+              <span v-show="!scope.row.edit">{{scope.row.location}}</span>
+              </span>
+              <el-select v-model="scope.row.location" multiple placeholder="请选择" v-show="scope.row.edit">
+                <el-option v-for="item in locationSel" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-table-column>
 
-      <el-table-column align="center" label="关键词" >
-        <template scope="scope">
-          <span>{{scope.row.id}}</span>
-        </template>
-      </el-table-column>
+          <el-table-column align="center" label="有效期" width="280px">
+            <template scope="scope">
+              <span v-show="!scope.row.edit">{{scope.row.validity}}</span>
+              <el-date-picker v-show="scope.row.edit" v-model="scope.row.validity" type="daterange" placeholder="选择日期范围">
+              </el-date-picker>
+            </template>
+          </el-table-column>
+          <el-table-column class-name="status-col" align="center" label="状态" width="80px" :filters="[{ text: '生效', value: '生效' }, { text: '失效', value: '失效' }]" filter-placement="bottom-end">
+            <!-- <el-table-column class-name="status-col" align="center" label="状态" width="80px" :filters="[{ text: '生效', value: '生效' }, { text: '失效', value: '失效' }]" :filter-method="filterTag" filter-placement="bottom-end"> -->
+            <template scope="scope">
+              <el-tag :type="scope.row.wordstate | statusFilter">{{scope.row.wordstate}}</el-tag>
+            </template>
+          </el-table-column>
 
-      <el-table-column align="center" label="范围" style="width: 10%">
-        <template scope="scope">
-          <span>{{scope.row.auditor}}</span>
-        </template>
-      </el-table-column>
+          <el-table-column label="提交人" align="center" width="80px">
+            <template scope="scope">
+              <span>{{scope.row.submitor}}</span>
+            </template>
+          </el-table-column>
 
-      <el-table-column align="center" label="有效期" width="200px">
-        <template scope="scope">
-          <span>{{scope.row.validity}}</span>
-        </template>
-      </el-table-column>
+          <el-table-column align="center" label="操作时间" width="200px">
+            <template scope="scope">
+              <span>{{scope.row.updatetime}}</span>
+            </template>
+          </el-table-column>
 
-      <el-table-column class-name="status-col" align="center" label="状态" width="80px">
-        <template scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>
-        </template>
-      </el-table-column>
+          <el-table-column align="center" label="操作" width="150px">
+            <template scope="scope">
+              <el-button :type="scope.row.edit?'success':'primary'" @click='scope.row.edit=!scope.row.edit' size="small">{{scope.row.edit?'完成':'编辑'}}</el-button>
+              <el-button v-if="scope.row.wordstate!='draft'" size="small" @click="handleModifyStatus(scope.row,'draft')">生效
+              </el-button>
+              <el-button v-if="scope.row.wordstate!='deleted'" size="small" type="danger" @click="handleModifyStatus(scope.row,' ')">失效
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div v-show="!listLoading" class="pagination-container">
+          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+          </el-pagination>
+        </div>
 
-      <el-table-column label="提交人" align="center"  width="80px">
-        <template scope="scope">
-          <span>{{scope.row.id}}</span>
-        </template>
-      </el-table-column>
+        <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" style="width: 900px;margin-left:23%">
+          <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 300px; margin-left:50px;'>
+            <el-form-item label="关键词">
+              <el-input type="textarea" :rows="2" v-model="temp.keywords" placeholder="请输入关键词,多个以“回车符”换行！"></el-input>
+            </el-form-item>
+            <el-form-item label="范围">
+              <el-select v-model="location" multiple placeholder="请选择">
+                <!-- <el-option v-for="item in locationSel" :key="item.label" :label="item.label" :value="item.value">
+                                                  </el-option> -->
+                <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
+                  <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
+                  </el-option>
+                </el-option-group>
+              </el-select>
+            </el-form-item>
 
-      <el-table-column align="center" label="操作时间" width="200px">
-        <template scope="scope">
-          <span>{{scope.row.opttime}}</span>
-        </template>
-      </el-table-column>
+            <el-form-item label="有效期">
+              <el-date-picker v-model="validity" type="daterange" placeholder="选择日期范围" @change="dateChange">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="create">创建</el-button>
+              <el-button>取消</el-button>
+            </el-form-item>
+          </el-form>
+        </el-dialog>
+      </el-tab-pane>
+      <el-tab-pane label="联系方式" name="second">联系方式</el-tab-pane>
+      <el-tab-pane label="IP" name="third">IP</el-tab-pane>
+      <el-tab-pane label="用户ID" name="fourth">用户ID</el-tab-pane>
+      <el-tab-pane label="用户名" name="fifth">用户名</el-tab-pane>
+    </el-tabs>
 
-      <el-table-column align="center" label="操作" width="150px">
-        <template scope="scope">
-          <el-button  size="small" type="success">修改
-          </el-button>
-          <el-button v-if="scope.row.status!='draft'" size="small" @click="handleModifyStatus(scope.row,'draft')">生效
-          </el-button>
-          <el-button v-if="scope.row.status!='deleted'" size="small" type="danger" @click="handleModifyStatus(scope.row,'deleted')">失效
-          </el-button>
-        </template>
-      </el-table-column>
-
-    </el-table>
-    <div v-show="!listLoading" class="pagination-container">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-        :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
-      </el-pagination>
-    </div>
   </div>
 </template>
-
 <script>
 import { fetchList, fetchPv } from '@/api/article'
 import waves from '@/directive/waves.js'// 水波纹指令
 import { parseTime } from '@/utils'
 
-const calendarTypeOptions = [
-  { key: 'CN', display_name: '中国' },
-  { key: 'US', display_name: '美国' },
-  { key: 'JP', display_name: '日本' },
-  { key: 'EU', display_name: '欧元区' }
-]
-
-// arr to obj
-const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
-  acc[cur.key] = cur.display_name
-  return acc
-}, {})
-
 export default {
-  name: 'table_demo',
+  name: 'banned-table',
   directives: {
     waves
   },
   data() {
     return {
+      activeName: 'first',
       list: null,
       total: null,
       listLoading: true,
@@ -106,17 +137,12 @@ export default {
         sort: '+id'
       },
       temp: {
-        id: undefined,
-        importance: 0,
-        remark: '',
-        timestamp: 0,
-        title: '',
-        type: '',
-        status: 'published'
+        validity: '',
+        wordstate: '',
+        updatetime: '',
+        keywords: '',
+        submitor: ''
       },
-      importanceOptions: [1, 2, 3],
-      calendarTypeOptions,
-      sortOptions: [{ label: '按ID升序列', key: '+id' }, { label: '按ID降序', key: '-id' }],
       statusOptions: ['published', 'draft', 'deleted'],
       dialogFormVisible: false,
       dialogStatus: '',
@@ -127,7 +153,89 @@ export default {
       dialogPvVisible: false,
       pvData: [],
       showAuditor: false,
-      tableKey: 0
+      tableKey: 0,
+      location: [],
+      searchLocation: [],
+      validity: '',
+      addValidity: '',
+      value6: '',
+      locationSel: [{
+        label: '汽车之家',
+        options: [{
+          value: '汽车之家',
+          label: '汽车之家'
+        }]
+      }, {
+        label: '论坛、评论',
+        options: [{
+          value: '论坛',
+          label: '论坛'
+        }, {
+          value: '评论',
+          label: '评论'
+        }, {
+          value: '回帖',
+          label: '回帖'
+        }, {
+          value: '历史数据清洗',
+          label: '历史数据清洗'
+        }]
+      }, {
+        label: '口碑',
+        options: [{
+          value: '口碑',
+          label: '口碑'
+        }]
+      }, {
+        label: '保养',
+        options: [{
+          value: '保养',
+          label: '保养'
+        }]
+      }, {
+        label: '问答',
+        options: [{
+          value: '提问',
+          label: '提问'
+        }, {
+          value: '答案',
+          label: '答案'
+        }, {
+          value: '追问',
+          label: '追问'
+        }]
+      }, {
+        label: '精华帖',
+        options: [{
+          value: '精华帖',
+          label: '精华贴'
+        }]
+      }, {
+        label: '说客拍客',
+        options: [{
+          value: '说客',
+          label: '说客'
+        }, {
+          value: '拍客',
+          label: '拍客'
+        }]
+      }]
+      // locationSel: [{
+      //   value: '论坛',
+      //   label: '论坛'
+      // }, {
+      //   value: '评论',
+      //   label: '评论'
+      // }, {
+      //   value: '回帖',
+      //   label: '回帖'
+      // }, {
+      //   value: '口碑',
+      //   label: '口碑'
+      // }, {
+      //   value: '汽车之家',
+      //   label: '汽车之家'
+      // }]
     }
   },
   filters: {
@@ -150,7 +258,10 @@ export default {
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
+        this.list = response.data.items.map(v => {
+          this.$set(v, 'edit', false)
+          return v
+        })
         this.total = response.data.total
         this.listLoading = false
       })
@@ -167,21 +278,13 @@ export default {
       this.listQuery.page = val
       this.getList()
     },
-    timeFilter(time) {
-      if (!time[0]) {
-        this.listQuery.start = undefined
-        this.listQuery.end = undefined
-        return
-      }
-      this.listQuery.start = parseInt(+time[0] / 1000)
-      this.listQuery.end = parseInt((+time[1] + 3600 * 1000 * 24) / 1000)
-    },
     handleModifyStatus(row, status) {
       this.$message({
         message: '操作成功',
         type: 'success'
       })
-      row.status = status
+      console.log(row.id);
+      row.wordstate = status
     },
     handleCreate() {
       this.resetTemp()
@@ -204,11 +307,26 @@ export default {
       this.list.splice(index, 1)
     },
     create() {
-      this.temp.id = parseInt(Math.random() * 100) + 1024
-      this.temp.timestamp = +new Date()
-      this.temp.author = '原创作者'
-      this.list.unshift(this.temp)
-      this.dialogFormVisible = false
+      this.temp.wordstate = '生效';
+      this.temp.submitor = '测试者';
+      this.dialogFormVisible = false;
+      // 获取当前时间 之后可抽出
+      const date = new Date();
+      const seperator1 = '-';
+      const seperator2 = ':';
+      let month = date.getMonth() + 1;
+      let strDate = date.getDate();
+      if (month >= 1 && month <= 9) {
+        month = '0' + month;
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = '0' + strDate;
+      }
+      const updatetime = date.getFullYear() + seperator1 + month + seperator1 + strDate + ' ' + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
+      let keywords = [];
+      keywords = this.temp.keywords.split('\n');
+      console.log(keywords);
+      console.log(keywords, this.temp.validity, this.temp.submitor, updatetime, this.location, this.temp.wordstate);
       this.$notify({
         title: '成功',
         message: '创建成功',
@@ -250,15 +368,6 @@ export default {
         this.dialogPvVisible = true
       })
     },
-    handleDownload() {
-      // require.ensure([], () => {
-      //   // const { export_json_to_excel } = require('vendor/Export2Excel')
-      //   const tHeader = ['时间', '地区', '类型', '标题', '重要性']
-      //   const filterVal = ['timestamp', 'province', 'type', 'title', 'importance']
-      //   const data = this.formatJson(filterVal, this.list)
-      //   export_json_to_excel(tHeader, data, 'table数据')
-      // })
-    },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => {
         if (j === 'timestamp') {
@@ -267,6 +376,10 @@ export default {
           return v[j]
         }
       }))
+    },
+    dateChange(val) {
+      console.log(val);
+      return this.temp.validity = val;
     }
   }
 }

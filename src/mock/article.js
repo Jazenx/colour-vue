@@ -8,19 +8,13 @@ const count = 100
 
 for (let i = 0; i < count; i++) {
   List.push(Mock.mock({
-    id: '@cname',
-    timestamp: +Mock.Random.date('T'),
-    author: '@cname',
-    auditor: '@city(true)',
-    title: '@ctitle(10, 20)',
-    forecast: '@float(0, 100, 2, 2)',
-    importance: '@integer(1, 3)',
-    'type|1': ['CN', 'US', 'JP', 'EU'],
-    'status|1': ['draft', 'deleted'],
-    display_time: '@datetime',
-    opttime: '@datetime',
+    location: ['@city(true)', '@city(true)'],
     validity: Mock.Random.date() + '至' + Mock.Random.date(),
-    pageviews: '@integer(300, 5000)'
+    'wordstate|1': ['draft', 'deleted'],
+    submitor: '@cname',
+    updatetime: '@datetime',
+    id: '@increment',
+    keywords: Mock.Random.cword(2, 8)
   }))
 }
 
