@@ -65,9 +65,9 @@
           <el-table-column align="center" label="操作" width="150px">
             <template scope="scope">
               <el-button :type="scope.row.edit?'success':'primary'" @click='scope.row.edit=!scope.row.edit' size="small">{{scope.row.edit?'完成':'编辑'}}</el-button>
-              <el-button v-if="scope.row.wordstate!='draft'" size="small" @click="handleModifyStatus(scope.row,'draft')">生效
+              <el-button v-if="scope.row.wordstate!='生效'" size="small" @click="handleModifyStatus(scope.row,'生效')">生效
               </el-button>
-              <el-button v-if="scope.row.wordstate!='deleted'" size="small" type="danger" @click="handleModifyStatus(scope.row,' ')">失效
+              <el-button v-if="scope.row.wordstate!='失效'" size="small" type="danger" @click="handleModifyStatus(scope.row,'失效')"> 失效
               </el-button>
             </template>
           </el-table-column>
@@ -85,7 +85,7 @@
             <el-form-item label="范围">
               <el-select v-model="location" multiple placeholder="请选择">
                 <!-- <el-option v-for="item in locationSel" :key="item.label" :label="item.label" :value="item.value">
-                                                  </el-option> -->
+                                                                        </el-option> -->
                 <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
                   <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
@@ -113,7 +113,7 @@
   </div>
 </template>
 <script>
-import { fetchList, fetchPv } from '@/api/article'
+import { fetchList, fetchPv, addKeywords, getKeywords } from '@/api/banned'
 import waves from '@/directive/waves.js'// 水波纹指令
 import { parseTime } from '@/utils'
 
@@ -130,11 +130,7 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 10,
-        importance: undefined,
-        title: undefined,
-        type: undefined,
-        sort: '+id'
+        limit: 10
       },
       temp: {
         validity: '',
@@ -143,7 +139,7 @@ export default {
         keywords: '',
         submitor: ''
       },
-      statusOptions: ['published', 'draft', 'deleted'],
+      // statusOptions: ['published', 'draft', 'deleted'],
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
@@ -241,9 +237,8 @@ export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
+        生效: 'success',
+        失效: 'danger'
       }
       return statusMap[status]
     },
@@ -257,7 +252,8 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      getKeywords(this.listQuery).then(response => {
+        console.log(response.data);
         this.list = response.data.items.map(v => {
           this.$set(v, 'edit', false)
           return v
@@ -279,12 +275,23 @@ export default {
       this.getList()
     },
     handleModifyStatus(row, status) {
-      this.$message({
-        message: '操作成功',
-        type: 'success'
-      })
-      console.log(row.id);
-      row.wordstate = status
+      this.$confirm('此操作将修改关键词状态, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          message: '操作成功',
+          type: 'success'
+        })
+        console.log(row.id);
+        row.wordstate = status
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        });
+      });
     },
     handleCreate() {
       this.resetTemp()
@@ -325,13 +332,15 @@ export default {
       const updatetime = date.getFullYear() + seperator1 + month + seperator1 + strDate + ' ' + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
       let keywords = [];
       keywords = this.temp.keywords.split('\n');
-      console.log(keywords);
       console.log(keywords, this.temp.validity, this.temp.submitor, updatetime, this.location, this.temp.wordstate);
-      this.$notify({
-        title: '成功',
-        message: '创建成功',
-        type: 'success',
-        duration: 2000
+      addKeywords(keywords, this.temp.validity, updatetime, this.temp.submitor, this.location, this.temp.wordstate).then(response => {
+        console.log(response);
+        this.$notify({
+          title: '成功',
+          message: '创建成功',
+          type: 'success',
+          duration: 2000
+        })
       })
     },
     update() {

@@ -10,7 +10,7 @@ for (let i = 0; i < count; i++) {
   List.push(Mock.mock({
     location: ['@city(true)', '@city(true)'],
     validity: Mock.Random.date() + '至' + Mock.Random.date(),
-    'wordstate|1': ['draft', 'deleted'],
+    'wordstate|1': ['生效', '失效'],
     submitor: '@cname',
     updatetime: '@datetime',
     id: '@increment',
