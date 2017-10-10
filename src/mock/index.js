@@ -12,7 +12,7 @@ Mock.mock(/\/login\/logout/, 'post', loginAPI.logout);
 Mock.mock(/\/user\/info\.*/, 'get', loginAPI.getInfo)
 
 // // 文章相关
-Mock.mock(/\/blacklist\/banned\/getkeywods/, 'get', articleAPI.getList);
+Mock.mock(/\/blacklist\/banned\/getkeywords/, 'get', articleAPI.getList);
 Mock.mock(/\/article\/detail/, 'get', articleAPI.getArticle);
 
 // // table example相关
@@ -24,14 +24,14 @@ Mock.mock(/\/search\/user/, 'get', remoteSearchAPI.searchUser);
 
 // //banned
 
-Mock.mock(/\/blacklist\/banned\/addkeywods/, 'post', bannedAPI)
+Mock.mock(/\/blacklist\/banned\/addkeywords/, 'post', bannedAPI)
 
-Mock.mock(/\/blacklist\/banned\/updatekeywods/, 'post', bannedAPI)
+Mock.mock(/\/blacklist\/banned\/updatekeywords/, 'post', bannedAPI)
 
-Mock.mock(/\/blacklist\/banned\/changekeywodstatus/, 'post', bannedAPI)
+Mock.mock(/\/blacklist\/banned\/changekeywordstatus/, 'post', bannedAPI)
 
-Mock.mock(/\/blacklist\/banned\/deletekeywods/, 'post', bannedAPI)
+Mock.mock(/\/blacklist\/banned\/deletekeywords/, 'post', bannedAPI)
 
-Mock.mock(/\/blacklist\/banned\/searchkeywods/, 'get', articleAPI.getList)
+Mock.mock(/\/blacklist\/banned\/searchkeywords/, 'get', articleAPI.getList)
 
 export default Mock;

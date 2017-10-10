@@ -28,9 +28,9 @@ export function fetchPv(pv) {
 
 export function addKeywords(keywords, validity, updatetime, submitor, location, wordstate) {
   return fetch({
-    url: 'blacklist/banned/addkeywods',
+    url: 'blacklist/banned/addkeywords',
     method: 'post',
-    params: {
+    data: {
       keywords, // 关键词
       validity, // 有效日期
       updatetime, // 提交时间
@@ -44,7 +44,7 @@ export function addKeywords(keywords, validity, updatetime, submitor, location, 
 
 export function getKeywords(query) {
   return fetch({
-    url: 'blacklist/banned/getkeywods',
+    url: 'blacklist/banned/getkeywords',
     method: 'get',
     params: query
   })
@@ -52,7 +52,7 @@ export function getKeywords(query) {
 
 export function searchKeywords(searchKeyword, searchLocation, searchWordstate, query) {
   return fetch({
-    url: 'blacklist/banned/searchkeywods',
+    url: 'blacklist/banned/searchkeywords',
     method: 'get',
     params: {
       searchKeyword,
@@ -67,9 +67,9 @@ export function searchKeywords(searchKeyword, searchLocation, searchWordstate, q
 
 export function updateKeywords(id, keywords, validity, updatetime, submitor, location) {
   return fetch({
-    url: 'blacklist/banned/updatekeywods',
+    url: 'blacklist/banned/updatekeywords',
     method: 'post',
-    params: {
+    data: {
       id, // 编号
       keywords, // 关键词
       validity, // 有效日期
@@ -83,9 +83,9 @@ export function updateKeywords(id, keywords, validity, updatetime, submitor, loc
 
 export function changeKeywordsStatus(id, wordstate) {
   return fetch({
-    url: 'blacklist/banned/changekeywodstatus',
+    url: 'blacklist/banned/changekeywordstatus',
     method: 'post',
-    params: {
+    data: {
       id,
       wordstate
     }
@@ -95,8 +95,8 @@ export function changeKeywordsStatus(id, wordstate) {
 
 export function deleteKeywords(keywordsID) {
   return fetch({
-    url: 'blacklist/banned/deletekeywods',
+    url: 'blacklist/banned/deletekeywords',
     method: 'post',
-    params: keywordsID
+    data: keywordsID
   })
 }

@@ -50,7 +50,7 @@
               </el-date-picker>
             </template>
           </el-table-column>
-          <el-table-column class-name="status-col" align="center" label="状态" width="80px" :filters="[{ text: '生效', value: '生效' }, { text: '失效', value: '失效' }]" :filter-method="filterTag" filter-placement="bottom-end">
+          <el-table-column class-name="status-col" align="center" label="状态" width="80px">
             <template scope="scope">
               <el-tag :type="scope.row.wordstate | statusFilter" close-transition>{{scope.row.wordstate}}</el-tag>
             </template>
@@ -375,13 +375,13 @@ export default {
         }
         row.updatetime = this.getNowTime();
         row.submitor = '测试者';  // 之后获取当前用户
-        console.log(row.id, row.keywords, row.location, row.validity, row.submitor, row.updatetime)
+        console.log(row.id, row.keyword, row.location, row.validity, row.submitor, row.updatetime)
         let tempLocation = '';
         for (const v of row.locations) {
           tempLocation += v + '、';
         }
         row.location = tempLocation.substr(0, tempLocation.length - 1)
-        updateKeywords(row.id, row.keywords, row.validity, row.updatetime, row.submitor, row.locations).then(response => {
+        updateKeywords(row.id, row.keyword, row.validity, row.updatetime, row.submitor, row.location).then(response => {
           console.log(response);
           this.$notify({
             title: '成功',
