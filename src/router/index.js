@@ -62,14 +62,14 @@ export const asyncRouterMap = [
     path: '/banned',
     component: Layout,
     redirect: '/banned/index',
-    name: '汽车之家',
+    name: '客户中心',
     icon: 'shuju',
     children: [
       {
         path: 'index',
         component: _import('banned/index'),
         icon: 'jiankong',
-        name: '违禁词'
+        name: '黑名单'
       }
     ]
   },

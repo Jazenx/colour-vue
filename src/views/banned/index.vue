@@ -3,7 +3,7 @@
     <el-tabs v-model="activeName">
       <el-tab-pane label="关键词" name="first">
         <div class="filter-container">
-          <el-input @keyup.enter.native="handleFilter" style="width: 250px;" class="filter-item" placeholder="关键词" v-model="listQuery.title">
+          <el-input style="width: 250px;" class="filter-item" placeholder="请输入关键词" v-model="searchKeyword">
           </el-input>
           <el-select clearable style="width: 200px" class="filter-item" v-model="searchLocation" multiple placeholder="请选择范围">
             <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
@@ -11,12 +11,16 @@
               </el-option>
             </el-option-group>
           </el-select>
-          <el-button class="filter-item" type="primary" v-waves icon="search">搜索</el-button>
+          <el-select clearable style="width: 200px" class="filter-item" v-model="searchWordstate" placeholder="请选择状态">
+            <el-option v-for="item in wordStateSel" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
+          <el-button class="filter-item" type="primary" v-waves icon="search" @click="searchList">搜索</el-button>
           <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="plus">添加</el-button>
-          <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="minus">删除</el-button>
+          <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="minus" s @click="deleteKeyword()">删除</el-button>
           <el-button class="filter-item" type="primary" icon="document">导出</el-button>
         </div>
-        <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="努力加载中..." border fit highlight-current-row style="width: 100%">
+        <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="努力加载中..." border fit highlight-current-row style="width: 100%" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55">
           </el-table-column>
           <el-table-column align="center" label="关键词">
@@ -30,23 +34,24 @@
               <span v-show="!scope.row.edit">{{scope.row.location}}</span>
               </span>
               <el-select v-model="scope.row.location" multiple placeholder="请选择" v-show="scope.row.edit">
-                <el-option v-for="item in locationSel" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
+                <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
+                  <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
+                  </el-option>
+                </el-option-group>
               </el-select>
             </template>
           </el-table-column>
 
-          <el-table-column align="center" label="有效期" width="280px">
+          <el-table-column align="center" label="有效期" width="270px">
             <template scope="scope">
               <span v-show="!scope.row.edit">{{scope.row.validity}}</span>
               <el-date-picker v-show="scope.row.edit" v-model="scope.row.validity" type="daterange" placeholder="选择日期范围">
               </el-date-picker>
             </template>
           </el-table-column>
-          <el-table-column class-name="status-col" align="center" label="状态" width="80px" :filters="[{ text: '生效', value: '生效' }, { text: '失效', value: '失效' }]" filter-placement="bottom-end">
-            <!-- <el-table-column class-name="status-col" align="center" label="状态" width="80px" :filters="[{ text: '生效', value: '生效' }, { text: '失效', value: '失效' }]" :filter-method="filterTag" filter-placement="bottom-end"> -->
+          <el-table-column class-name="status-col" align="center" label="状态" width="80px" :filters="[{ text: '生效', value: '生效' }, { text: '失效', value: '失效' }]" :filter-method="filterTag" filter-placement="bottom-end">
             <template scope="scope">
-              <el-tag :type="scope.row.wordstate | statusFilter">{{scope.row.wordstate}}</el-tag>
+              <el-tag :type="scope.row.wordstate | statusFilter" close-transition>{{scope.row.wordstate}}</el-tag>
             </template>
           </el-table-column>
 
@@ -64,7 +69,7 @@
 
           <el-table-column align="center" label="操作" width="150px">
             <template scope="scope">
-              <el-button :type="scope.row.edit?'success':'primary'" @click='scope.row.edit=!scope.row.edit' size="small">{{scope.row.edit?'完成':'编辑'}}</el-button>
+              <el-button :type="scope.row.edit?'success':'primary'" @click='updateKeywordDetail(scope.row)' size="small">{{scope.row.edit?'完成':'编辑'}}</el-button>
               <el-button v-if="scope.row.wordstate!='生效'" size="small" @click="handleModifyStatus(scope.row,'生效')">生效
               </el-button>
               <el-button v-if="scope.row.wordstate!='失效'" size="small" type="danger" @click="handleModifyStatus(scope.row,'失效')"> 失效
@@ -85,7 +90,7 @@
             <el-form-item label="范围">
               <el-select v-model="location" multiple placeholder="请选择">
                 <!-- <el-option v-for="item in locationSel" :key="item.label" :label="item.label" :value="item.value">
-                                                                        </el-option> -->
+                                                                                                                                                                                                  </el-option> -->
                 <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
                   <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
@@ -113,7 +118,7 @@
   </div>
 </template>
 <script>
-import { fetchList, fetchPv, addKeywords, getKeywords } from '@/api/banned'
+import { fetchPv, addKeywords, getKeywords, updateKeywords, changeKeywordsStatus, searchKeywords, deleteKeywords } from '@/api/banned'
 import waves from '@/directive/waves.js'// 水波纹指令
 import { parseTime } from '@/utils'
 
@@ -132,6 +137,7 @@ export default {
         page: 1,
         limit: 10
       },
+      searchKeyword: '',
       temp: {
         validity: '',
         wordstate: '',
@@ -155,6 +161,18 @@ export default {
       validity: '',
       addValidity: '',
       value6: '',
+      multipleSelection: [],
+      searchWordstate: '全部',
+      wordStateSel: [{
+        value: '全部',
+        label: '全部'
+      }, {
+        value: '生效',
+        label: '生效'
+      }, {
+        value: '失效',
+        label: '失效'
+      }],
       locationSel: [{
         label: '汽车之家',
         options: [{
@@ -262,6 +280,18 @@ export default {
         this.listLoading = false
       })
     },
+    searchList() {
+      console.log(this.searchKeyword, this.searchLocation, this.listQuery)
+      searchKeywords(this.searchKeyword, this.searchLocation, this.searchWordstate, this.listQuery).then(response => {
+        console.log(response.data);
+        this.list = response.data.items.map(v => {
+          this.$set(v, 'edit', false)
+          return v
+        })
+        this.total = response.data.total
+        this.listLoading = false
+      })
+    },
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
@@ -280,18 +310,78 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          message: '操作成功',
-          type: 'success'
-        })
-        console.log(row.id);
         row.wordstate = status
+        changeKeywordsStatus(row.id, status).then(response => {
+          console.log(response);
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          })
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '已取消'
         });
       });
+    },
+    getYMDTime(date) {
+      if (typeof date !== 'object') {
+        console.log('不是日期对象');
+        return null;
+      }
+      const seperator1 = '-';
+      let month = date.getMonth() + 1;
+      let strDate = date.getDate();
+      if (month >= 1 && month <= 9) {
+        month = '0' + month;
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = '0' + strDate;
+      }
+      return date.getFullYear() + seperator1 + month + seperator1 + strDate;
+    },
+    getNowTime() {
+      const date = new Date();
+      const seperator1 = '-';
+      const seperator2 = ':';
+      let month = date.getMonth() + 1;
+      let strDate = date.getDate();
+      if (month >= 1 && month <= 9) {
+        month = '0' + month;
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = '0' + strDate;
+      }
+      return date.getFullYear() + seperator1 + month + seperator1 + strDate + ' ' + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
+    },
+    updateKeywordDetail(row) {
+      row.edit = !row.edit
+      // console.log(row.edit);
+      if (row.edit) {
+        console.log('开启修改');
+      } else {
+        // for (const value of row.location) {
+        //   // console.log(value)  // 结果依次为1，2，3
+        //   row.location += value + '、';
+        // }
+        if (typeof row.validity[0] === 'object') {
+          const validity = this.getYMDTime(row.validity[0]) + ' - ' + this.getYMDTime(row.validity[1]);
+          row.validity = validity;
+        }
+        row.updatetime = this.getNowTime();
+        row.submitor = '测试者';  // 之后获取当前用户
+        console.log(row.id, row.keywords, row.location, row.validity, row.submitor, row.updatetime)
+        updateKeywords(row.id, row.keywords, row.validity, row.updatetime, row.submitor, row.location).then(response => {
+          console.log(response);
+          this.$notify({
+            title: '成功',
+            message: '修改成功',
+            type: 'success',
+            duration: 2000
+          })
+        })
+      }
     },
     handleCreate() {
       this.resetTemp()
@@ -389,6 +479,39 @@ export default {
     dateChange(val) {
       console.log(val);
       return this.temp.validity = val;
+    },
+    filterTag(value, row) {
+      console.log(value);
+      console.log(row);
+      return row.wordstate === value;
+    },
+    handleSelectionChange(val) {
+      for (const item of val) {
+        this.multipleSelection.push(item.id)
+      }
+    },
+    deleteKeyword() {
+      this.$confirm('此操作将批量删除关键词, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'error'
+      }).then(() => {
+        deleteKeywords(this.multipleSelection).then(response => {
+          console.log(response);
+          this.$notify({
+            title: '成功',
+            message: '删除成功',
+            type: 'success',
+            duration: 2000
+          })
+          this.getList();
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        });
+      });
     }
   }
 }

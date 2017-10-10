@@ -2,6 +2,6 @@
 
 export default {
   addKeywords: () => ({
-    addFlag: true
+    result: 0
   })
 }

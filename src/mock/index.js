@@ -26,5 +26,12 @@ Mock.mock(/\/search\/user/, 'get', remoteSearchAPI.searchUser);
 
 Mock.mock(/\/blacklist\/banned\/addkeywods/, 'post', bannedAPI)
 
+Mock.mock(/\/blacklist\/banned\/updatekeywods/, 'post', bannedAPI)
+
+Mock.mock(/\/blacklist\/banned\/changekeywodstatus/, 'post', bannedAPI)
+
+Mock.mock(/\/blacklist\/banned\/deletekeywods/, 'post', bannedAPI)
+
+Mock.mock(/\/blacklist\/banned\/searchkeywods/, 'get', articleAPI.getList)
 
 export default Mock;
