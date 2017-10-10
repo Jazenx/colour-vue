@@ -25,20 +25,21 @@
           </el-table-column>
           <el-table-column align="center" label="关键词">
             <template scope="scope">
-              <el-input v-show="scope.row.edit" size="small" v-model="scope.row.keywords"></el-input>
-              <span v-show="!scope.row.edit">{{ scope.row.keywords }}</span>
+              <el-input v-show="scope.row.edit" size="small" v-model="scope.row.keyword"></el-input>
+              <span v-show="!scope.row.edit">{{ scope.row.keyword }}</span>
             </template>
           </el-table-column>
           <el-table-column align="center" label="范围" style="width: 10%">
-            <template v-show="!scope.row.edit" scope="scope">
-              <span v-show="!scope.row.edit">{{scope.row.location}}</span>
-              </span>
-              <el-select v-model="scope.row.location" multiple placeholder="请选择" v-show="scope.row.edit">
+            <template scope="scope">
+              <el-select v-model="scope.row.locations" multiple placeholder="请选择" v-show="scope.row.edit">
                 <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
                   <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-option-group>
               </el-select>
+              <span v-show="!scope.row.edit">{{scope.row.location}}</span>
+              </span>
+
             </template>
           </el-table-column>
 
@@ -90,7 +91,7 @@
             <el-form-item label="范围">
               <el-select v-model="location" multiple placeholder="请选择">
                 <!-- <el-option v-for="item in locationSel" :key="item.label" :label="item.label" :value="item.value">
-                                                                                                                                                                                                  </el-option> -->
+                                                                                                                                                                                                                </el-option> -->
                 <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
                   <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
@@ -273,6 +274,9 @@ export default {
       getKeywords(this.listQuery).then(response => {
         console.log(response.data);
         this.list = response.data.items.map(v => {
+          let location = [];
+          location = v.location.split('、');
+          this.$set(v, 'locations', location);
           this.$set(v, 'edit', false)
           return v
         })
@@ -372,7 +376,12 @@ export default {
         row.updatetime = this.getNowTime();
         row.submitor = '测试者';  // 之后获取当前用户
         console.log(row.id, row.keywords, row.location, row.validity, row.submitor, row.updatetime)
-        updateKeywords(row.id, row.keywords, row.validity, row.updatetime, row.submitor, row.location).then(response => {
+        let tempLocation = '';
+        for (const v of row.locations) {
+          tempLocation += v + '、';
+        }
+        row.location = tempLocation.substr(0, tempLocation.length - 1)
+        updateKeywords(row.id, row.keywords, row.validity, row.updatetime, row.submitor, row.locations).then(response => {
           console.log(response);
           this.$notify({
             title: '成功',

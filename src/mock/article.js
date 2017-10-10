@@ -8,13 +8,14 @@ const count = 100
 
 for (let i = 0; i < count; i++) {
   List.push(Mock.mock({
-    location: ['@city(true)', '@city(true)'],
+    // location: ['@city(true)', '@city(true)'],
+    location: '@cname 、@cname',
     validity: Mock.Random.date() + '至' + Mock.Random.date(),
     'wordstate|1': ['生效', '失效'],
     submitor: '@cname',
     updatetime: '@datetime',
     id: '@increment',
-    keywords: Mock.Random.cword(2, 8)
+    keyword: Mock.Random.cword(2, 8)
   }))
 }
 
