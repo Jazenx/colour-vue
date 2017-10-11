@@ -3,19 +3,19 @@
     <el-tabs v-model="activeName">
       <el-tab-pane label="关键词" name="first">
         <div class="filter-container">
-          <el-input style="width: 250px;" class="filter-item" placeholder="请输入关键词" v-model="searchKeyword">
+          <el-input style="width: 250px;" class="filter-item" placeholder="请输入关键词" v-model="listQuery.searchKeyword">
           </el-input>
-          <el-select clearable style="width: 200px" class="filter-item" v-model="searchLocation" multiple placeholder="请选择范围">
+          <el-select clearable style="width: 200px" class="filter-item" v-model="listQuery.searchLocation" multiple placeholder="请选择范围">
             <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
               <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-option-group>
           </el-select>
-          <el-select clearable style="width: 200px" class="filter-item" v-model="searchWordstate" placeholder="请选择状态">
+          <el-select clearable style="width: 200px" class="filter-item" v-model="listQuery.searchWordstate" placeholder="请选择状态">
             <el-option v-for="item in wordStateSel" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
-          <el-button class="filter-item" type="primary" v-waves icon="search" @click="searchList">搜索</el-button>
+          <el-button class="filter-item" type="primary" v-waves icon="search" @click="getList">搜索</el-button>
           <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="plus">添加</el-button>
           <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="minus" s @click="deleteKeyword()">删除</el-button>
           <el-button class="filter-item" type="primary" icon="document">导出</el-button>
@@ -91,7 +91,7 @@
             <el-form-item label="范围">
               <el-select v-model="location" multiple placeholder="请选择">
                 <!-- <el-option v-for="item in locationSel" :key="item.label" :label="item.label" :value="item.value">
-                                                                                                                                                                                                                </el-option> -->
+                                                                                                                                                                                                                        </el-option> -->
                 <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
                   <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
@@ -119,7 +119,7 @@
   </div>
 </template>
 <script>
-import { fetchPv, addKeywords, getKeywords, updateKeywords, changeKeywordsStatus, searchKeywords, deleteKeywords } from '@/api/banned'
+import { fetchPv, addKeywords, getKeywords, updateKeywords, changeKeywordsStatus, deleteKeywords } from '@/api/banned'
 import waves from '@/directive/waves.js'// 水波纹指令
 import { parseTime } from '@/utils'
 
@@ -136,9 +136,12 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 10
+        limit: 10,
+        searchKeyword: null,
+        searchLocation: [],
+        searchWordstate: null
       },
-      searchKeyword: '',
+      // searchKeyword: '',
       temp: {
         validity: '',
         wordstate: '',
@@ -158,12 +161,12 @@ export default {
       showAuditor: false,
       tableKey: 0,
       location: [],
-      searchLocation: [],
+      // searchLocation: [],
       validity: '',
       addValidity: '',
       value6: '',
       multipleSelection: [],
-      searchWordstate: '全部',
+      // searchWordstate: '全部',
       wordStateSel: [{
         value: '全部',
         label: '全部'
@@ -235,22 +238,6 @@ export default {
           label: '拍客'
         }]
       }]
-      // locationSel: [{
-      //   value: '论坛',
-      //   label: '论坛'
-      // }, {
-      //   value: '评论',
-      //   label: '评论'
-      // }, {
-      //   value: '回帖',
-      //   label: '回帖'
-      // }, {
-      //   value: '口碑',
-      //   label: '口碑'
-      // }, {
-      //   value: '汽车之家',
-      //   label: '汽车之家'
-      // }]
     }
   },
   filters: {
@@ -284,18 +271,18 @@ export default {
         this.listLoading = false
       })
     },
-    searchList() {
-      console.log(this.searchKeyword, this.searchLocation, this.listQuery)
-      searchKeywords(this.searchKeyword, this.searchLocation, this.searchWordstate, this.listQuery).then(response => {
-        console.log(response.data);
-        this.list = response.data.items.map(v => {
-          this.$set(v, 'edit', false)
-          return v
-        })
-        this.total = response.data.total
-        this.listLoading = false
-      })
-    },
+    // searchList() {
+    //   console.log(this.searchKeyword, this.searchLocation, this.listQuery)
+    //   searchKeywords(this.searchKeyword, this.searchLocation, this.searchWordstate, this.listQuery).then(response => {
+    //     console.log(response.data);
+    //     this.list = response.data.items.map(v => {
+    //       this.$set(v, 'edit', false)
+    //       return v
+    //     })
+    //     this.total = response.data.total
+    //     this.listLoading = false
+    //   })
+    // },
     handleFilter() {
       this.listQuery.page = 1
       this.getList()

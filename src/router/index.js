@@ -39,11 +39,22 @@ export const constantRouterMap = [
   {
     path: '/',
     component: Layout,
-    redirect: '/banned',
-    name: '首页',
+    redirect: '/review',
+    name: '审核',
     hidden: true,
     children: [{
-      path: 'banned',
+      path: 'review',
+      component: _import('review/content')
+    }]
+  },
+  {
+    path: '/banned',
+    component: Layout,
+    redirect: '/banned',
+    name: '黑名单',
+    hidden: true,
+    children: [{
+      path: 'index',
       component: _import('banned/index')
     }]
   }
@@ -59,6 +70,21 @@ export default new Router({
 
 export const asyncRouterMap = [
   {
+    path: '/review',
+    component: Layout,
+    redirect: '/review/content',
+    name: '审核',
+    icon: 'semantics',
+    children: [
+      {
+        path: 'content',
+        component: _import('review/content'),
+        icon: 'fenxi',
+        name: '内容'
+      }
+    ]
+  },
+  {
     path: '/banned',
     component: Layout,
     redirect: '/banned/index',
@@ -73,27 +99,6 @@ export const asyncRouterMap = [
       }
     ]
   },
-  // {
-  //   path: '/semantic',
-  //   component: Layout,
-  //   redirect: '/semantic/index',
-  //   name: '语义分析工具',
-  //   icon: 'semantics',
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: _import('semantic/index'),
-  //       icon: 'fenxi',
-  //       name: '语义分析'
-  //     },
-  //     {
-  //       path: 'grapMonitor',
-  //       component: _import('semantic/w2v'),
-  //       icon: 'zhinengsuanfa',
-  //       name: 'w2v'
-  //     }
-  //   ]
-  // },
   {
     path: '*',
     redirect: '/404',

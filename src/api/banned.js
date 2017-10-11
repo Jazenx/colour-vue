@@ -97,6 +97,8 @@ export function deleteKeywords(keywordsID) {
   return fetch({
     url: 'blacklist/banned/deletekeywords',
     method: 'post',
-    data: keywordsID
+    data: {
+      keywordsID
+    }
   })
 }
