@@ -9,6 +9,7 @@ const count = 100
 for (let i = 0; i < count; i++) {
   List.push(Mock.mock({
     // location: ['@city(true)', '@city(true)'],
+    rowkey: '@id',
     pid: '@id', // 帖子id
     userid: '@id',
     username: '@cname', // 用户姓名
@@ -18,7 +19,9 @@ for (let i = 0; i < count; i++) {
     'location|1': ['主贴', '回帖'],
     subtime: '@time',
     submitor: '@cname', // 操作者姓名
+    'submitor|1': [null, '@cname'],
     title: '@ctitle',
+    url: '@url',
     keyword: '草泥马',
     content: '草泥马@cparagraph()草泥马',
     'wordtype|1': ['低俗信息', '涉政信息', '黄色信息', '广告信息'],
@@ -34,7 +37,7 @@ export default {
       type,
       title,
       page = 1,
-      limit = 10,
+      limit = 20,
       sort
     } = param2Obj(config.url)
 

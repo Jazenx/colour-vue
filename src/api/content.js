@@ -8,3 +8,26 @@ export function getContentList(query) {
     params: query
   })
 }
+
+
+
+export function submitAllList(listInfo) {
+  return fetch({
+    url: 'review/content/allsubmit',
+    method: 'post',
+    data: listInfo
+  })
+}
+
+
+
+export function submitOneOperation(rowkey, opt) {
+  return fetch({
+    url: 'review/content/submitOneOperation',
+    method: 'post',
+    data: {
+      rowkey,
+      opt
+    }
+  })
+}

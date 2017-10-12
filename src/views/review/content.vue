@@ -95,18 +95,18 @@
       </sticky>
       <div style="margin: 15px 0;"></div>
       <div style="margin: 15px; display: flex;justify-content: flex-end;">
-        <el-button type="primary" size="small">全部通过</el-button>
-        <el-button type="primary" size="small">全部删除</el-button>
-        <el-button type="primary" size="small">全部忽略</el-button>
-        <el-button type="primary" size="small">全部取消</el-button>
-        <el-button type="success">提交</el-button>
+        <el-button type="primary" size="small" @click="passAllContent">全部通过</el-button>
+        <el-button type="primary" size="small" @click="deleteAllContent">全部删除</el-button>
+        <el-button type="primary" size="small" @click="ignoreAllContent">全部忽略</el-button>
+        <el-button type="primary" size="small" @click="cancelAllContent">全部取消</el-button>
+        <el-button type="success" @click="submitAllOperation">提交</el-button>
       </div>
-      <div style="margin: 15px; display: flex;justify-content: flex-end;">
-        <el-button type="primary" size="small">全部用户勾选</el-button>
+      <div style="margin: 15px;   display: flex;justify-content: space-between;">
+        <el-checkbox size="large" v-model="checkAll">全选</el-checkbox>
         <el-button type="danger" size="small">封禁跳转提交</el-button>
       </div>
 
-      <el-row v-for="item in list" :key="item.pid" v-loading="listLoading" style="margin:12px">
+      <el-row v-for="(item, index) in list" :key="item.pid" v-loading="listLoading" style="margin:12px">
         <el-row class="detail-box">
           <el-col :span="20" style="margin:4px">
             <el-row>
@@ -114,11 +114,11 @@
                 <a class="aTitle">{{item.location}}</a>
               </label>>
               <label>
-                <a class="aTitle">{{item.title}}</a>
+                <a class="aTitle" :href="item.url" target="_blank">{{item.title}}</a>
               </label>
             </el-row>
             <el-row style="display: flex;align-items: center;height:22px">
-              <el-checkbox></el-checkbox>
+              <el-checkbox :value="item.rowkey" v-model="item.checked"></el-checkbox>
               <h5 class="infoGrey" style="margin-left:10px">{{item.username}}</h5>
               <p class="infoGrey">(
                 <a href="#" class="aHref">{{item.userid}}</a>) |
@@ -129,7 +129,7 @@
                 <p class="infoGrey">帖子ID:{{item.pid}}</p>
                 <p class="infoGrey" style="margin-left:15px">主题ID:{{item.threadid}}</p>
                 <p class="infoGrey" style="margin-left:15px">提交时间:{{item.subtime}}</p>
-                <p class="infoGrey" style="margin-left:30px">操作者:{{item.submitor}}</p>
+                <p class="infoGrey" style="margin-left:30px" v-if="item.submitor != null">操作者:{{item.submitor}}</p>
               </el-col>
               <el-col :span="4" style="display: flex;justify-content: center;align-items: center;height:22px">
                 <h4 class="infoGrey">{{item.state}}</h4>
@@ -144,10 +144,11 @@
                 <p class="infoGrey" style="margin-left:15px">{{item.judgedetail}}</p>
               </el-col>
               <el-col :span="8" style="display: flex;align-items: center;margin-top:5px">
-                <el-button type="primary" size="mini">通过</el-button>
-                <el-button type="primary" size="mini">删除</el-button>
-                <el-button type="primary" size="mini">忽略</el-button>
-                <el-button type="primary" size="mini">禁ID</el-button>
+                <el-button type="primary" size="mini" @click="submitOneOperation(item,index,1)">通过</el-button>
+                <el-button type="primary" size="mini" @click="submitOneOperation(item,index,2)">删除</el-button>
+                <el-button type="primary" size="mini" @click="submitOneOperation(item,index,3)">忽略</el-button>
+                <el-button type="primary" size="mini" @click="submitOneOperation(item,index,4)">禁ID</el-button>
+                <!-- <el-button type="danger" size="mini" @click="submitOneOperation(item,index,5)">封杀用户</el-button> -->
                 <el-button type="danger" size="mini">封杀用户</el-button>
               </el-col>
             </el-row>
@@ -169,8 +170,8 @@
           </el-col>
         </el-row>
       </el-row>
-      <div v-show="!listLoading" class="pagination-container">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+      <div v-show="!listLoading" class="pagination-container" style="  display: flex;justify-content: center;align-items: center;">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[20, 50, 100]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
       </div>
       <back-to-top transitionName="fade" :customStyle="myBackToTopStyle" :visibilityHeight="300" :backPosition="50"></back-to-top>
@@ -182,7 +183,7 @@
 import Sticky from '@/components/Sticky' // 粘性header组件
 import waves from '@/directive/waves.js'// 水波纹指令
 import BackToTop from '@/components/BackToTop'
-import { getContentList } from '@/api/content'
+import { getContentList, submitAllList, submitOneOperation } from '@/api/content'
 
 export default {
   name: 'contentTemplate',
@@ -207,12 +208,13 @@ export default {
     return {
       testRadio: undefined,
       testArea: '<span style="color: red;font-weight: bold;background-color: yellow;">草泥马</span>三轮全责，不要掏钱了事……凭啥给。下来就跟他要驾驶证，没有就说，你这属于机动车，无牌无证，按交通法需要扣你车，外加行政拘留。先吓唬他，让他赔钱，不行就报警。现在我们这里摩托电动三轮查的严的很。至于给他钱，凭啥？你自己修车还得第二年保费上涨呢。习大大提出法治社会，行人闯红灯都赔汽车了，别怕',
-      list: null,
+      list: [],
       total: null,
       listLoading: true,
+      massList: [],
       listQuery: {
         page: 1,
-        limit: 10,
+        limit: 20,
         currentState: 2,
         humanReview: 1,
         contentType: 0,
@@ -322,6 +324,28 @@ export default {
       }
     };
   },
+  computed: {
+    checkAll: {
+      get() {
+        return this.checkedCount === this.list.length;
+      },
+      set(value) {
+        this.$message({
+          type: 'warning',
+          message: '超过五十条全选可能失败'
+        });
+        this.lists = this.list.map(item => {
+          item.checked = value;
+          return item;
+        });
+      }
+    },
+    checkedCount: {
+      get() {
+        return this.list.filter(item => item.checked).length;
+      }
+    }
+  },
   created() {
     this.getList()
   },
@@ -333,9 +357,10 @@ export default {
         this.list = response.data.items.map(v => {
           const content = v.content.replace(new RegExp(v.keyword, 'ig'), '<span style="color: red;font-weight: bold;background-color: yellow;">' + v.keyword + '</span>')
           this.$set(v, 'content', content);
-
+          this.$set(v, 'checked', false);
           return v
         })
+        console.log(this.list);
         this.total = response.data.total
         this.listLoading = false
       })
@@ -347,15 +372,72 @@ export default {
     handleCurrentChange(val) {
       this.listQuery.page = val
       this.getList()
+    },
+    passAllContent() {
+      this.list.map(v => {
+        this.$set(v, 'optinfo', 1);
+        return v
+      })
+    },
+    deleteAllContent() {
+      this.list.map(v => {
+        this.$set(v, 'optinfo', 2);
+        return v
+      })
+    },
+    ignoreAllContent() {
+      this.list.map(v => {
+        this.$set(v, 'optinfo', 3);
+        return v
+      })
+    },
+    cancelAllContent() {
+      this.list.map(v => {
+        this.$set(v, 'optinfo', 0);
+        return v
+      })
+    },
+    submitAllOperation() {
+      this.massList = [];
+      this.listLoading = true;
+      this.list.map(v => {
+        const mass = { rowkey: null, optinfo: null };
+        mass.rowkey = v.rowkey;
+        mass.optinfo = v.optinfo;
+        this.massList.push(mass);
+        return v
+      })
+      console.log(this.massList);
+      submitAllList(this.massList).then(response => {
+        console.log(response);
+        this.$notify({
+          title: '成功',
+          message: '批量提交成功',
+          type: 'success',
+          duration: 2000
+        })
+        this.getList();
+      })
+    },
+    submitOneOperation(row, index, opt) {
+      // console.log(row.rowkey, index, opt);
+      this.list.splice(index, 1);
+      submitOneOperation(row.rowkey, opt).then(response => {
+        console.log(response);
+        this.$notify({
+          title: '成功',
+          message: '操作成功',
+          type: 'success',
+          duration: 2000
+        })
+      })
     }
   },
   watch: {
     listQuery: {
       handler(newValue) {
-        console.log(newValue);
         this.listLoading = true
         getContentList(newValue).then(response => {
-          console.log(response.data);
           this.list = response.data.items.map(v => {
             const content = v.content.replace(new RegExp(v.keyword, 'ig'), '<span style="color: red;font-weight: bold;background-color: yellow;">' + v.keyword + '</span>')
             this.$set(v, 'content', content);
