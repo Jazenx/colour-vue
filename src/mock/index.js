@@ -4,7 +4,7 @@ import articleAPI from './article';
 import article_tableAPI from './article_table';
 import remoteSearchAPI from './remoteSearch';
 import bannedAPI from './banned'
-
+import contentAPI from './content';
 
 // 登录相关
 Mock.mock(/\/login\/loginbyemail/, 'post', loginAPI.loginByEmail);
@@ -33,5 +33,10 @@ Mock.mock(/\/blacklist\/banned\/changekeywordstatus/, 'post', bannedAPI)
 Mock.mock(/\/blacklist\/banned\/deletekeywords/, 'post', bannedAPI)
 
 Mock.mock(/\/blacklist\/banned\/searchkeywords/, 'get', articleAPI.getList)
+
+// // content
+Mock.mock(/\/review\/content\/list/, 'get', contentAPI.getList);
+
+
 
 export default Mock;

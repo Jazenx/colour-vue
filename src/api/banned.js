@@ -26,7 +26,7 @@ export function fetchPv(pv) {
 }
 
 
-export function addKeywords(keywords, validity, updatetime, submitor, location, wordstate) {
+export function addKeywords(keywords, validity, updatetime, submitor, location, wordstate, classify) {
   return fetch({
     url: 'blacklist/banned/addkeywords',
     method: 'post',
@@ -36,7 +36,8 @@ export function addKeywords(keywords, validity, updatetime, submitor, location, 
       updatetime, // 提交时间
       submitor, // 提交人
       location, // 范围
-      wordstate // 状态
+      wordstate, // 状态
+      classify
     }
   })
 }

@@ -39,10 +39,13 @@
               </el-select>
               <span v-show="!scope.row.edit">{{scope.row.location}}</span>
               </span>
-
             </template>
           </el-table-column>
-
+          <el-table-column align="center" label="分类">
+            <template scope="scope">
+              <span>{{scope.row.classify}}</span>
+            </template>
+          </el-table-column>
           <el-table-column align="center" label="有效期" width="270px">
             <template scope="scope">
               <span v-show="!scope.row.edit">{{scope.row.validity}}</span>
@@ -89,13 +92,19 @@
               <el-input type="textarea" :rows="2" v-model="temp.keywords" placeholder="请输入关键词,多个以“回车符”换行！"></el-input>
             </el-form-item>
             <el-form-item label="范围">
-              <el-select v-model="location" multiple placeholder="请选择">
+              <el-select v-model="location" multiple placeholder="请选择范围">
                 <!-- <el-option v-for="item in locationSel" :key="item.label" :label="item.label" :value="item.value">
-                                                                                                                                                                                                                        </el-option> -->
+                                                                                                                                                                                                                                      </el-option> -->
                 <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
                   <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-option-group>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="分类">
+              <el-select v-model="classify" placeholder="请选择分类">
+                <el-option v-for="item in classifySel" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
               </el-select>
             </el-form-item>
 
@@ -167,6 +176,23 @@ export default {
       value6: '',
       multipleSelection: [],
       // searchWordstate: '全部',
+      classify: '',
+      classifySel: [{
+        value: '涉政',
+        label: '涉政'
+      }, {
+        value: '涉黄',
+        label: '涉黄'
+      }, {
+        value: '涉恐',
+        label: '涉恐'
+      }, {
+        value: '广告',
+        label: '广告'
+      }, {
+        value: '低俗',
+        label: '低俗'
+      }],
       wordStateSel: [{
         value: '全部',
         label: '全部'
@@ -418,8 +444,8 @@ export default {
       const updatetime = date.getFullYear() + seperator1 + month + seperator1 + strDate + ' ' + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
       let keywords = [];
       keywords = this.temp.keywords.split('\n');
-      console.log(keywords, this.temp.validity, this.temp.submitor, updatetime, this.location, this.temp.wordstate);
-      addKeywords(keywords, this.temp.validity, updatetime, this.temp.submitor, this.location, this.temp.wordstate).then(response => {
+      console.log(keywords, this.temp.validity, this.temp.submitor, updatetime, this.location, this.temp.wordstate, this.classify);
+      addKeywords(keywords, this.temp.validity, updatetime, this.temp.submitor, this.location, this.temp.wordstate, this.classify).then(response => {
         console.log(response);
         this.$notify({
           title: '成功',

@@ -11,17 +11,17 @@
           <el-button type="info" size="small">误删</el-button>
           <el-button type="info" size="small">漏删</el-button>
           <el-button type="info" size="small">复议</el-button>
-          <el-select v-model="timeHourpick" placeholder="请选择时间段" style="float:right; width:100px">
+          <el-select v-model="listQuery.timeHourpick" placeholder="请选择时间段" style="float:right; width:110px">
             <el-option v-for="item in timeSel" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
-          <el-date-picker v-model="timeDayPick" type="date" placeholder="选择日期" style="float:right;margin-right:30px">
+          <el-date-picker v-model="listQuery.timeDayPick" type="date" placeholder="选择日期" style="float:right;margin-right:30px;width:120px">
           </el-date-picker>
         </div>
         <div style="margin: 15px 0;"></div>
         <el-form>
           <el-form-item label="版块名称:">
-            <el-select v-model="locations" multiple placeholder="请选择板块名">
+            <el-select v-model="listQuery.locations" multiple placeholder="请选择板块名">
               <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
@@ -29,7 +29,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="当前状态:">
-            <el-radio-group v-model="currentState" size="small">
+            <el-radio-group v-model="listQuery.currentState" size="small">
               <el-radio-button label="0">不限</el-radio-button>
               <el-radio-button label="1">通过</el-radio-button>
               <el-radio-button label="2">待审</el-radio-button>
@@ -39,7 +39,7 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="人工审核:">
-            <el-radio-group v-model="humanReview" size="small">
+            <el-radio-group v-model="listQuery.humanReview" size="small">
               <el-radio-button label="0">不限</el-radio-button>
               <el-radio-button label="1">未确认</el-radio-button>
               <el-radio-button label="2">已确认</el-radio-button>
@@ -47,14 +47,14 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="内容类型:">
-            <el-radio-group v-model="contentType" size="small">
+            <el-radio-group v-model="listQuery.contentType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
               <el-radio-button label="1">主题</el-radio-button>
               <el-radio-button label="2">回复</el-radio-button>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="识别类型:">
-            <el-radio-group v-model="indentifyType" size="small">
+            <el-radio-group v-model="listQuery.indentifyType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
               <el-radio-button label="1">违法</el-radio-button>
               <el-radio-button label="2">违约</el-radio-button>
@@ -67,86 +67,129 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="识别类型:">
-            <el-radio-group v-model="recognitionType" size="small">
+            <el-radio-group v-model="listQuery.recognitionType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
               <el-radio-button label="1">未确认</el-radio-button>
               <el-radio-button label="2">已确认</el-radio-button>
               <el-radio-button label="3">已忽略</el-radio-button>
             </el-radio-group>
           </el-form-item>
+          <el-form-item label="彩数识别:">
+            <el-radio-group v-model="listQuery.colourdataType" size="small">
+              <el-radio-button label="0">不限</el-radio-button>
+              <el-radio-button label="1">通过</el-radio-button>
+              <el-radio-button label="2">待审</el-radio-button>
+              <el-radio-button label="3">删除</el-radio-button>
+            </el-radio-group>
+          </el-form-item>
         </el-form>
       </div>
       <sticky className="sub-navbar">
-        <el-select v-model="seachCondition" placeholder="请选择筛选条件" align="left">
+        <el-select v-model="listQuery.seachCondition" placeholder="请选择筛选条件" class="filter-item" style="float:left;margin-left:20px">
           <el-option v-for="item in seachSel" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
+        <el-input style="width: 250px;float:left;margin-left:20px" class="filter-item" :placeholder="'请输入'+seachCondition" v-model="listQuery.seachContent">
+        </el-input>
+        <el-button class="filter-item" type="success" style="float:left;margin-left:20px;margin-top:8px" v-waves icon="search" @click="getList">搜索</el-button>
       </sticky>
-      <div class="components-container">
-        <code>Sticky header 当页面滚动到预设的位置会吸附在顶部</code>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
-        <div>我是占位</div>
+      <div style="margin: 15px 0;"></div>
+      <div style="margin: 15px; display: flex;justify-content: flex-end;">
+        <el-button type="primary" size="small">全部通过</el-button>
+        <el-button type="primary" size="small">全部删除</el-button>
+        <el-button type="primary" size="small">全部忽略</el-button>
+        <el-button type="primary" size="small">全部取消</el-button>
+        <el-button type="success">提交</el-button>
       </div>
+      <div style="margin: 15px; display: flex;justify-content: flex-end;">
+        <el-button type="primary" size="small">全部用户勾选</el-button>
+        <el-button type="danger" size="small">封禁跳转提交</el-button>
+      </div>
+
+      <el-row v-for="item in list" :key="item.pid" v-loading="listLoading" style="margin:12px">
+        <el-row class="detail-box">
+          <el-col :span="20" style="margin:4px">
+            <el-row>
+              <label>
+                <a class="aTitle">{{item.location}}</a>
+              </label>>
+              <label>
+                <a class="aTitle">{{item.title}}</a>
+              </label>
+            </el-row>
+            <el-row style="display: flex;align-items: center;height:22px">
+              <el-checkbox></el-checkbox>
+              <h5 class="infoGrey" style="margin-left:10px">{{item.username}}</h5>
+              <p class="infoGrey">(
+                <a href="#" class="aHref">{{item.userid}}</a>) |
+                <a class="aHref">{{item.ip}}</a> | {{item.subtime}}</p>
+            </el-row>
+            <el-row>
+              <el-col :span="20" style="display: flex;align-items: center;height:22px">
+                <p class="infoGrey">帖子ID:{{item.pid}}</p>
+                <p class="infoGrey" style="margin-left:15px">主题ID:{{item.threadid}}</p>
+                <p class="infoGrey" style="margin-left:15px">提交时间:{{item.subtime}}</p>
+                <p class="infoGrey" style="margin-left:30px">操作者:{{item.submitor}}</p>
+              </el-col>
+              <el-col :span="4" style="display: flex;justify-content: center;align-items: center;height:22px">
+                <h4 class="infoGrey">{{item.state}}</h4>
+              </el-col>
+            </el-row>
+            <el-row style="border: 1px solid #d3dce6;background: #f3f3f3;height:130px;overflow:auto" v-html="item.content">
+              {{item.content}}
+            </el-row>
+            <el-row>
+              <el-col :span="16" style="display: flex;align-items: center;height:30px">
+                <h4 style="color: red">{{item.wordtype}}</h4>
+                <p class="infoGrey" style="margin-left:15px">{{item.judgedetail}}</p>
+              </el-col>
+              <el-col :span="8" style="display: flex;align-items: center;margin-top:5px">
+                <el-button type="primary" size="mini">通过</el-button>
+                <el-button type="primary" size="mini">删除</el-button>
+                <el-button type="primary" size="mini">忽略</el-button>
+                <el-button type="primary" size="mini">禁ID</el-button>
+                <el-button type="danger" size="mini">封杀用户</el-button>
+              </el-col>
+            </el-row>
+          </el-col>
+          <el-col :span="3" style="margin:4px">
+            <div style="height:220px;display:flex;justify-content: center;align-items: center;">
+              <el-radio-group v-model="item.optinfo" style="display: flex;flex-direction: column;justify-content: space-between;">
+                <div>
+                  <el-radio :label="1" class="infoGrey">通过</el-radio>
+                </div>
+                <div>
+                  <el-radio :label="2" class="infoGrey">删除</el-radio>
+                </div>
+                <div>
+                  <el-radio :label="3" class="infoGrey">忽略</el-radio>
+                </div>
+              </el-radio-group>
+            </div>
+          </el-col>
+        </el-row>
+      </el-row>
+      <div v-show="!listLoading" class="pagination-container">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+        </el-pagination>
+      </div>
+      <back-to-top transitionName="fade" :customStyle="myBackToTopStyle" :visibilityHeight="300" :backPosition="50"></back-to-top>
     </div>
   </div>
 </template>
 
 <script>
 import Sticky from '@/components/Sticky' // 粘性header组件
+import waves from '@/directive/waves.js'// 水波纹指令
+import BackToTop from '@/components/BackToTop'
+import { getContentList } from '@/api/content'
 
 export default {
   name: 'contentTemplate',
-  components: { Sticky },
+  components: { Sticky, BackToTop },
+  directives: {
+    waves
+  },
   data() {
     function getNowDay() {
       const date = new Date();
@@ -162,8 +205,28 @@ export default {
       return date.getFullYear() + seperator1 + month + seperator1 + strDate;
     }
     return {
-      timeDayPick: getNowDay(),
+      testRadio: undefined,
+      testArea: '<span style="color: red;font-weight: bold;background-color: yellow;">草泥马</span>三轮全责，不要掏钱了事……凭啥给。下来就跟他要驾驶证，没有就说，你这属于机动车，无牌无证，按交通法需要扣你车，外加行政拘留。先吓唬他，让他赔钱，不行就报警。现在我们这里摩托电动三轮查的严的很。至于给他钱，凭啥？你自己修车还得第二年保费上涨呢。习大大提出法治社会，行人闯红灯都赔汽车了，别怕',
+      list: null,
+      total: null,
+      listLoading: true,
+      listQuery: {
+        page: 1,
+        limit: 10,
+        currentState: 2,
+        humanReview: 1,
+        contentType: 0,
+        indentifyType: 0,
+        recognitionType: 0,
+        colourdataType: 0,
+        timeHourpick: '0024',
+        timeDayPick: getNowDay(),
+        locations: [],
+        seachCondition: null,  //  查询种类 默认全部
+        seachContent: null //  查询详情 默认全部
+      },
       seachCondition: '',
+      seachContent: '',
       seachSel: [{
         value: '帖子ID',
         label: '帖子ID'
@@ -220,7 +283,6 @@ export default {
         value: '2224',
         label: '22点-24点'
       }],
-      timeHourpick: '全天',
       locationSel: [{
         label: '论坛、评论',
         options: [{
@@ -249,13 +311,62 @@ export default {
           label: '精华贴'
         }]
       }],
-      locations: [],
-      currentState: '0',
-      humanReview: '1',
-      contentType: '0',
-      indentifyType: '0',
-      recognitionType: '0'
+      myBackToTopStyle: {
+        right: '50px',
+        bottom: '50px',
+        width: '40px',
+        height: '40px',
+        'border-radius': '4px',
+        'line-height': '45px', // 请保持与高度一致以垂直居中
+        background: '#e7eaf1'// 按钮的背景颜色
+      }
     };
+  },
+  created() {
+    this.getList()
+  },
+  methods: {
+    getList() {
+      this.listLoading = true
+      getContentList(this.listQuery).then(response => {
+        console.log(response.data);
+        this.list = response.data.items.map(v => {
+          const content = v.content.replace(new RegExp(v.keyword, 'ig'), '<span style="color: red;font-weight: bold;background-color: yellow;">' + v.keyword + '</span>')
+          this.$set(v, 'content', content);
+
+          return v
+        })
+        this.total = response.data.total
+        this.listLoading = false
+      })
+    },
+    handleSizeChange(val) {
+      this.listQuery.limit = val
+      this.getList()
+    },
+    handleCurrentChange(val) {
+      this.listQuery.page = val
+      this.getList()
+    }
+  },
+  watch: {
+    listQuery: {
+      handler(newValue) {
+        console.log(newValue);
+        this.listLoading = true
+        getContentList(newValue).then(response => {
+          console.log(response.data);
+          this.list = response.data.items.map(v => {
+            const content = v.content.replace(new RegExp(v.keyword, 'ig'), '<span style="color: red;font-weight: bold;background-color: yellow;">' + v.keyword + '</span>')
+            this.$set(v, 'content', content);
+            return v
+          })
+          this.total = response.data.total
+          this.listLoading = false
+        })
+      },
+      deep: true
+    }
   }
 }
 </script>
@@ -270,7 +381,21 @@ export default {
   background: #f3f3f3
 }
 
-.sub-navbar {
-  margin-top: 1000px;
+.detail-box {
+  border: 1px solid #d3dce6;
+  background: #F0FFFF
+}
+
+.aTitle {
+  color: #4682B4;
+}
+
+.aHref {
+  color: #00BFFF;
+  text-decoration: underline;
+}
+
+.infoGrey {
+  color: #808080;
 }
 </style>

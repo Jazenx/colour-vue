@@ -15,6 +15,7 @@ for (let i = 0; i < count; i++) {
     submitor: '@cname',
     updatetime: '@datetime',
     id: '@increment',
+    classify: '@cname',
     keyword: Mock.Random.cword(2, 8)
   }))
 }
