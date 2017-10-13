@@ -47,10 +47,11 @@
                 <h4 class="infoGrey">{{item.state}}</h4>
               </el-col>
             </el-row>
-            <el-row style="border: 1px solid #d3dce6;background: #f3f3f3;height:130px;overflow:auto；margin-top:100px" v-html="item.content">
-              {{item.content}}
-            </el-row>
             <el-row>
+              <el-row style="border: 1px solid #d3dce6;background: #f3f3f3;height:130px;width:99%;overflow:auto;margin-top:5px;position:absolute;" v-html="item.content">
+              </el-row>
+            </el-row>
+            <el-row style="margin-top:140px">
               <el-col :span="16" style="display: flex;align-items: center;height:30px">
                 <h4 style="color: red">{{item.wordtype}}</h4>
                 <p class="infoGrey" style="margin-left:15px">{{item.judgedetail}}</p>

@@ -43,6 +43,55 @@ export function addKeywords(keywords, validity, updatetime, submitor, location, 
 }
 
 
+export function addContacts(keywords, validity, updatetime, submitor, location, wordstate, classify) {
+  return fetch({
+    url: 'blacklist/banned/addcontacts',
+    method: 'post',
+    data: {
+      keywords, // 联系方式
+      validity, // 有效日期
+      updatetime, // 提交时间
+      submitor, // 提交人
+      location, // 范围
+      wordstate, // 状态
+      classify  // 分类
+    }
+  })
+}
+
+export function addIp(keywords, validity, updatetime, submitor, location, wordstate) {
+  return fetch({
+    url: 'blacklist/banned/addip',
+    method: 'post',
+    data: {
+      keywords, // 联系方式
+      validity, // 有效日期
+      updatetime, // 提交时间
+      submitor, // 提交人
+      location, // 范围
+      wordstate // 状态
+    }
+  })
+}
+
+
+export function addId(keywords, validity, updatetime, submitor, location, wordstate) {
+  return fetch({
+    url: 'blacklist/banned/addid',
+    method: 'post',
+    data: {
+      keywords, // 联系方式
+      validity, // 有效日期
+      updatetime, // 提交时间
+      submitor, // 提交人
+      location, // 范围
+      wordstate // 状态
+    }
+  })
+}
+
+
+
 export function getKeywords(query) {
   return fetch({
     url: 'blacklist/banned/getkeywords',
@@ -50,6 +99,33 @@ export function getKeywords(query) {
     params: query
   })
 }
+
+
+export function getContacts(query) {
+  return fetch({
+    url: 'blacklist/banned/getcontacts',
+    method: 'get',
+    params: query
+  })
+}
+
+export function getIp(query) {
+  return fetch({
+    url: 'blacklist/banned/getip',
+    method: 'get',
+    params: query
+  })
+}
+
+
+export function getId(query) {
+  return fetch({
+    url: 'blacklist/banned/getid',
+    method: 'get',
+    params: query
+  })
+}
+
 
 export function searchKeywords(searchKeyword, searchLocation, searchWordstate, query) {
   return fetch({
@@ -82,6 +158,56 @@ export function updateKeywords(id, keywords, validity, updatetime, submitor, loc
 }
 
 
+
+export function updateIp(id, keywords, validity, updatetime, submitor, location) {
+  return fetch({
+    url: 'blacklist/banned/updateip',
+    method: 'post',
+    data: {
+      id, // 编号
+      keywords, // ip
+      validity, // 有效日期
+      updatetime, // 提交时间
+      submitor, // 提交人
+      location // 范围
+    }
+  })
+}
+
+
+export function updateId(id, keywords, validity, updatetime, submitor, location) {
+  return fetch({
+    url: 'blacklist/banned/updateid',
+    method: 'post',
+    data: {
+      id, // 编号
+      keywords, // id
+      validity, // 有效日期
+      updatetime, // 提交时间
+      submitor, // 提交人
+      location // 范围
+    }
+  })
+}
+
+
+
+export function updateContacts(id, keywords, validity, updatetime, submitor, location) {
+  return fetch({
+    url: 'blacklist/banned/updatecontacts',
+    method: 'post',
+    data: {
+      id, // 编号
+      keywords, // 关键词
+      validity, // 有效日期
+      updatetime, // 提交时间
+      submitor, // 提交人
+      location // 范围
+    }
+  })
+}
+
+
 export function changeKeywordsStatus(id, wordstate) {
   return fetch({
     url: 'blacklist/banned/changekeywordstatus',
@@ -94,9 +220,76 @@ export function changeKeywordsStatus(id, wordstate) {
 }
 
 
+export function changeContactsStatus(id, wordstate) {
+  return fetch({
+    url: 'blacklist/banned/changecontactstatus',
+    method: 'post',
+    data: {
+      id,
+      wordstate
+    }
+  })
+}
+
+export function changeIpStatus(id, wordstate) {
+  return fetch({
+    url: 'blacklist/banned/changeipstatus',
+    method: 'post',
+    data: {
+      id,
+      wordstate
+    }
+  })
+}
+
+export function changeIdStatus(id, wordstate) {
+  return fetch({
+    url: 'blacklist/banned/changeidstatus',
+    method: 'post',
+    data: {
+      id,
+      wordstate
+    }
+  })
+}
+
 export function deleteKeywords(keywordsID) {
   return fetch({
     url: 'blacklist/banned/deletekeywords',
+    method: 'post',
+    data: {
+      keywordsID
+    }
+  })
+}
+
+
+
+export function deleteContacts(keywordsID) {
+  return fetch({
+    url: 'blacklist/banned/deletecontacts',
+    method: 'post',
+    data: {
+      keywordsID
+    }
+  })
+}
+
+
+export function deleteIps(keywordsID) {
+  return fetch({
+    url: 'blacklist/banned/deleteips',
+    method: 'post',
+    data: {
+      keywordsID
+    }
+  })
+}
+
+
+export function deleteIds(keywordsID) {
+  return fetch({
+    url: 'blacklist/banned/deleteids',
     method: 'post',
     data: {
       keywordsID

@@ -13,6 +13,10 @@ Mock.mock(/\/user\/info\.*/, 'get', loginAPI.getInfo)
 
 // // 文章相关
 Mock.mock(/\/blacklist\/banned\/getkeywords/, 'get', articleAPI.getList);
+Mock.mock(/\/blacklist\/banned\/getcontacts/, 'get', articleAPI.getList);
+Mock.mock(/\/blacklist\/banned\/getip/, 'get', articleAPI.getList);
+Mock.mock(/\/blacklist\/banned\/getid/, 'get', articleAPI.getList);
+
 Mock.mock(/\/article\/detail/, 'get', articleAPI.getArticle);
 
 // // table example相关
@@ -25,12 +29,28 @@ Mock.mock(/\/search\/user/, 'get', remoteSearchAPI.searchUser);
 // //banned
 
 Mock.mock(/\/blacklist\/banned\/addkeywords/, 'post', bannedAPI)
+Mock.mock(/\/blacklist\/banned\/addcontacts/, 'post', bannedAPI)
+Mock.mock(/\/blacklist\/banned\/addip/, 'post', bannedAPI)
+Mock.mock(/\/blacklist\/banned\/addid/, 'post', bannedAPI)
+
 
 Mock.mock(/\/blacklist\/banned\/updatekeywords/, 'post', bannedAPI)
+Mock.mock(/\/blacklist\/banned\/updatecontacts/, 'post', bannedAPI)
+Mock.mock(/\/blacklist\/banned\/updateip/, 'post', bannedAPI)
+Mock.mock(/\/blacklist\/banned\/updateid/, 'post', bannedAPI)
+
 
 Mock.mock(/\/blacklist\/banned\/changekeywordstatus/, 'post', bannedAPI)
+Mock.mock(/\/blacklist\/banned\/changecontactstatus/, 'post', bannedAPI)
+Mock.mock(/\/blacklist\/banned\/changeipstatus/, 'post', bannedAPI)
+Mock.mock(/\/blacklist\/banned\/changeidstatus/, 'post', bannedAPI)
+
 
 Mock.mock(/\/blacklist\/banned\/deletekeywords/, 'post', bannedAPI)
+Mock.mock(/\/blacklist\/banned\/deletecontacts/, 'post', bannedAPI)
+Mock.mock(/\/blacklist\/banned\/deleteips/, 'post', bannedAPI)
+Mock.mock(/\/blacklist\/banned\/deleteids/, 'post', bannedAPI)
+
 
 Mock.mock(/\/blacklist\/banned\/searchkeywords/, 'get', articleAPI.getList)
 

@@ -1,33 +1,129 @@
 <template>
   <div class="app-container calendar-list-container">
-    <el-tabs v-model="activeName">
-      <el-tab-pane label="关键词" name="first">
-        <keywords></keywords>
-      </el-tab-pane>
-      <el-tab-pane label="联系方式" name="second">
-        <contacts></contacts>
-      </el-tab-pane>
-      <el-tab-pane label="IP" name="third">
-        <userip></userip>
-      </el-tab-pane>
-      <el-tab-pane label="用户ID" name="fourth">
-        <userid></userid>
-      </el-tab-pane>
-    </el-tabs>
+    <div class="filter-container">
+      <el-input style="width: 250px;" class="filter-item" placeholder="请输入关键词" v-model="listQuery.searchKeyword">
+      </el-input>
+      <el-select clearable style="width: 200px" class="filter-item" v-model="listQuery.searchLocation" multiple placeholder="请选择范围">
+        <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
+          <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
+          </el-option>
+        </el-option-group>
+      </el-select>
+      <el-select clearable style="width: 200px" class="filter-item" v-model="listQuery.searchWordstate" placeholder="请选择状态">
+        <el-option v-for="item in wordStateSel" :key="item.value" :label="item.label" :value="item.value">
+        </el-option>
+      </el-select>
+      <el-button class="filter-item" type="primary" v-waves icon="search" @click="getList">搜索</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="plus">添加</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="minus" s @click="deleteKeyword()">删除</el-button>
+      <el-button class="filter-item" type="primary" icon="document">导出</el-button>
+    </div>
+    <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="努力加载中..." border fit highlight-current-row style="width: 100%" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55">
+      </el-table-column>
+      <el-table-column align="center" label="关键词">
+        <template scope="scope">
+          <el-input v-show="scope.row.edit" size="small" v-model="scope.row.keyword"></el-input>
+          <span v-show="!scope.row.edit">{{ scope.row.keyword }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="范围" style="width: 10%">
+        <template scope="scope">
+          <el-select v-model="scope.row.locations" multiple placeholder="请选择" v-show="scope.row.edit">
+            <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
+              <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-option-group>
+          </el-select>
+          <span v-show="!scope.row.edit">{{scope.row.location}}</span>
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="类别">
+        <template scope="scope">
+          <span>{{scope.row.classify}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="有效期" width="270px">
+        <template scope="scope">
+          <span v-show="!scope.row.edit">{{scope.row.validity}}</span>
+          <el-date-picker v-show="scope.row.edit" v-model="scope.row.validity" type="daterange" placeholder="选择日期范围">
+          </el-date-picker>
+        </template>
+      </el-table-column>
+      <el-table-column class-name="status-col" align="center" label="状态" width="80px">
+        <template scope="scope">
+          <el-tag :type="scope.row.wordstate | statusFilter" close-transition>{{scope.row.wordstate}}</el-tag>
+        </template>
+      </el-table-column>
 
+      <el-table-column label="提交人" align="center" width="80px">
+        <template scope="scope">
+          <span>{{scope.row.submitor}}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="操作时间" width="200px">
+        <template scope="scope">
+          <span>{{scope.row.updatetime}}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="操作" width="150px">
+        <template scope="scope">
+          <el-button :type="scope.row.edit?'success':'primary'" @click='updateKeywordDetail(scope.row)' size="small">{{scope.row.edit?'完成':'编辑'}}</el-button>
+          <el-button v-if="scope.row.wordstate!='生效'" size="small" @click="handleModifyStatus(scope.row,'生效')">生效
+          </el-button>
+          <el-button v-if="scope.row.wordstate!='失效'" size="small" type="danger" @click="handleModifyStatus(scope.row,'失效')"> 失效
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div v-show="!listLoading" class="pagination-container">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+      </el-pagination>
+    </div>
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" style="width: 900px;margin-left:23%">
+      <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 300px; margin-left:50px;'>
+        <el-form-item label="关键词">
+          <el-input type="textarea" :rows="2" v-model="temp.keywords" placeholder="请输入关键词,多个以“回车符”换行！"></el-input>
+        </el-form-item>
+        <el-form-item label="范围">
+          <el-select v-model="location" multiple placeholder="请选择范围">
+            <!-- <el-option v-for="item in locationSel" :key="item.label" :label="item.label" :value="item.value">
+                                                                                                                                                                                                                                            </el-option> -->
+            <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
+              <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-option-group>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="分类">
+          <el-select v-model="classify" placeholder="请选择分类">
+            <el-option v-for="item in classifySel" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="有效期">
+          <el-date-picker v-model="validity" type="daterange" placeholder="选择日期范围" @change="dateChange">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="create">创建</el-button>
+          <el-button>取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 <script>
 import { fetchPv, addKeywords, getKeywords, updateKeywords, changeKeywordsStatus, deleteKeywords } from '@/api/banned'
 import waves from '@/directive/waves.js'// 水波纹指令
 import { parseTime } from '@/utils'
-import keywords from './keywords'
-import contacts from './contact'
-import userip from './ip'
-import userid from './id'
+
 export default {
-  name: 'banned-table',
-  components: { keywords, contacts, userip, userid },
+  name: 'keywords',
   directives: {
     waves
   },
@@ -191,18 +287,6 @@ export default {
         this.listLoading = false
       })
     },
-    // searchList() {
-    //   console.log(this.searchKeyword, this.searchLocation, this.listQuery)
-    //   searchKeywords(this.searchKeyword, this.searchLocation, this.searchWordstate, this.listQuery).then(response => {
-    //     console.log(response.data);
-    //     this.list = response.data.items.map(v => {
-    //       this.$set(v, 'edit', false)
-    //       return v
-    //     })
-    //     this.total = response.data.total
-    //     this.listLoading = false
-    //   })
-    // },
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
@@ -268,14 +352,9 @@ export default {
     },
     updateKeywordDetail(row) {
       row.edit = !row.edit
-      // console.log(row.edit);
       if (row.edit) {
         console.log('开启修改');
       } else {
-        // for (const value of row.location) {
-        //   // console.log(value)  // 结果依次为1，2，3
-        //   row.location += value + '、';
-        // }
         if (typeof row.validity[0] === 'object') {
           const validity = this.getYMDTime(row.validity[0]) + ' - ' + this.getYMDTime(row.validity[1]);
           row.validity = validity;
@@ -338,9 +417,10 @@ export default {
       const updatetime = date.getFullYear() + seperator1 + month + seperator1 + strDate + ' ' + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
       let keywords = [];
       keywords = this.temp.keywords.split('\n');
-      console.log(keywords, this.temp.validity, this.temp.submitor, updatetime, this.location, this.temp.wordstate, this.classify);
+      // console.log(keywords, this.temp.validity, this.temp.submitor, updatetime, this.location, this.temp.wordstate, this.classify);
       addKeywords(keywords, this.temp.validity, updatetime, this.temp.submitor, this.location, this.temp.wordstate, this.classify).then(response => {
         console.log(response);
+        this.getList();
         this.$notify({
           title: '成功',
           message: '创建成功',
