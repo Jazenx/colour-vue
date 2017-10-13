@@ -36,6 +36,8 @@ Mock.mock(/\/blacklist\/banned\/searchkeywords/, 'get', articleAPI.getList)
 
 // // content
 Mock.mock(/\/review\/content\/list/, 'get', contentAPI.getList);
+Mock.mock(/\/review\/content\/userlist/, 'get', contentAPI.getList);
+Mock.mock(/\/review\/content\/iplist/, 'get', contentAPI.getList);
 
 Mock.mock(/\/review\/content\/allsubmit/, 'post', bannedAPI)
 

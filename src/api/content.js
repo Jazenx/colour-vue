@@ -10,24 +10,46 @@ export function getContentList(query) {
 }
 
 
-
-export function submitAllList(listInfo) {
+export function getUserInfoList(query) {
   return fetch({
-    url: 'review/content/allsubmit',
-    method: 'post',
-    data: listInfo
+    url: 'review/content/userlist',
+    method: 'get',
+    params: query
+  })
+}
+
+export function getIpInfoList(query) {
+  return fetch({
+    url: 'review/content/iplist',
+    method: 'get',
+    params: query
   })
 }
 
 
 
-export function submitOneOperation(rowkey, opt) {
+
+export function submitAllList(listInfo, submitor) {
+  return fetch({
+    url: 'review/content/allsubmit',
+    method: 'post',
+    data: {
+      listInfo,
+      submitor
+    }
+  })
+}
+
+
+
+export function submitOneOperation(rowkey, opt, submitor) {
   return fetch({
     url: 'review/content/submitOneOperation',
     method: 'post',
     data: {
       rowkey,
-      opt
+      opt,
+      submitor
     }
   })
 }

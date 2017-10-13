@@ -48,6 +48,18 @@ export const constantRouterMap = [
     }]
   },
   {
+    path: '/userinfo',
+    name: '用户详情',
+    component: _import('review/userinfo'),
+    hidden: true
+  },
+  {
+    path: '/ipinfo',
+    name: 'IP详情',
+    component: _import('review/ipinfo'),
+    hidden: true
+  },
+  {
     path: '/banned',
     component: Layout,
     redirect: '/banned',

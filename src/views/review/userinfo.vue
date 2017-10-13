@@ -184,7 +184,7 @@
 import Sticky from '@/components/Sticky' // 粘性header组件
 import waves from '@/directive/waves.js'// 水波纹指令
 import BackToTop from '@/components/BackToTop'
-import { getContentList, submitAllList, submitOneOperation } from '@/api/content'
+import { getUserInfoList, submitAllList, submitOneOperation } from '@/api/content'
 
 export default {
   name: 'contentTemplate',
@@ -226,7 +226,8 @@ export default {
         timeDayPick: getNowDay(),
         locations: [],
         seachCondition: null,  //  查询种类 默认全部
-        seachContent: null //  查询详情 默认全部
+        seachContent: null, //  查询详情 默认全部
+        userid: null    // 用户id
       },
       seachCondition: '',
       seachContent: '',
@@ -344,12 +345,14 @@ export default {
     }
   },
   created() {
-    this.getList()
+    this.listQuery.userid = this.$route.query.userid;
+    console.log(this.listQuery.userid);
+    this.getList();
   },
   methods: {
     getList() {
       this.listLoading = true
-      getContentList(this.listQuery).then(response => {
+      getUserInfoList(this.listQuery).then(response => {
         console.log(response.data);
         this.list = response.data.items.map(v => {
           const content = v.content.replace(new RegExp(v.keyword, 'ig'), '<span style="color: red;font-weight: bold;background-color: yellow;">' + v.keyword + '</span>')
@@ -510,7 +513,7 @@ export default {
     listQuery: {
       handler(newValue) {
         this.listLoading = true
-        getContentList(newValue).then(response => {
+        getUserInfoList(newValue).then(response => {
           this.list = response.data.items.map(v => {
             const content = v.content.replace(new RegExp(v.keyword, 'ig'), '<span style="color: red;font-weight: bold;background-color: yellow;">' + v.keyword + '</span>')
             this.$set(v, 'content', content);
@@ -548,7 +551,8 @@ export default {
 }
 
 .detail-box {
-  border: 1px solid #d3dce6; // background: #F0FFFF
+  border: 1px solid #d3dce6;
+  background: #F0FFFF
 }
 
 .aTitle {
