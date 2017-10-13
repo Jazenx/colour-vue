@@ -42,5 +42,7 @@ Mock.mock(/\/review\/content\/iplist/, 'get', contentAPI.getList);
 Mock.mock(/\/review\/content\/allsubmit/, 'post', bannedAPI)
 
 Mock.mock(/\/review\/content\/submitOneOperation/, 'post', bannedAPI)
+Mock.mock(/\/review\/ipcontent\/list/, 'get', contentAPI.getIpList);
+Mock.mock(/\/review\/idcontent\/list/, 'get', contentAPI.getIdList);
 
 export default Mock;

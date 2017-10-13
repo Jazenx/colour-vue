@@ -53,3 +53,21 @@ export function submitOneOperation(rowkey, opt, submitor) {
     }
   })
 }
+
+
+export function getUserIPWorkStation(query) {
+  return fetch({
+    url: 'review/ipcontent/list',
+    method: 'get',
+    params: query
+  })
+}
+
+
+export function getUserIDWorkStation(query) {
+  return fetch({
+    url: 'review/idcontent/list',
+    method: 'get',
+    params: query
+  })
+}

@@ -93,6 +93,18 @@ export const asyncRouterMap = [
         component: _import('review/content'),
         icon: 'fenxi',
         name: '内容'
+      },
+      {
+        path: 'ipcontent',
+        component: _import('review/ipcontent'),
+        icon: 'fenxi',
+        name: '用户IP'
+      },
+      {
+        path: 'idcontent',
+        component: _import('review/idcontent'),
+        icon: 'fenxi',
+        name: '用户ID'
       }
     ]
   },
