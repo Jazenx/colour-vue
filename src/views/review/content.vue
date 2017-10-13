@@ -4,12 +4,12 @@
     <div class="main-container">
       <div style="margin: 20px">
         <div>
-          <el-button type="info" size="small">全部</el-button>
-          <el-button type="info" size="small">待审</el-button>
-          <el-button type="info" size="small">删除</el-button>
-          <el-button type="info" size="small">通过</el-button>
-          <el-button type="info" size="small">误删</el-button>
-          <el-button type="info" size="small">漏删</el-button>
+          <el-button type="info" size="small" @click="changeState(0)">全部</el-button>
+          <el-button type="info" size="small" @click="changeState(1)">待审</el-button>
+          <el-button type="info" size="small" @click="changeState(2)">删除</el-button>
+          <el-button type="info" size="small" @click="changeState(3)">通过</el-button>
+          <el-button type="info" size="small" @click="changeState(4)">误删</el-button>
+          <el-button type="info" size="small" @click="changeState(5)">漏删</el-button>
           <el-button type="info" size="small">复议</el-button>
           <el-select v-model="listQuery.timeHourpick" placeholder="请选择时间段" style="float:right; width:110px">
             <el-option v-for="item in timeSel" :key="item.value" :label="item.label" :value="item.value">
@@ -125,17 +125,17 @@
                 <a class="aHref">{{item.ip}}</a> | {{item.subtime}}</p>
             </el-row>
             <el-row>
-              <el-col :span="20" style="display: flex;align-items: center;height:22px">
+              <el-col :span="20" style="display: flex;align-items: center;height:40px">
                 <p class="infoGrey">帖子ID:{{item.pid}}</p>
                 <p class="infoGrey" style="margin-left:15px">主题ID:{{item.threadid}}</p>
                 <p class="infoGrey" style="margin-left:15px">提交时间:{{item.subtime}}</p>
                 <p class="infoGrey" style="margin-left:30px" v-if="item.submitor != null">操作者:{{item.submitor}}</p>
               </el-col>
-              <el-col :span="4" style="display: flex;justify-content: center;align-items: center;height:22px">
+              <el-col :span="4" style="display: flex;justify-content: center;align-items: center;height:40px">
                 <h4 class="infoGrey">{{item.state}}</h4>
               </el-col>
             </el-row>
-            <el-row style="border: 1px solid #d3dce6;background: #f3f3f3;height:130px;overflow:auto" v-html="item.content">
+            <el-row style="border: 1px solid #d3dce6;background: #f3f3f3;height:130px;overflow:auto；margin-top:100px" v-html="item.content">
               {{item.content}}
             </el-row>
             <el-row>
@@ -330,10 +330,6 @@ export default {
         return this.checkedCount === this.list.length;
       },
       set(value) {
-        this.$message({
-          type: 'warning',
-          message: '超过五十条全选可能失败'
-        });
         this.lists = this.list.map(item => {
           item.checked = value;
           return item;
@@ -431,6 +427,56 @@ export default {
           duration: 2000
         })
       })
+    },
+    changeState(state) {
+      if (state === 0) {
+        this.listQuery.currentState = 0;
+        this.listQuery.humanReview = 1;
+        this.listQuery.contentType = 0;
+        this.listQuery.indentifyType = 0;
+        this.listQuery.recognitionType = 0;
+        this.listQuery.colourdataType = 0;
+      }
+      if (state === 1) {
+        this.listQuery.currentState = 4;
+        this.listQuery.humanReview = 1;
+        this.listQuery.contentType = 0;
+        this.listQuery.indentifyType = 0;
+        this.listQuery.recognitionType = 0;
+        this.listQuery.colourdataType = 0;
+      }
+      if (state === 2) {
+        this.listQuery.currentState = 3;
+        this.listQuery.humanReview = 1;
+        this.listQuery.contentType = 0;
+        this.listQuery.indentifyType = 0;
+        this.listQuery.recognitionType = 0;
+        this.listQuery.colourdataType = 0;
+      }
+      if (state === 3) {
+        this.listQuery.currentState = 1;
+        this.listQuery.humanReview = 1;
+        this.listQuery.contentType = 0;
+        this.listQuery.indentifyType = 0;
+        this.listQuery.recognitionType = 0;
+        this.listQuery.colourdataType = 0;
+      }
+      if (state === 4) {
+        this.listQuery.currentState = 1;
+        this.listQuery.humanReview = 2;
+        this.listQuery.contentType = 0;
+        this.listQuery.indentifyType = 0;
+        this.listQuery.recognitionType = 0;
+        this.listQuery.colourdataType = 3;
+      }
+      if (state === 5) {
+        this.listQuery.currentState = 3;
+        this.listQuery.humanReview = 2;
+        this.listQuery.contentType = 0;
+        this.listQuery.indentifyType = 0;
+        this.listQuery.recognitionType = 0;
+        this.listQuery.colourdataType = 1;
+      }
     }
   },
   watch: {
