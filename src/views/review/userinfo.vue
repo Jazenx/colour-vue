@@ -94,12 +94,15 @@
         <el-button class="filter-item" type="success" style="float:left;margin-left:20px;margin-top:8px" v-waves icon="search" @click="getList">搜索</el-button>
       </sticky>
       <div style="margin: 15px 0;"></div>
-      <div style="margin: 15px; display: flex;justify-content: flex-end;">
-        <el-button type="primary" size="small" @click="passAllContent">全部通过</el-button>
-        <el-button type="primary" size="small" @click="deleteAllContent">全部删除</el-button>
-        <el-button type="primary" size="small" @click="ignoreAllContent">全部忽略</el-button>
-        <el-button type="primary" size="small" @click="cancelAllContent">全部取消</el-button>
-        <el-button type="success" @click="submitAllOperation">提交</el-button>
+      <div style="margin: 15px; display: flex;justify-content:space-between;">
+        <label style="float:left">总量：{{total}}</label>
+        <div>
+          <el-button type="primary" size="small" @click="passAllContent">全部通过</el-button>
+          <el-button type="primary" size="small" @click="deleteAllContent">全部删除</el-button>
+          <el-button type="primary" size="small" @click="ignoreAllContent">全部忽略</el-button>
+          <el-button type="primary" size="small" @click="cancelAllContent">全部取消</el-button>
+          <el-button type="success" @click="submitAllOperation">提交</el-button>
+        </div>
       </div>
       <div style="margin: 15px;   display: flex;justify-content: space-between;">
         <el-checkbox size="large" v-model="checkAll">全选</el-checkbox>
