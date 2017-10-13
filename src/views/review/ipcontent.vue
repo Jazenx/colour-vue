@@ -56,14 +56,11 @@
           <el-form-item label="识别类型:">
             <el-radio-group v-model="listQuery.indentifyType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
-              <el-radio-button label="1">违法</el-radio-button>
-              <el-radio-button label="2">违约</el-radio-button>
-              <el-radio-button label="3">低俗</el-radio-button>
-              <el-radio-button label="4">色情</el-radio-button>
-              <el-radio-button label="5">敏感</el-radio-button>
-              <el-radio-button label="6">灌水</el-radio-button>
-              <el-radio-button label="7">个性</el-radio-button>
-              <el-radio-button label="8">跨站</el-radio-button>
+              <el-radio-button label="1">涉政</el-radio-button>
+              <el-radio-button label="2">涉黄</el-radio-button>
+              <el-radio-button label="3">涉恐</el-radio-button>
+              <el-radio-button label="4">广告</el-radio-button>
+              <el-radio-button label="5">低俗</el-radio-button>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="识别类型:">
@@ -280,8 +277,6 @@ export default {
     getList() {
       this.listLoading = true
       getUserIPWorkStation(this.listQuery).then(response => {
-        console.log('<-------------->');
-        console.log(response.data);
         this.list = response.data.items;
         this.total = response.data.total
         this.listLoading = false
@@ -351,8 +346,8 @@ export default {
       handler(newValue) {
         this.listLoading = true
         getUserIPWorkStation(newValue).then(response => {
-          this.list = response.data;
-          this.total = response.data.total;
+          this.list = response.data.items;
+          this.total = response.data.total
           this.listLoading = false
         })
       },
