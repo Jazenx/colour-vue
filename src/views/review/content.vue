@@ -15,7 +15,7 @@
             <el-option v-for="item in timeSel" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
-          <el-date-picker v-model="listQuery.timeDayPick" type="date" placeholder="选择日期" style="float:right;margin-right:30px;width:120px">
+          <el-date-picker v-model="listQuery.timeDayPick" type="date" placeholder="选择日期" style="float:right;margin-right:30px;width:120px" format="yyyy-MM-dd" @change="dateChange">
           </el-date-picker>
         </div>
         <div style="margin: 15px 0;"></div>
@@ -194,19 +194,6 @@ export default {
     waves
   },
   data() {
-    function getNowDay() {
-      const date = new Date();
-      const seperator1 = '-';
-      let month = date.getMonth() + 1;
-      let strDate = date.getDate();
-      if (month >= 1 && month <= 9) {
-        month = '0' + month;
-      }
-      if (strDate >= 0 && strDate <= 9) {
-        strDate = '0' + strDate;
-      }
-      return date.getFullYear() + seperator1 + month + seperator1 + strDate;
-    }
     return {
       testInfo: '本人最近打算换车，10年的大众要退休了，皮实耐用，用料厚道是这10年来用车经验对我选下一款车所留下的深刻影响，上网站搜了搜，正好看到最近这款车上了首页SUV，看了看大家分享的雪铁龙经验，觉得挺符合我的要求，直奔4S看实车。 &nbsp;&nbsp;&nbsp;&nbsp;先说外型，这车，不喜欢的人绝对认为它丑得一塌糊涂，不过我承认还是电到我了，我本人其实很喜欢MINI那种圆了咕噜的休闲风格，喜欢轻松自在自由随意的驾驶感觉，这车一眼看去就让人感觉很悠闲但又具有自己的独特风格，外型高水平过关了，另外加一句，实车绝对比网上照片还要好看，不知道摄像师们都什么水平啊 &nbsp;&nbsp;&nbsp;&nbsp;再看内饰，撞色现在好像挺流行，不过我还是喜欢纯色的，到时候再说吧。话说法国人造车确实感觉脑子是实芯的呆呆的，面子功夫一点不会做，内饰进去根本感不到能和豪华挂钩，主驾驶车窗那个控制面板按键用手去按竟然还能左右咣当，松松垮垮，不知道是不是就展车这样，还是都这样，中控台硬塑，真是可惜了电子档杆和仪表盘这么高科技感的配件了。座椅看起来挺单薄，坐上去感觉倒是还可以，前后排空间和顶部高度绝对OK，够用，内饰勉强过关吧，毕竟本身就想选一辆很休闲的车，只要不是丑的过分，内饰豪华不豪华的不会产生决定',
       list: [],
@@ -223,7 +210,7 @@ export default {
         recognitionType: 0,
         colourdataType: 0,
         timeHourpick: '0024',
-        timeDayPick: getNowDay(),
+        timeDayPick: this.getNowDay(),
         locations: [],
         seachCondition: null,  //  查询种类 默认全部
         seachContent: null //  查询详情 默认全部
@@ -349,6 +336,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
+      console.log(this.listQuery)
       getContentList(this.listQuery).then(response => {
         console.log(response.data);
         this.list = response.data.items.map(v => {
@@ -442,9 +430,10 @@ export default {
       })
     },
     submitOneOperation(row, index, opt) {
-      // console.log(row.rowkey, index, opt);
       this.submitor = 'test1'; // 获取操作者名字
-      this.list.splice(index, 1);
+      console.log(row.rowkey, opt, this.submitor);
+      // this.list.splice(index, 1);
+      // console.log(this.list.splice(index, 1));
       submitOneOperation(row.rowkey, opt, this.submitor).then(response => {
         console.log(response);
         this.$notify({
@@ -504,12 +493,50 @@ export default {
         this.listQuery.recognitionType = 0;
         this.listQuery.colourdataType = 1;
       }
+    },
+    getYMDTime(date) {
+      if (typeof date !== 'object') {
+        console.log('不是日期对象');
+        return null;
+      }
+      const seperator1 = '-';
+      let month = date.getMonth() + 1;
+      let strDate = date.getDate();
+      if (month >= 1 && month <= 9) {
+        month = '0' + month;
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = '0' + strDate;
+      }
+      return date.getFullYear() + seperator1 + month + seperator1 + strDate;
+    },
+    getNowDay() {
+      const date = new Date();
+      const seperator1 = '-';
+      let month = date.getMonth() + 1;
+      let strDate = date.getDate();
+      if (month >= 1 && month <= 9) {
+        month = '0' + month;
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = '0' + strDate;
+      }
+      return date.getFullYear() + seperator1 + month + seperator1 + strDate;
+    },
+    dateChange(val) {
+      console.log(val);
+      return this.listQuery.timeDayPick = val;
     }
   },
   watch: {
     listQuery: {
       handler(newValue) {
         this.listLoading = true
+        if (newValue.timeDayPick === '' || newValue.timeDayPick == null) {
+          newValue.timeDayPick = this.getNowDay();
+        }
+        console.log(newValue.timeDayPick);
+        console.log(newValue);
         getContentList(newValue).then(response => {
           this.list = response.data.items.map(v => {
             const content = v.content.replace(new RegExp(v.keyword, 'ig'), '<span style="color: red;font-weight: bold;background-color: yellow;">' + v.keyword + '</span>')

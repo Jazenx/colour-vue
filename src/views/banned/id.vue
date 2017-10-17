@@ -1,7 +1,7 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <el-input style="width: 250px;" class="filter-item" placeholder="请输入IP" v-model="listQuery.searchKeyword">
+      <el-input style="width: 250px;" class="filter-item" placeholder="请输入用户ID" v-model="listQuery.searchKeyword">
       </el-input>
       <el-select clearable style="width: 200px" class="filter-item" v-model="listQuery.searchLocation" multiple placeholder="请选择范围">
         <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">

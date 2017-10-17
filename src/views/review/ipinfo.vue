@@ -15,7 +15,7 @@
             <el-option v-for="item in timeSel" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
-          <el-date-picker v-model="listQuery.timeDayPick" type="date" placeholder="选择日期" style="float:right;margin-right:30px;width:120px">
+          <el-date-picker v-model="listQuery.timeDayPick" type="date" placeholder="选择日期" style="float:right;margin-right:30px;width:120px" format="yyyy-MM-dd" @change="dateChange">
           </el-date-picker>
         </div>
         <div style="margin: 15px 0;"></div>
@@ -194,19 +194,6 @@ export default {
     waves
   },
   data() {
-    function getNowDay() {
-      const date = new Date();
-      const seperator1 = '-';
-      let month = date.getMonth() + 1;
-      let strDate = date.getDate();
-      if (month >= 1 && month <= 9) {
-        month = '0' + month;
-      }
-      if (strDate >= 0 && strDate <= 9) {
-        strDate = '0' + strDate;
-      }
-      return date.getFullYear() + seperator1 + month + seperator1 + strDate;
-    }
     return {
       testRadio: undefined,
       testArea: '<span style="color: red;font-weight: bold;background-color: yellow;">草泥马</span>三轮全责，不要掏钱了事……凭啥给。下来就跟他要驾驶证，没有就说，你这属于机动车，无牌无证，按交通法需要扣你车，外加行政拘留。先吓唬他，让他赔钱，不行就报警。现在我们这里摩托电动三轮查的严的很。至于给他钱，凭啥？你自己修车还得第二年保费上涨呢。习大大提出法治社会，行人闯红灯都赔汽车了，别怕',
@@ -224,7 +211,7 @@ export default {
         recognitionType: 0,
         colourdataType: 0,
         timeHourpick: '0024',
-        timeDayPick: getNowDay(),
+        timeDayPick: this.getNowDay(),
         locations: [],
         seachCondition: null,  //  查询种类 默认全部
         seachContent: null, //  查询详情 默认全部
@@ -507,12 +494,32 @@ export default {
         this.listQuery.recognitionType = 0;
         this.listQuery.colourdataType = 1;
       }
+    },
+    getNowDay() {
+      const date = new Date();
+      const seperator1 = '-';
+      let month = date.getMonth() + 1;
+      let strDate = date.getDate();
+      if (month >= 1 && month <= 9) {
+        month = '0' + month;
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = '0' + strDate;
+      }
+      return date.getFullYear() + seperator1 + month + seperator1 + strDate;
+    },
+    dateChange(val) {
+      console.log(val);
+      return this.listQuery.timeDayPick = val;
     }
   },
   watch: {
     listQuery: {
       handler(newValue) {
         this.listLoading = true
+        if (newValue.timeDayPick === '' || newValue.timeDayPick == null) {
+          newValue.timeDayPick = this.getNowDay();
+        }
         getIpInfoList(newValue).then(response => {
           this.list = response.data.items.map(v => {
             const content = v.content.replace(new RegExp(v.keyword, 'ig'), '<span style="color: red;font-weight: bold;background-color: yellow;">' + v.keyword + '</span>')
