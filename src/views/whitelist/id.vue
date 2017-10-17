@@ -108,7 +108,7 @@
   </div>
 </template>
 <script>
-import { fetchPv, addId, getId, updateId, changeIdStatus, deleteIds } from '@/api/banned'
+import { addId, getId, updateId, changeIdStatus, deleteIds } from '@/api/whitelist'
 import waves from '@/directive/waves.js'// 水波纹指令
 import { parseTime } from '@/utils'
 
@@ -454,12 +454,6 @@ export default {
         status: 'published',
         type: ''
       }
-    },
-    handleFetchPv(pv) {
-      fetchPv(pv).then(response => {
-        this.pvData = response.data.pvData
-        this.dialogPvVisible = true
-      })
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => {

@@ -83,8 +83,8 @@
     </div>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" style="width: 900px;margin-left:23%">
       <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 300px; margin-left:50px;'>
-        <el-form-item label="联系方式">
-          <el-input type="textarea" :rows="2" v-model="temp.keywords" placeholder="请输入联系方式,多个以“回车符”换行！"></el-input>
+        <el-form-item label="IP">
+          <el-input type="textarea" :rows="2" v-model="temp.keywords" placeholder="请输入IP,多个以“回车符”换行！"></el-input>
         </el-form-item>
         <el-form-item label="范围">
           <el-select v-model="location" multiple placeholder="请选择范围">

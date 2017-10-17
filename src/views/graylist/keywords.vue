@@ -1,16 +1,13 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <el-input style="width: 250px;" class="filter-item" placeholder="请输入用户ID" v-model="listQuery.searchKeyword">
+      <el-input style="width: 250px;" class="filter-item" placeholder="请输入关键词" v-model="listQuery.searchKeyword">
       </el-input>
       <el-select clearable style="width: 200px" class="filter-item" v-model="listQuery.searchLocation" multiple placeholder="请选择范围">
         <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
           <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-option-group>
-      </el-select>
-      <el-input style="width: 250px;" class="filter-item" placeholder="请输入提交人" v-model="listQuery.searchSubmitor">
-      </el-input>
       </el-select>
       <el-select clearable style="width: 200px" class="filter-item" v-model="listQuery.searchWordstate" placeholder="请选择状态">
         <el-option v-for="item in wordStateSel" :key="item.value" :label="item.label" :value="item.value">
@@ -24,7 +21,7 @@
     <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="努力加载中..." border fit highlight-current-row style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55">
       </el-table-column>
-      <el-table-column align="center" label="用户ID">
+      <el-table-column align="center" label="关键词">
         <template scope="scope">
           <el-input v-show="scope.row.edit" size="small" v-model="scope.row.keyword"></el-input>
           <span v-show="!scope.row.edit">{{ scope.row.keyword }}</span>
@@ -40,6 +37,11 @@
           </el-select>
           <span v-show="!scope.row.edit">{{scope.row.location}}</span>
           </span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="类别">
+        <template scope="scope">
+          <span>{{scope.row.classify}}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="有效期" width="270px">
@@ -83,18 +85,26 @@
     </div>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" style="width: 900px;margin-left:23%">
       <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 300px; margin-left:50px;'>
-        <el-form-item label="ID">
-          <el-input type="textarea" :rows="2" v-model="temp.keywords" placeholder="请输入ID,多个以“回车符”换行！"></el-input>
+        <el-form-item label="关键词">
+          <el-input type="textarea" :rows="2" v-model="temp.keywords" placeholder="请输入关键词,多个以“回车符”换行！"></el-input>
         </el-form-item>
         <el-form-item label="范围">
           <el-select v-model="location" multiple placeholder="请选择范围">
-            <!-- <el-option v-for="item in locationSel" :key="item.label" :label="item.label" :value="item.value">                                                                                                                                                                            </el-option> -->
+            <!-- <el-option v-for="item in locationSel" :key="item.label" :label="item.label" :value="item.value">
+                                                                                                                                                                                                                                            </el-option> -->
             <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
               <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-option-group>
           </el-select>
         </el-form-item>
+        <el-form-item label="分类">
+          <el-select v-model="classify" placeholder="请选择分类">
+            <el-option v-for="item in classifySel" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
         <el-form-item label="有效期">
           <el-date-picker v-model="validity" type="daterange" placeholder="选择日期范围" @change="dateChange">
           </el-date-picker>
@@ -108,12 +118,12 @@
   </div>
 </template>
 <script>
-import { fetchPv, addId, getId, updateId, changeIdStatus, deleteIds } from '@/api/banned'
+import { addKeywords, getKeywords, updateKeywords, changeKeywordsStatus, deleteKeywords } from '@/api/graylist'
 import waves from '@/directive/waves.js'// 水波纹指令
 import { parseTime } from '@/utils'
 
 export default {
-  name: 'userid',
+  name: 'keywords',
   directives: {
     waves
   },
@@ -128,7 +138,6 @@ export default {
         limit: 10,
         searchKeyword: null,
         searchLocation: [],
-        searchSubmitor: null,
         searchWordstate: null
       },
       // searchKeyword: '',
@@ -159,26 +168,20 @@ export default {
       // searchWordstate: '全部',
       classify: '',
       classifySel: [{
-        value: 'QQ',
-        label: 'QQ'
+        value: '涉政',
+        label: '涉政'
       }, {
-        value: '微信',
-        label: '微信'
+        value: '涉黄',
+        label: '涉黄'
       }, {
-        value: '固定电话',
-        label: '固定电话'
+        value: '涉恐',
+        label: '涉恐'
       }, {
-        value: '手机号',
-        label: '手机号'
+        value: '广告',
+        label: '广告'
       }, {
-        value: 'URL',
-        label: 'URL'
-      }, {
-        value: 'MSN',
-        label: 'MSN'
-      }, {
-        value: '电子邮件',
-        label: '电子邮件'
+        value: '低俗',
+        label: '低俗'
       }],
       wordStateSel: [{
         value: '全部',
@@ -270,9 +273,8 @@ export default {
   },
   methods: {
     getList() {
-      console.log(this.listQuery);
       this.listLoading = true
-      getId(this.listQuery).then(response => {
+      getKeywords(this.listQuery).then(response => {
         console.log(response.data);
         this.list = response.data.items.map(v => {
           let location = [];
@@ -304,7 +306,7 @@ export default {
         type: 'warning'
       }).then(() => {
         row.wordstate = status
-        changeIdStatus(row.id, status).then(response => {
+        changeKeywordsStatus(row.id, status).then(response => {
           console.log(response);
           this.$message({
             message: '操作成功',
@@ -365,7 +367,7 @@ export default {
           tempLocation += v + '、';
         }
         row.location = tempLocation.substr(0, tempLocation.length - 1)
-        updateId(row.id, row.keyword, row.validity, row.updatetime, row.submitor, row.location).then(response => {
+        updateKeywords(row.id, row.keyword, row.validity, row.updatetime, row.submitor, row.location).then(response => {
           console.log(response);
           this.$notify({
             title: '成功',
@@ -415,8 +417,8 @@ export default {
       const updatetime = date.getFullYear() + seperator1 + month + seperator1 + strDate + ' ' + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
       let keywords = [];
       keywords = this.temp.keywords.split('\n');
-      console.log(keywords, this.temp.validity, this.temp.submitor, updatetime, this.location, this.temp.wordstate, this.classify);
-      addId(keywords, this.temp.validity, updatetime, this.temp.submitor, this.location, this.temp.wordstate).then(response => {
+      // console.log(keywords, this.temp.validity, this.temp.submitor, updatetime, this.location, this.temp.wordstate, this.classify);
+      addKeywords(keywords, this.temp.validity, updatetime, this.temp.submitor, this.location, this.temp.wordstate, this.classify).then(response => {
         console.log(response);
         this.getList();
         this.$notify({
@@ -455,12 +457,6 @@ export default {
         type: ''
       }
     },
-    handleFetchPv(pv) {
-      fetchPv(pv).then(response => {
-        this.pvData = response.data.pvData
-        this.dialogPvVisible = true
-      })
-    },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => {
         if (j === 'timestamp') {
@@ -485,12 +481,12 @@ export default {
       }
     },
     deleteKeyword() {
-      this.$confirm('此操作将批量删除id, 是否继续?', '提示', {
+      this.$confirm('此操作将批量删除关键词, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'error'
       }).then(() => {
-        deleteIds(this.multipleSelection).then(response => {
+        deleteKeywords(this.multipleSelection).then(response => {
           console.log(response);
           this.$notify({
             title: '成功',

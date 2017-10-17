@@ -69,6 +69,17 @@ export const constantRouterMap = [
       path: 'index',
       component: _import('banned/index')
     }]
+  },
+  {
+    path: '/whitelist',
+    component: Layout,
+    redirect: '/whitelist',
+    name: '白名单',
+    hidden: true,
+    children: [{
+      path: 'index',
+      component: _import('whitelist/index')
+    }]
   }
 ]
 
@@ -109,17 +120,29 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '/banned',
+    path: '/usercenter',
     component: Layout,
-    redirect: '/banned/index',
+    redirect: '/usercenter/index',
     name: '客户中心',
     icon: 'shuju',
     children: [
       {
-        path: 'index',
+        path: 'blacklist',
         component: _import('banned/index'),
         icon: 'jiankong',
         name: '黑名单'
+      },
+      {
+        path: 'whitelist',
+        component: _import('whitelist/index'),
+        icon: 'jiankong',
+        name: '白名单'
+      },
+      {
+        path: 'graylist',
+        component: _import('graylist/index'),
+        icon: 'jiankong',
+        name: '灰名单'
       }
     ]
   },

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container calendar-list-container">
     <div class="filter-container">
-      <el-input style="width: 250px;" class="filter-item" placeholder="请输入用户ID" v-model="listQuery.searchKeyword">
+      <el-input style="width: 250px;" class="filter-item" placeholder="请输入IP" v-model="listQuery.searchKeyword">
       </el-input>
       <el-select clearable style="width: 200px" class="filter-item" v-model="listQuery.searchLocation" multiple placeholder="请选择范围">
         <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
@@ -24,7 +24,7 @@
     <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="努力加载中..." border fit highlight-current-row style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55">
       </el-table-column>
-      <el-table-column align="center" label="用户ID">
+      <el-table-column align="center" label="IP">
         <template scope="scope">
           <el-input v-show="scope.row.edit" size="small" v-model="scope.row.keyword"></el-input>
           <span v-show="!scope.row.edit">{{ scope.row.keyword }}</span>
@@ -83,8 +83,8 @@
     </div>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" style="width: 900px;margin-left:23%">
       <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 300px; margin-left:50px;'>
-        <el-form-item label="ID">
-          <el-input type="textarea" :rows="2" v-model="temp.keywords" placeholder="请输入ID,多个以“回车符”换行！"></el-input>
+        <el-form-item label="IP">
+          <el-input type="textarea" :rows="2" v-model="temp.keywords" placeholder="请输入IP,多个以“回车符”换行！"></el-input>
         </el-form-item>
         <el-form-item label="范围">
           <el-select v-model="location" multiple placeholder="请选择范围">
@@ -108,12 +108,12 @@
   </div>
 </template>
 <script>
-import { fetchPv, addId, getId, updateId, changeIdStatus, deleteIds } from '@/api/banned'
+import { addIp, getIp, updateIp, changeIpStatus, deleteIps } from '@/api/whitelist'
 import waves from '@/directive/waves.js'// 水波纹指令
 import { parseTime } from '@/utils'
 
 export default {
-  name: 'userid',
+  name: 'userip',
   directives: {
     waves
   },
@@ -272,7 +272,7 @@ export default {
     getList() {
       console.log(this.listQuery);
       this.listLoading = true
-      getId(this.listQuery).then(response => {
+      getIp(this.listQuery).then(response => {
         console.log(response.data);
         this.list = response.data.items.map(v => {
           let location = [];
@@ -304,7 +304,7 @@ export default {
         type: 'warning'
       }).then(() => {
         row.wordstate = status
-        changeIdStatus(row.id, status).then(response => {
+        changeIpStatus(row.id, status).then(response => {
           console.log(response);
           this.$message({
             message: '操作成功',
@@ -365,7 +365,7 @@ export default {
           tempLocation += v + '、';
         }
         row.location = tempLocation.substr(0, tempLocation.length - 1)
-        updateId(row.id, row.keyword, row.validity, row.updatetime, row.submitor, row.location).then(response => {
+        updateIp(row.id, row.keyword, row.validity, row.updatetime, row.submitor, row.location).then(response => {
           console.log(response);
           this.$notify({
             title: '成功',
@@ -416,7 +416,7 @@ export default {
       let keywords = [];
       keywords = this.temp.keywords.split('\n');
       console.log(keywords, this.temp.validity, this.temp.submitor, updatetime, this.location, this.temp.wordstate, this.classify);
-      addId(keywords, this.temp.validity, updatetime, this.temp.submitor, this.location, this.temp.wordstate).then(response => {
+      addIp(keywords, this.temp.validity, updatetime, this.temp.submitor, this.location, this.temp.wordstate).then(response => {
         console.log(response);
         this.getList();
         this.$notify({
@@ -485,12 +485,12 @@ export default {
       }
     },
     deleteKeyword() {
-      this.$confirm('此操作将批量删除id, 是否继续?', '提示', {
+      this.$confirm('此操作将批量删除ip, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'error'
       }).then(() => {
-        deleteIds(this.multipleSelection).then(response => {
+        deleteIps(this.multipleSelection).then(response => {
           console.log(response);
           this.$notify({
             title: '成功',
