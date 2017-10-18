@@ -13,6 +13,8 @@ Mock.mock(/\/user\/info\.*/, 'get', loginAPI.getInfo)
 
 // // 文章相关
 Mock.mock(/\/blacklist\/banned\/getkeywords/, 'get', articleAPI.getList);
+
+
 Mock.mock(/\/blacklist\/banned\/getcontacts/, 'get', articleAPI.getList);
 Mock.mock(/\/blacklist\/banned\/getip/, 'get', articleAPI.getList);
 Mock.mock(/\/blacklist\/banned\/getid/, 'get', articleAPI.getList);
@@ -89,5 +91,7 @@ Mock.mock(/\/review\/content\/allsubmit/, 'post', bannedAPI)
 Mock.mock(/\/review\/content\/submitOneOperation/, 'post', bannedAPI)
 Mock.mock(/\/review\/ipcontent\/list/, 'get', contentAPI.getIpList);
 Mock.mock(/\/review\/idcontent\/list/, 'get', contentAPI.getIdList);
+
+Mock.mock(/\/review\/ipworkstation\/list/, 'get', contentAPI.getList);
 
 export default Mock;

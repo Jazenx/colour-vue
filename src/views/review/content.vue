@@ -186,6 +186,7 @@ import Sticky from '@/components/Sticky' // 粘性header组件
 import waves from '@/directive/waves.js'// 水波纹指令
 import BackToTop from '@/components/BackToTop'
 import { getContentList, submitAllList, submitOneOperation } from '@/api/content'
+import store from '../../store'
 
 export default {
   name: 'contentTemplate',
@@ -336,7 +337,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      console.log(this.listQuery)
+      // console.log(this.listQuery)
       getContentList(this.listQuery).then(response => {
         console.log(response.data);
         this.list = response.data.items.map(v => {
@@ -356,7 +357,7 @@ export default {
           }
           return v
         })
-        console.log(this.list);
+        // console.log(this.list);
         this.total = response.data.total
         this.listLoading = false
       })
@@ -416,8 +417,7 @@ export default {
         this.massList.push(mass);
         return v
       })
-      this.submitor = 'test1';
-      console.log(this.massList);
+      this.submitor = store.state.user.name; // 获取操作者名字
       submitAllList(this.massList, this.submitor).then(response => {
         console.log(response);
         this.$notify({
@@ -430,10 +430,7 @@ export default {
       })
     },
     submitOneOperation(row, index, opt) {
-      this.submitor = 'test1'; // 获取操作者名字
-      console.log(row.rowkey, opt, this.submitor);
-      // this.list.splice(index, 1);
-      // console.log(this.list.splice(index, 1));
+      this.submitor = store.state.user.name; // 获取操作者名字
       submitOneOperation(row.rowkey, opt, this.submitor).then(response => {
         console.log(response);
         this.$notify({

@@ -124,6 +124,7 @@
 import { fetchPv, addContacts, getContacts, updateContacts, changeContactsStatus, deleteContacts } from '@/api/banned'
 import waves from '@/directive/waves.js'// 水波纹指令
 import { parseTime } from '@/utils'
+import store from '../../store'
 
 export default {
   name: 'contacts',
@@ -371,7 +372,7 @@ export default {
           row.validity = validity;
         }
         row.updatetime = this.getNowTime();
-        row.submitor = '测试者';  // 之后获取当前用户
+        row.submitor = store.state.user.name;  // 之后获取当前用户
         console.log(row.id, row.keyword, row.location, row.validity, row.submitor, row.updatetime)
         let tempLocation = '';
         for (const v of row.locations) {
@@ -412,7 +413,7 @@ export default {
     },
     create() {
       this.temp.wordstate = '生效';
-      this.temp.submitor = '测试者';
+      this.temp.submitor = store.state.user.name;
       this.dialogFormVisible = false;
       // 获取当前时间 之后可抽出
       const date = new Date();

@@ -84,8 +84,8 @@
         </el-row>
       </el-row>
 
-      <div v-show="!listLoading" class="pagination-container" style="  display: flex;justify-content: center;align-items: center;">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[1, 20, 30]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next" :total="total">
+      <div v-show="!listLoading" class="pagination-container" style="display: flex;justify-content: center;align-items: center;">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="pageQuery.page" :page-sizes="[10, 20, 100]" :page-size="pageQuery.limit" layout="total, sizes, prev, pager, next" :total="total">
         </el-pagination>
       </div>
     </div>
@@ -96,27 +96,29 @@
 import Sticky from '@/components/Sticky' // 粘性header组件
 import waves from '@/directive/waves.js'// 水波纹指令
 import BackToTop from '@/components/BackToTop'
-import { submitAllList, submitOneOperation } from '@/api/content'
+import { getIpList, submitAllList, submitOneOperation } from '@/api/content'
 import store from '../../store'
 
 export default {
-  name: 'workstation',
+  name: 'workstationip',
   components: { Sticky, BackToTop },
   directives: {
     waves
   },
   props: {
-    list: null,
-    total: null,
-    keyword: null
+    listQueryIp: {},
+    ip: null
   },
   data() {
     return {
+      list: [],
+      total: null,
       listLoading: true,
       massList: [],
-      listQuery: {
+      pageQuery: {
         page: 1,
-        limit: 10
+        limit: 10,
+        ip: ''
       }
     };
   },
@@ -140,34 +142,43 @@ export default {
   },
   created() {
     this.listLoading = false;
-    console.log(this.keyword);
+    console.log(this.ip);
+    this.pageQuery.ip = this.ip;
+    // this.listQuery = this.listQueryIp;
+    this.getList();
   },
   methods: {
     getList() {
-      this.list.map(v => {
-        const content = v.content.replace(new RegExp(v.keyword, 'ig'), '<span style="color: red;font-weight: bold;background-color: yellow;">' + v.keyword + '</span>')
-        this.$set(v, 'content', content);
-        this.$set(v, 'checked', false);
-        if (v.optinfo === 0) {
-          this.$set(v, 'bgcolor', '#F0FFFF');
-        } else if (v.optinfo === 1) {
-          this.$set(v, 'bgcolor', '#CCE7CD');
-        } else if (v.optinfo === 2) {
-          this.$set(v, 'bgcolor', '#FFCCD5');
-        } else if (v.optinfo === 3) {
-          this.$set(v, 'bgcolor', '#D3D3D3');
-        } else {
-          this.$set(v, 'bgcolor', '#F0FFFF');
-        }
-        return v
+      getIpList(this.listQuery, this.pageQuery).then(response => {
+        console.log(this.pageQuery);
+        this.list = response.data.items.map(v => {
+          const content = v.content.replace(new RegExp(v.keyword, 'ig'), '<span style="color: red;font-weight: bold;background-color: yellow;">' + v.keyword + '</span>')
+          this.$set(v, 'content', content);
+          this.$set(v, 'checked', false);
+          if (v.optinfo === 0) {
+            this.$set(v, 'bgcolor', '#F0FFFF');
+          } else if (v.optinfo === 1) {
+            this.$set(v, 'bgcolor', '#CCE7CD');
+          } else if (v.optinfo === 2) {
+            this.$set(v, 'bgcolor', '#FFCCD5');
+          } else if (v.optinfo === 3) {
+            this.$set(v, 'bgcolor', '#D3D3D3');
+          } else {
+            this.$set(v, 'bgcolor', '#F0FFFF');
+          }
+          return v
+        })
+        console.log(this.list);
+        this.total = response.data.total
+        this.listLoading = false
       })
     },
     handleSizeChange(val) {
-      this.listQuery.limit = val
+      this.pageQuery.limit = val;
       this.getList()
     },
     handleCurrentChange(val) {
-      this.listQuery.page = val
+      this.pageQuery.page = val;
       this.getList()
     },
     changeColor(item) {

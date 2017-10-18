@@ -186,6 +186,7 @@ import Sticky from '@/components/Sticky' // 粘性header组件
 import waves from '@/directive/waves.js'// 水波纹指令
 import BackToTop from '@/components/BackToTop'
 import { getIpInfoList, submitAllList, submitOneOperation } from '@/api/content'
+import store from '../../store'
 
 export default {
   name: 'contentTemplate',
@@ -419,7 +420,7 @@ export default {
         this.massList.push(mass);
         return v
       })
-      this.submitor = 'test1';
+      this.submitor = store.state.user.name; // 获取操作者名字
       submitAllList(this.massList, this.submitor).then(response => {
         console.log(response);
         this.$notify({
@@ -433,7 +434,7 @@ export default {
     },
     submitOneOperation(row, index, opt) {
       // console.log(row.rowkey, index, opt);
-      this.submitor = 'test1'; // 获取操作者名字
+      this.submitor = store.state.user.name; // 获取操作者名字
       this.list.splice(index, 1);
       submitOneOperation(row.rowkey, opt, this.submitor).then(response => {
         console.log(response);

@@ -10,6 +10,18 @@ export function getContentList(query) {
 }
 
 
+export function getIpList(query, page) {
+  return fetch({
+    url: 'review/ipworkstation/list',
+    method: 'get',
+    params: [query, page]
+  })
+}
+
+
+
+
+
 export function getUserInfoList(query) {
   return fetch({
     url: 'review/content/userlist',

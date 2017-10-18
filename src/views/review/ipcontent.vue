@@ -95,9 +95,9 @@
         <label style="float:left">总量：{{total}}</label>
       </div>
 
-      <el-collapse v-for="(item, index) in list" :key="item.ip" v-loading="listLoading" accordion>
-        <el-collapse-item :title="item.ip+' (共'+item.total+'条)'" name="index">
-          <workstation :list="item.rowlist" :total="item.total"></workstation>
+      <el-collapse v-for="(item, index) in list" :key="item.ip" v-loading="listLoading">
+        <el-collapse-item :title="item.ip+' (共'+item.total+'条)'" name="item.ip">
+          <workstationip :ip="item.ip" :listQueryIp="listQuery"></workstationip>
         </el-collapse-item>
       </el-collapse>
       <div v-show="!listLoading" class="pagination-container" style="  display: flex;justify-content: center;align-items: center;">
@@ -114,10 +114,10 @@ import Sticky from '@/components/Sticky' // 粘性header组件
 import waves from '@/directive/waves.js'// 水波纹指令
 import BackToTop from '@/components/BackToTop'
 import { getUserIPWorkStation } from '@/api/content'
-import workstation from './workstation'
+import workstationip from './workstationip'
 
 export default {
-  components: { Sticky, BackToTop, workstation },
+  components: { Sticky, BackToTop, workstationip },
   directives: {
     waves
   },
@@ -343,6 +343,9 @@ export default {
     dateChange(val) {
       console.log(val);
       return this.listQuery.timeDayPick = val;
+    },
+    testCollapse(val) {
+      console.log(val);
     }
   },
   watch: {
@@ -352,6 +355,7 @@ export default {
         if (newValue.timeDayPick === '' || newValue.timeDayPick == null) {
           newValue.timeDayPick = this.getNowDay();
         }
+        this.list = null;
         getUserIPWorkStation(newValue).then(response => {
           this.list = response.data.items;
           this.total = response.data.total
