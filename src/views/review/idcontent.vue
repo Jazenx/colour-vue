@@ -97,7 +97,7 @@
 
       <el-collapse v-for="(item, index) in list" :key="item.ip" v-loading="listLoading" accordion>
         <el-collapse-item :title="item.userid+' ('+item.username+')'+' (共'+item.total+'条)'" name="index">
-          <workstation :list="item.rowlist" :total="item.total"></workstation>
+          <workstationid  :ip="item.id" :listQueryId="listQuery"></workstationid>
         </el-collapse-item>
       </el-collapse>
       <div v-show="!listLoading" class="pagination-container" style="  display: flex;justify-content: center;align-items: center;">
@@ -114,10 +114,10 @@ import Sticky from '@/components/Sticky' // 粘性header组件
 import waves from '@/directive/waves.js'// 水波纹指令
 import BackToTop from '@/components/BackToTop'
 import { getUserIDWorkStation } from '@/api/content'
-import workstation from './workstation'
+import workstationid from './workstationid'
 
 export default {
-  components: { Sticky, BackToTop, workstation },
+  components: { Sticky, BackToTop, workstationid },
   directives: {
     waves
   },

@@ -96,17 +96,17 @@
 import Sticky from '@/components/Sticky' // 粘性header组件
 import waves from '@/directive/waves.js'// 水波纹指令
 import BackToTop from '@/components/BackToTop'
-import { getIpList, submitAllList, submitOneOperation } from '@/api/content'
+import { getIdList, submitAllList, submitOneOperation } from '@/api/content'
 import store from '../../store'
 
 export default {
-  name: 'workstationip',
+  name: 'workstationid',
   components: { Sticky, BackToTop },
   directives: {
     waves
   },
   props: {
-    listQueryIp: {},
+    listQueryId: {},
     ip: null
   },
   data() {
@@ -118,7 +118,7 @@ export default {
       pageQuery: {
         page: 1,
         limit: 10,
-        ip: ''
+        id: ''
       }
     };
   },
@@ -142,13 +142,14 @@ export default {
   },
   created() {
     this.listLoading = false;
-    this.pageQuery.ip = this.ip;
+    // console.log(this.ip);
+    this.pageQuery.id = this.id;
     // this.listQuery = this.listQueryIp;
     this.getList();
   },
   methods: {
     getList() {
-      getIpList(this.listQueryIp, this.pageQuery).then(response => {
+      getIdList(this.listQueryId, this.pageQuery).then(response => {
         console.log(this.pageQuery);
         this.list = response.data.items.map(v => {
           const content = v.content.replace(new RegExp(v.keyword, 'ig'), '<span style="color: red;font-weight: bold;background-color: yellow;">' + v.keyword + '</span>')

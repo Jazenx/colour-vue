@@ -37,17 +37,6 @@ export const constantRouterMap = [
     hidden: true
   },
   {
-    path: '/',
-    component: Layout,
-    redirect: '/review',
-    name: '审核',
-    hidden: true,
-    children: [{
-      path: 'review',
-      component: _import('review/content')
-    }]
-  },
-  {
     path: '/userinfo',
     name: '用户详情',
     component: _import('review/userinfo'),
@@ -58,28 +47,6 @@ export const constantRouterMap = [
     name: 'IP详情',
     component: _import('review/ipinfo'),
     hidden: true
-  },
-  {
-    path: '/banned',
-    component: Layout,
-    redirect: '/banned',
-    name: '黑名单',
-    hidden: true,
-    children: [{
-      path: 'index',
-      component: _import('banned/index')
-    }]
-  },
-  {
-    path: '/whitelist',
-    component: Layout,
-    redirect: '/whitelist',
-    name: '白名单',
-    hidden: true,
-    children: [{
-      path: 'index',
-      component: _import('whitelist/index')
-    }]
   }
 ]
 

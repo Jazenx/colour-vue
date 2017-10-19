@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px" class="card-box login-form">
-      <h2 class="title">Colourdata Platform</h2>
+      <h2 class="title">Colourdata 水军违禁词系统</h2>
       <el-form-item prop="email">
         <span class="svg-container">
           <icon-svg icon-class="youxiang"></icon-svg>
@@ -126,7 +126,7 @@ export default {
     color: #889aa4;
   }
   .title {
-    font-size: 26px;
+    font-size: 20px;
     font-weight: 400;
     color: #eeeeee;
     margin: 0px auto 40px auto;

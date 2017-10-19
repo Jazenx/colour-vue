@@ -94,7 +94,6 @@
       <div style="margin: 15px; display: flex;justify-content:space-between;">
         <label style="float:left">总量：{{total}}</label>
       </div>
-
       <el-collapse v-for="(item, index) in list" :key="item.ip" v-loading="listLoading">
         <el-collapse-item :title="item.ip+' (共'+item.total+'条)'" name="item.ip">
           <workstationip :ip="item.ip" :listQueryIp="listQuery"></workstationip>

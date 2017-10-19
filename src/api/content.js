@@ -19,6 +19,15 @@ export function getIpList(query, page) {
 }
 
 
+export function getIdList(query, page) {
+  return fetch({
+    url: 'review/idworkstation/list',
+    method: 'get',
+    params: [query, page]
+  })
+}
+
+
 
 
 
