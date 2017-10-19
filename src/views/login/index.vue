@@ -24,6 +24,7 @@
 </template>
 <script>
 import socialSign from './socialsignin';
+import store from '../../store'
 
 export default {
   components: { socialSign },
@@ -31,8 +32,6 @@ export default {
   data() {
     const validateEmail = (rule, value, callback) => {
       if (!value) {
-        console.log(rule);
-        console.log(value);
         callback(new Error('请输入正确的合法邮箱'));
       } else {
         callback();
@@ -76,8 +75,14 @@ export default {
           this.loading = true;
           this.$store.dispatch('LoginByEmail', this.loginForm).then(() => {
             this.loading = false;
-            this.$router.push({ path: '/' });
-            // this.showDialog = true;
+            if (store.state.user.code === 88888) {
+              this.$router.push({ path: '/' });
+            } else {
+              this.$message({
+                message: '用户名或密码错误，请重试！',
+                type: 'error'
+              })
+            }
           }).catch(() => {
             this.loading = false;
           });

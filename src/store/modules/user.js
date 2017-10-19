@@ -1,5 +1,13 @@
-import { loginByEmail, logout, getInfo } from 'api/login';
-import { getToken, setToken, removeToken } from 'utils/auth';
+import {
+  loginByEmail,
+  logout,
+  getInfo
+} from 'api/login';
+import {
+  getToken,
+  setToken,
+  removeToken
+} from 'utils/auth';
 
 const user = {
   state: {
@@ -51,13 +59,20 @@ const user = {
 
   actions: {
     // 邮箱登录
-    LoginByEmail({ commit }, userInfo) {
+    LoginByEmail({
+      commit
+    }, userInfo) {
       const email = userInfo.email.trim();
       return new Promise((resolve, reject) => {
         loginByEmail(email, userInfo.password).then(response => {
           const data = response.data;
           setToken(response.data.token);
           commit('SET_TOKEN', data.token);
+          commit('SET_CODE', data.code);
+          commit('SET_ROLES', data.role);
+          commit('SET_NAME', data.name);
+          commit('SET_AVATAR', data.avatar);
+          commit('SET_INTRODUCTION', data.introduction);
           resolve();
         }).catch(error => {
           reject(error);
@@ -66,10 +81,14 @@ const user = {
     },
 
     // 获取用户信息
-    GetInfo({ commit, state }) {
+    GetInfo({
+      commit,
+      state
+    }) {
       return new Promise((resolve, reject) => {
         loginByEmail(state.token).then(response => {
           const data = response.data;
+          commit('SET_CODE', data.code);
           commit('SET_ROLES', data.role);
           commit('SET_NAME', data.name);
           commit('SET_AVATAR', data.avatar);
@@ -82,7 +101,10 @@ const user = {
     },
 
     // 第三方验证登录
-    LoginByThirdparty({ commit, state }, code) {
+    LoginByThirdparty({
+      commit,
+      state
+    }, code) {
       return new Promise((resolve, reject) => {
         commit('SET_CODE', code);
         loginByThirdparty(state.status, state.email, state.code).then(response => {
@@ -96,7 +118,10 @@ const user = {
     },
 
     // 登出
-    LogOut({ commit, state }) {
+    LogOut({
+      commit,
+      state
+    }) {
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
           commit('SET_TOKEN', '');
@@ -110,7 +135,9 @@ const user = {
     },
 
     // 前端 登出
-    FedLogOut({ commit }) {
+    FedLogOut({
+      commit
+    }) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '');
         removeToken();
@@ -119,7 +146,9 @@ const user = {
     },
 
     // 动态修改权限
-    ChangeRole({ commit }, role) {
+    ChangeRole({
+      commit
+    }, role) {
       return new Promise(resolve => {
         commit('SET_ROLES', [role]);
         commit('SET_TOKEN', role);

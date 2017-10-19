@@ -7,7 +7,7 @@ const userMap = {
     introduction: '我是超级管理员',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     name: 'Super Admin',
-    code: 2000
+    code: 88888
   },
   editor: {
     role: ['editor'],
@@ -28,7 +28,7 @@ const userMap = {
 export default {
   loginByEmail: config => {
     const { email } = JSON.parse(config.body);
-    console.log(userMap[email.split('@')[0]]);
+    // console.log(userMap[email.split('@')[0]]);
     return userMap[email.split('@')[0]];
   },
   getInfo: config => {

@@ -37,6 +37,17 @@ export const constantRouterMap = [
     hidden: true
   },
   {
+    path: '/',
+    component: Layout,
+    redirect: '/review',
+    name: '审核',
+    hidden: true,
+    children: [{
+      path: 'review',
+      component: _import('review/content')
+    }]
+  },
+  {
     path: '/userinfo',
     name: '用户详情',
     component: _import('review/userinfo'),
