@@ -411,12 +411,12 @@ export default {
       this.massList = [];
       this.listLoading = true;
       this.list.map(v => {
-        const mass = { rowkey: null, optinfo: null };
-        mass.rowkey = v.rowkey;
-        mass.optinfo = v.optinfo;
-        this.massList.push(mass);
+        if (v.checked) {
+          this.massList.push(v);
+        }
         return v
       })
+      console.log(this.massList);
       this.submitor = store.state.user.name; // 获取操作者名字
       submitAllList(this.massList, this.submitor).then(response => {
         console.log(response);
@@ -431,7 +431,8 @@ export default {
     },
     submitOneOperation(row, index, opt) {
       this.submitor = store.state.user.name; // 获取操作者名字
-      submitOneOperation(row.rowkey, opt, this.submitor).then(response => {
+      console.log(opt);
+      submitOneOperation(this.submitor, row).then(response => {
         console.log(response);
         this.$notify({
           title: '成功',

@@ -75,6 +75,7 @@ export default {
           this.loading = true;
           this.$store.dispatch('LoginByEmail', this.loginForm).then(() => {
             this.loading = false;
+            console.log(store.state.user.code);
             if (store.state.user.code === 88888) {
               this.$router.push({ path: '/' });
             } else {

@@ -66,13 +66,11 @@ const user = {
       return new Promise((resolve, reject) => {
         loginByEmail(email, userInfo.password).then(response => {
           const data = response.data;
+          console.log('vuex 存储用户信息');
+          console.log(response.data);
           setToken(response.data.token);
           commit('SET_TOKEN', data.token);
           commit('SET_CODE', data.code);
-          commit('SET_ROLES', data.role);
-          commit('SET_NAME', data.name);
-          commit('SET_AVATAR', data.avatar);
-          commit('SET_INTRODUCTION', data.introduction);
           resolve();
         }).catch(error => {
           reject(error);
@@ -86,9 +84,10 @@ const user = {
       state
     }) {
       return new Promise((resolve, reject) => {
-        loginByEmail(state.token).then(response => {
+        getInfo(state.token).then(response => {
+          console.log('getUserInfo');
           const data = response.data;
-          commit('SET_CODE', data.code);
+          console.log(data);
           commit('SET_ROLES', data.role);
           commit('SET_NAME', data.name);
           commit('SET_AVATAR', data.avatar);

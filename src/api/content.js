@@ -14,7 +14,10 @@ export function getIpList(query, page) {
   return fetch({
     url: 'review/ipworkstation/list',
     method: 'get',
-    params: [query, page]
+    params: {
+      query,
+      page
+    }
   })
 }
 
@@ -23,7 +26,10 @@ export function getIdList(query, page) {
   return fetch({
     url: 'review/idworkstation/list',
     method: 'get',
-    params: [query, page]
+    params: {
+      query,
+      page
+    }
   })
 }
 
@@ -63,14 +69,13 @@ export function submitAllList(listInfo, submitor) {
 
 
 
-export function submitOneOperation(rowkey, opt, submitor) {
+export function submitOneOperation(submitor, detail) {
   return fetch({
     url: 'review/content/submitOneOperation',
     method: 'post',
     data: {
-      rowkey,
-      opt,
-      submitor
+      submitor,
+      detail
     }
   })
 }

@@ -1,4 +1,4 @@
-import fetch from 'utils/fetch';
+import fetch from '@/utils/fetch';
 
 export function loginByEmail(email, password) {
   const data = {
@@ -21,7 +21,7 @@ export function logout() {
 
 export function getInfo(token) {
   return fetch({
-    url: '/user/info',
+    url: '/login/info',
     method: 'get',
     params: { token }
   });
