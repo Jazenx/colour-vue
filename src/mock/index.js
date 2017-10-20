@@ -7,9 +7,9 @@ import bannedAPI from './banned'
 import contentAPI from './content';
 
 // 登录相关
-Mock.mock(/\/login\/loginbyemail/, 'post', loginAPI.loginByEmail);
-Mock.mock(/\/login\/logout/, 'post', loginAPI.logout);
-Mock.mock(/\/login\/info\.*/, 'get', loginAPI.getInfo)
+// Mock.mock(/\/login\/loginbyemail/, 'post', loginAPI.loginByEmail);
+// Mock.mock(/\/login\/logout/, 'post', loginAPI.logout);
+// Mock.mock(/\/login\/info\.*/, 'get', loginAPI.getInfo)
 
 // // 文章相关
 Mock.mock(/\/blacklist\/banned\/getkeywords/, 'get', articleAPI.getList);

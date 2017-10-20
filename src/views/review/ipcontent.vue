@@ -20,14 +20,14 @@
         </div>
         <div style="margin: 15px 0;"></div>
         <el-form>
-          <el-form-item label="版块名称:">
+          <!-- <el-form-item label="版块名称:">
             <el-select v-model="listQuery.locations" multiple placeholder="请选择板块名">
               <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-option-group>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="当前状态:">
             <el-radio-group v-model="listQuery.currentState" size="small">
               <el-radio-button label="0">不限</el-radio-button>
@@ -63,14 +63,14 @@
               <el-radio-button label="5">低俗</el-radio-button>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="识别类型:">
+          <!-- <el-form-item label="识别类型:">
             <el-radio-group v-model="listQuery.recognitionType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
               <el-radio-button label="1">未确认</el-radio-button>
               <el-radio-button label="2">已确认</el-radio-button>
               <el-radio-button label="3">已忽略</el-radio-button>
             </el-radio-group>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="彩数识别:">
             <el-radio-group v-model="listQuery.colourdataType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
@@ -100,7 +100,7 @@
         </el-collapse-item>
       </el-collapse>
       <div v-show="!listLoading" class="pagination-container" style="  display: flex;justify-content: center;align-items: center;">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[20, 50, 100]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[20, 30 ,50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
       </div>
       <back-to-top transitionName="fade" :customStyle="myBackToTopStyle" :visibilityHeight="300" :backPosition="50"></back-to-top>

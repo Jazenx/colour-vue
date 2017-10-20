@@ -20,14 +20,14 @@
         </div>
         <div style="margin: 15px 0;"></div>
         <el-form>
-          <el-form-item label="版块名称:">
+          <!-- <el-form-item label="版块名称:">
             <el-select v-model="listQuery.locations" multiple placeholder="请选择板块名">
               <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-option-group>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="当前状态:">
             <el-radio-group v-model="listQuery.currentState" size="small">
               <el-radio-button label="0">不限</el-radio-button>
@@ -63,14 +63,14 @@
               <el-radio-button label="5">低俗</el-radio-button>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="识别类型:">
+          <!-- <el-form-item label="识别类型:">
             <el-radio-group v-model="listQuery.recognitionType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
               <el-radio-button label="1">未确认</el-radio-button>
               <el-radio-button label="2">已确认</el-radio-button>
               <el-radio-button label="3">已忽略</el-radio-button>
             </el-radio-group>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="彩数识别:">
             <el-radio-group v-model="listQuery.colourdataType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
@@ -173,7 +173,7 @@
         </el-row>
       </el-row>
       <div v-show="!listLoading" class="pagination-container" style="  display: flex;justify-content: center;align-items: center;">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[20, 50, 100]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[20, 30 ,50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
       </div>
       <back-to-top transitionName="fade" :customStyle="myBackToTopStyle" :visibilityHeight="300" :backPosition="50"></back-to-top>
@@ -182,11 +182,15 @@
 </template>
 
 <script>
-import Sticky from '@/components/Sticky' // 粘性header组件
-import waves from '@/directive/waves.js'// 水波纹指令
-import BackToTop from '@/components/BackToTop'
-import { getContentList, submitAllList, submitOneOperation } from '@/api/content'
-import store from '../../store'
+import Sticky from '@/components/Sticky'; // 粘性header组件
+import waves from '@/directive/waves.js'; // 水波纹指令
+import BackToTop from '@/components/BackToTop';
+import {
+  getContentList,
+  submitAllList,
+  submitOneOperation
+} from '@/api/content';
+import store from '../../store';
 
 export default {
   name: 'contentTemplate',
@@ -196,7 +200,8 @@ export default {
   },
   data() {
     return {
-      testInfo: '本人最近打算换车，10年的大众要退休了，皮实耐用，用料厚道是这10年来用车经验对我选下一款车所留下的深刻影响，上网站搜了搜，正好看到最近这款车上了首页SUV，看了看大家分享的雪铁龙经验，觉得挺符合我的要求，直奔4S看实车。 &nbsp;&nbsp;&nbsp;&nbsp;先说外型，这车，不喜欢的人绝对认为它丑得一塌糊涂，不过我承认还是电到我了，我本人其实很喜欢MINI那种圆了咕噜的休闲风格，喜欢轻松自在自由随意的驾驶感觉，这车一眼看去就让人感觉很悠闲但又具有自己的独特风格，外型高水平过关了，另外加一句，实车绝对比网上照片还要好看，不知道摄像师们都什么水平啊 &nbsp;&nbsp;&nbsp;&nbsp;再看内饰，撞色现在好像挺流行，不过我还是喜欢纯色的，到时候再说吧。话说法国人造车确实感觉脑子是实芯的呆呆的，面子功夫一点不会做，内饰进去根本感不到能和豪华挂钩，主驾驶车窗那个控制面板按键用手去按竟然还能左右咣当，松松垮垮，不知道是不是就展车这样，还是都这样，中控台硬塑，真是可惜了电子档杆和仪表盘这么高科技感的配件了。座椅看起来挺单薄，坐上去感觉倒是还可以，前后排空间和顶部高度绝对OK，够用，内饰勉强过关吧，毕竟本身就想选一辆很休闲的车，只要不是丑的过分，内饰豪华不豪华的不会产生决定',
+      testInfo:
+        '本人最近打算换车，10年的大众要退休了，皮实耐用，用料厚道是这10年来用车经验对我选下一款车所留下的深刻影响，上网站搜了搜，正好看到最近这款车上了首页SUV，看了看大家分享的雪铁龙经验，觉得挺符合我的要求，直奔4S看实车。 &nbsp;&nbsp;&nbsp;&nbsp;先说外型，这车，不喜欢的人绝对认为它丑得一塌糊涂，不过我承认还是电到我了，我本人其实很喜欢MINI那种圆了咕噜的休闲风格，喜欢轻松自在自由随意的驾驶感觉，这车一眼看去就让人感觉很悠闲但又具有自己的独特风格，外型高水平过关了，另外加一句，实车绝对比网上照片还要好看，不知道摄像师们都什么水平啊 &nbsp;&nbsp;&nbsp;&nbsp;再看内饰，撞色现在好像挺流行，不过我还是喜欢纯色的，到时候再说吧。话说法国人造车确实感觉脑子是实芯的呆呆的，面子功夫一点不会做，内饰进去根本感不到能和豪华挂钩，主驾驶车窗那个控制面板按键用手去按竟然还能左右咣当，松松垮垮，不知道是不是就展车这样，还是都这样，中控台硬塑，真是可惜了电子档杆和仪表盘这么高科技感的配件了。座椅看起来挺单薄，坐上去感觉倒是还可以，前后排空间和顶部高度绝对OK，够用，内饰勉强过关吧，毕竟本身就想选一辆很休闲的车，只要不是丑的过分，内饰豪华不豪华的不会产生决定',
       list: [],
       total: null,
       listLoading: true,
@@ -213,95 +218,128 @@ export default {
         timeHourpick: '0024',
         timeDayPick: this.getNowDay(),
         locations: [],
-        seachCondition: null,  //  查询种类 默认全部
+        seachCondition: null, //  查询种类 默认全部
         seachContent: null //  查询详情 默认全部
       },
       seachCondition: '',
       seachContent: '',
-      seachSel: [{
-        value: '帖子ID',
-        label: '帖子ID'
-      }, {
-        value: '主题ID',
-        label: '主题ID'
-      }, {
-        value: '用户名',
-        label: '用户名'
-      }, {
-        value: '用户ID',
-        label: '用户ID'
-      }, {
-        value: '用户IP',
-        label: '用户IP'
-      }],
-      timeSel: [{
-        value: '0024',
-        label: '全天'
-      }, {
-        value: '0002',
-        label: '0点-2点'
-      }, {
-        value: '0204',
-        label: '2点-4点'
-      }, {
-        value: '0406',
-        label: '4点-6点'
-      }, {
-        value: '0608',
-        label: '6点-8点'
-      }, {
-        value: '0810',
-        label: '8点-10点'
-      }, {
-        value: '1012',
-        label: '10点-12点'
-      }, {
-        value: '1214',
-        label: '12点-14点'
-      }, {
-        value: '1416',
-        label: '14点-16点'
-      }, {
-        value: '1618',
-        label: '16点-18点'
-      }, {
-        value: '1820',
-        label: '18点-20点'
-      }, {
-        value: '2022',
-        label: '20点-22点'
-      }, {
-        value: '2224',
-        label: '22点-24点'
-      }],
-      locationSel: [{
-        label: '论坛、评论',
-        options: [{
-          value: '论坛',
-          label: '论坛'
-        }, {
-          value: '回帖',
-          label: '回帖'
-        }, {
-          value: '历史数据清洗',
-          label: '历史数据清洗'
-        }]
-      }, {
-        label: '问答',
-        options: [{
-          value: '提问',
-          label: '提问'
-        }, {
-          value: '答案',
-          label: '答案'
-        }]
-      }, {
-        label: '精华帖',
-        options: [{
-          value: '精华帖',
-          label: '精华贴'
-        }]
-      }],
+      seachSel: [
+        {
+          value: '帖子ID',
+          label: '帖子ID'
+        },
+        {
+          value: '主题ID',
+          label: '主题ID'
+        },
+        {
+          value: '用户名',
+          label: '用户名'
+        },
+        {
+          value: '用户ID',
+          label: '用户ID'
+        },
+        {
+          value: '用户IP',
+          label: '用户IP'
+        }
+      ],
+      timeSel: [
+        {
+          value: '0024',
+          label: '全天'
+        },
+        {
+          value: '0002',
+          label: '0点-2点'
+        },
+        {
+          value: '0204',
+          label: '2点-4点'
+        },
+        {
+          value: '0406',
+          label: '4点-6点'
+        },
+        {
+          value: '0608',
+          label: '6点-8点'
+        },
+        {
+          value: '0810',
+          label: '8点-10点'
+        },
+        {
+          value: '1012',
+          label: '10点-12点'
+        },
+        {
+          value: '1214',
+          label: '12点-14点'
+        },
+        {
+          value: '1416',
+          label: '14点-16点'
+        },
+        {
+          value: '1618',
+          label: '16点-18点'
+        },
+        {
+          value: '1820',
+          label: '18点-20点'
+        },
+        {
+          value: '2022',
+          label: '20点-22点'
+        },
+        {
+          value: '2224',
+          label: '22点-24点'
+        }
+      ],
+      locationSel: [
+        {
+          label: '论坛、评论',
+          options: [
+            {
+              value: '论坛',
+              label: '论坛'
+            },
+            {
+              value: '回帖',
+              label: '回帖'
+            },
+            {
+              value: '历史数据清洗',
+              label: '历史数据清洗'
+            }
+          ]
+        },
+        {
+          label: '问答',
+          options: [
+            {
+              value: '提问',
+              label: '提问'
+            },
+            {
+              value: '答案',
+              label: '答案'
+            }
+          ]
+        },
+        {
+          label: '精华帖',
+          options: [
+            {
+              value: '精华帖',
+              label: '精华贴'
+            }
+          ]
+        }
+      ],
       myBackToTopStyle: {
         right: '50px',
         bottom: '50px',
@@ -309,7 +347,7 @@ export default {
         height: '40px',
         'border-radius': '4px',
         'line-height': '45px', // 请保持与高度一致以垂直居中
-        background: '#e7eaf1'// 按钮的背景颜色
+        background: '#e7eaf1' // 按钮的背景颜色
       }
     };
   },
@@ -332,16 +370,21 @@ export default {
     }
   },
   created() {
-    this.getList()
+    this.getList();
   },
   methods: {
     getList() {
-      this.listLoading = true
+      this.listLoading = true;
       // console.log(this.listQuery)
       getContentList(this.listQuery).then(response => {
         console.log(response.data);
         this.list = response.data.items.map(v => {
-          const content = v.content.replace(new RegExp(v.keyword, 'ig'), '<span style="color: red;font-weight: bold;background-color: yellow;">' + v.keyword + '</span>')
+          const content = v.content.replace(
+            new RegExp(v.keyword, 'ig'),
+            '<span style="color: red;font-weight: bold;background-color: yellow;">' +
+              v.keyword +
+              '</span>'
+          );
           this.$set(v, 'content', content);
           this.$set(v, 'checked', false);
           if (v.optinfo === 0) {
@@ -355,12 +398,12 @@ export default {
           } else {
             this.$set(v, 'bgcolor', '#F0FFFF');
           }
-          return v
-        })
+          return v;
+        });
         // console.log(this.list);
-        this.total = response.data.total
-        this.listLoading = false
-      })
+        this.total = response.data.total;
+        this.listLoading = false;
+      });
     },
     changeColor(item) {
       if (item.optinfo === 0) {
@@ -376,36 +419,36 @@ export default {
       }
     },
     handleSizeChange(val) {
-      this.listQuery.limit = val
-      this.getList()
+      this.listQuery.limit = val;
+      this.getList();
     },
     handleCurrentChange(val) {
-      this.listQuery.page = val
-      this.getList()
+      this.listQuery.page = val;
+      this.getList();
     },
     passAllContent() {
       this.list.map(v => {
         this.$set(v, 'optinfo', 1);
-        return v
-      })
+        return v;
+      });
     },
     deleteAllContent() {
       this.list.map(v => {
         this.$set(v, 'optinfo', 2);
-        return v
-      })
+        return v;
+      });
     },
     ignoreAllContent() {
       this.list.map(v => {
         this.$set(v, 'optinfo', 3);
-        return v
-      })
+        return v;
+      });
     },
     cancelAllContent() {
       this.list.map(v => {
         this.$set(v, 'optinfo', 0);
-        return v
-      })
+        return v;
+      });
     },
     submitAllOperation() {
       this.massList = [];
@@ -413,9 +456,10 @@ export default {
       this.list.map(v => {
         if (v.checked) {
           this.massList.push(v);
+          // this.list.splice(index, 1);
         }
-        return v
-      })
+        return v;
+      });
       console.log(this.massList);
       this.submitor = store.state.user.name; // 获取操作者名字
       submitAllList(this.massList, this.submitor).then(response => {
@@ -425,22 +469,27 @@ export default {
           message: '批量提交成功',
           type: 'success',
           duration: 2000
-        })
+        });
         this.getList();
-      })
+      });
     },
     submitOneOperation(row, index, opt) {
       this.submitor = store.state.user.name; // 获取操作者名字
-      console.log(opt);
-      submitOneOperation(this.submitor, row).then(response => {
+      // row.push({ optsubmitor: this.submitor });
+      // row.push({ optx: optx });
+      row.optsubmitor = this.submitor;
+      row.opt = opt;
+      console.log(row);
+      submitOneOperation(row).then(response => {
+        this.list.splice(index, 1);
         console.log(response);
         this.$notify({
           title: '成功',
           message: '操作成功',
           type: 'success',
           duration: 2000
-        })
-      })
+        });
+      });
     },
     changeState(state) {
       if (state === 0) {
@@ -529,7 +578,7 @@ export default {
   watch: {
     listQuery: {
       handler(newValue) {
-        this.listLoading = true
+        this.listLoading = true;
         if (newValue.timeDayPick === '' || newValue.timeDayPick == null) {
           newValue.timeDayPick = this.getNowDay();
         }
@@ -537,7 +586,12 @@ export default {
         console.log(newValue);
         getContentList(newValue).then(response => {
           this.list = response.data.items.map(v => {
-            const content = v.content.replace(new RegExp(v.keyword, 'ig'), '<span style="color: red;font-weight: bold;background-color: yellow;">' + v.keyword + '</span>')
+            const content = v.content.replace(
+              new RegExp(v.keyword, 'ig'),
+              '<span style="color: red;font-weight: bold;background-color: yellow;">' +
+                v.keyword +
+                '</span>'
+            );
             this.$set(v, 'content', content);
             if (v.optinfo === 0) {
               this.$set(v, 'bgcolor', '#F0FFFF');
@@ -550,16 +604,16 @@ export default {
             } else {
               this.$set(v, 'bgcolor', '#F0FFFF');
             }
-            return v
-          })
-          this.total = response.data.total
-          this.listLoading = false
-        })
+            return v;
+          });
+          this.total = response.data.total;
+          this.listLoading = false;
+        });
       },
       deep: true
     }
   }
-}
+};
 </script>
 
 
@@ -569,7 +623,7 @@ export default {
   border: 1px solid #d3dce6;
   margin: 80px;
   margin-top: 10px;
-  background: #f3f3f3
+  background: #f3f3f3;
 }
 
 .detail-box {
@@ -577,11 +631,11 @@ export default {
 }
 
 .aTitle {
-  color: #4682B4;
+  color: #4682b4;
 }
 
 .aHref {
-  color: #00BFFF;
+  color: #00bfff;
   text-decoration: underline;
 }
 

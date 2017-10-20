@@ -85,7 +85,7 @@
       </el-row>
 
       <div v-show="!listLoading" class="pagination-container" style="display: flex;justify-content: center;align-items: center;">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="pageQuery.page" :page-sizes="[10, 20, 100]" :page-size="pageQuery.limit" layout="total, sizes, prev, pager, next" :total="total">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="pageQuery.page" :page-sizes="[10, 20, 30]" :page-size="pageQuery.limit" layout="total, sizes, prev, pager, next" :total="total">
         </el-pagination>
       </div>
     </div>
@@ -149,7 +149,7 @@ export default {
   methods: {
     getList() {
       getIpList(this.listQueryIp, this.pageQuery).then(response => {
-        console.log(this.pageQuery);
+        console.log(response.data);
         this.list = response.data.items.map(v => {
           const content = v.content.replace(new RegExp(v.keyword, 'ig'), '<span style="color: red;font-weight: bold;background-color: yellow;">' + v.keyword + '</span>')
           this.$set(v, 'content', content);
@@ -167,7 +167,6 @@ export default {
           }
           return v
         })
-        console.log(this.list);
         this.total = response.data.total
         this.listLoading = false
       })
@@ -241,16 +240,21 @@ export default {
     },
     submitOneOperation(row, index, opt) {
       this.submitor = store.state.user.name; // 获取操作者名字
-      console.log(opt);
-      submitOneOperation(this.submitor, row).then(response => {
+      // row.push({ optsubmitor: this.submitor });
+      // row.push({ optx: optx });
+      row.optsubmitor = this.submitor;
+      row.opt = opt;
+      console.log(row);
+      submitOneOperation(row).then(response => {
+        this.list.splice(index, 1);
         console.log(response);
         this.$notify({
           title: '成功',
           message: '操作成功',
           type: 'success',
           duration: 2000
-        })
-      })
+        });
+      });
     }
   }
 }

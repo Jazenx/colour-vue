@@ -69,12 +69,11 @@ export function submitAllList(listInfo, submitor) {
 
 
 
-export function submitOneOperation(submitor, detail) {
+export function submitOneOperation(detail) {
   return fetch({
     url: 'review/content/submitOneOperation',
     method: 'post',
     data: {
-      submitor,
       detail
     }
   })

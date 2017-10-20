@@ -20,14 +20,14 @@
         </div>
         <div style="margin: 15px 0;"></div>
         <el-form>
-          <el-form-item label="版块名称:">
+          <!-- <el-form-item label="版块名称:">
             <el-select v-model="listQuery.locations" multiple placeholder="请选择板块名">
               <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-option-group>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="当前状态:">
             <el-radio-group v-model="listQuery.currentState" size="small">
               <el-radio-button label="0">不限</el-radio-button>
@@ -63,14 +63,14 @@
               <el-radio-button label="5">低俗</el-radio-button>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="识别类型:">
+          <!-- <el-form-item label="识别类型:">
             <el-radio-group v-model="listQuery.recognitionType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
               <el-radio-button label="1">未确认</el-radio-button>
               <el-radio-button label="2">已确认</el-radio-button>
               <el-radio-button label="3">已忽略</el-radio-button>
             </el-radio-group>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="彩数识别:">
             <el-radio-group v-model="listQuery.colourdataType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
@@ -121,7 +121,7 @@
               <el-checkbox :value="item.rowkey" v-model="item.checked"></el-checkbox>
               <h5 class="infoGrey" style="margin-left:10px">{{item.username}}</h5>
               <p class="infoGrey">(
-                <router-link class="aHref" :to="{ path: '/userinfo', query: { userid: item.userid }}">{{item.userid}}</router-link>） |
+                <router-link class="aHref" :to="{ path: '/userinfo', query: { userid: item.userid }}" @click.native="changeUser(item.userid)">{{item.userid}}</router-link>） |
                 <router-link class="aHref" :to="{ path: '/ipinfo', query: { ip: item.ip }}">{{item.ip}}</router-link> | {{item.subtime}}
               </p>
             </el-row>
@@ -173,7 +173,7 @@
         </el-row>
       </el-row>
       <div v-show="!listLoading" class="pagination-container" style="  display: flex;justify-content: center;align-items: center;">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[20, 50, 100]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[20, 30 ,50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
       </div>
       <back-to-top transitionName="fade" :customStyle="myBackToTopStyle" :visibilityHeight="300" :backPosition="50"></back-to-top>
@@ -185,7 +185,7 @@
 import Sticky from '@/components/Sticky' // 粘性header组件
 import waves from '@/directive/waves.js'// 水波纹指令
 import BackToTop from '@/components/BackToTop'
-import { getUserInfoList, submitAllList, submitOneOperation } from '@/api/content'
+import { getContentList, submitAllList, submitOneOperation } from '@/api/content'
 import store from '../../store'
 
 export default {
@@ -214,12 +214,12 @@ export default {
         timeHourpick: '0024',
         timeDayPick: this.getNowDay(),
         locations: [],
-        seachCondition: null,  //  查询种类 默认全部
-        seachContent: null, //  查询详情 默认全部
+        seachCondition: '用户ID',
+        seachContent: this.$route.query.userid,
         userid: null    // 用户id
       },
-      seachCondition: '',
-      seachContent: '',
+      seachCondition: '用户ID',
+      seachContent: this.$route.query.userid,
       seachSel: [{
         value: '帖子ID',
         label: '帖子ID'
@@ -336,13 +336,14 @@ export default {
   created() {
     this.listQuery.userid = this.$route.query.userid;
     console.log(this.listQuery.userid);
+    console.log(this.seachCondition);
     this.getList();
   },
   methods: {
     getList() {
       this.listLoading = true
-      getUserInfoList(this.listQuery).then(response => {
-        console.log(response.data);
+      getContentList(this.listQuery).then(response => {
+        console.log(this.listQuery);
         this.list = response.data.items.map(v => {
           const content = v.content.replace(new RegExp(v.keyword, 'ig'), '<span style="color: red;font-weight: bold;background-color: yellow;">' + v.keyword + '</span>')
           this.$set(v, 'content', content);
@@ -364,6 +365,10 @@ export default {
         this.total = response.data.total
         this.listLoading = false
       })
+    },
+    changeUser(userid) {
+      this.listQuery.seachContent = userid;
+      this.getList();
     },
     changeColor(item) {
       if (item.optinfo === 0) {
@@ -434,16 +439,21 @@ export default {
     },
     submitOneOperation(row, index, opt) {
       this.submitor = store.state.user.name; // 获取操作者名字
-      console.log(opt);
-      submitOneOperation(this.submitor, row).then(response => {
+      // row.push({ optsubmitor: this.submitor });
+      // row.push({ optx: optx });
+      row.optsubmitor = this.submitor;
+      row.opt = opt;
+      console.log(row);
+      submitOneOperation(row).then(response => {
+        this.list.splice(index, 1);
         console.log(response);
         this.$notify({
           title: '成功',
           message: '操作成功',
           type: 'success',
           duration: 2000
-        })
-      })
+        });
+      });
     },
     changeState(state) {
       if (state === 0) {
@@ -520,7 +530,7 @@ export default {
         if (newValue.timeDayPick === '' || newValue.timeDayPick == null) {
           newValue.timeDayPick = this.getNowDay();
         }
-        getUserInfoList(newValue).then(response => {
+        getContentList(newValue).then(response => {
           this.list = response.data.items.map(v => {
             const content = v.content.replace(new RegExp(v.keyword, 'ig'), '<span style="color: red;font-weight: bold;background-color: yellow;">' + v.keyword + '</span>')
             this.$set(v, 'content', content);
