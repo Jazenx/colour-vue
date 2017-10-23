@@ -13,8 +13,8 @@ export function getContentList(query) {
 export function getIpList(query, page) {
   return fetch({
     url: 'review/ipworkstation/list',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       query,
       page
     }
@@ -25,8 +25,8 @@ export function getIpList(query, page) {
 export function getIdList(query, page) {
   return fetch({
     url: 'review/idworkstation/list',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       query,
       page
     }

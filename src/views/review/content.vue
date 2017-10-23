@@ -1,7 +1,6 @@
 <template>
-  <div class="app-container">
-
-    <div class="main-container">
+  <div class="app-container"> 
+    <div class="main-container"  v-loading="mainLoading">
       <div style="margin: 20px">
         <div>
           <el-button type="info" size="small" @click="changeState(0)">全部</el-button>
@@ -102,7 +101,7 @@
         </div>
       </div>
       <div style="margin: 15px;  display: flex;justify-content: space-between;">
-        <el-checkbox size="large" v-model="checkAll">全选</el-checkbox>
+        <el-checkbox v-model="checkAll">全选</el-checkbox>
         <el-button type="danger" size="small">封禁跳转提交</el-button>
       </div>
 
@@ -118,6 +117,7 @@
               </label>
             </el-row>
             <el-row style="display: flex;align-items: center;height:22px">
+              <!-- <input type="checkbox" :value="item.rowkey" v-model="item.checked"> -->
               <el-checkbox :value="item.rowkey" v-model="item.checked"></el-checkbox>
               <h5 class="infoGrey" style="margin-left:10px">{{item.username}}</h5>
               <p class="infoGrey">(
@@ -200,8 +200,7 @@ export default {
   },
   data() {
     return {
-      testInfo:
-        '本人最近打算换车，10年的大众要退休了，皮实耐用，用料厚道是这10年来用车经验对我选下一款车所留下的深刻影响，上网站搜了搜，正好看到最近这款车上了首页SUV，看了看大家分享的雪铁龙经验，觉得挺符合我的要求，直奔4S看实车。 &nbsp;&nbsp;&nbsp;&nbsp;先说外型，这车，不喜欢的人绝对认为它丑得一塌糊涂，不过我承认还是电到我了，我本人其实很喜欢MINI那种圆了咕噜的休闲风格，喜欢轻松自在自由随意的驾驶感觉，这车一眼看去就让人感觉很悠闲但又具有自己的独特风格，外型高水平过关了，另外加一句，实车绝对比网上照片还要好看，不知道摄像师们都什么水平啊 &nbsp;&nbsp;&nbsp;&nbsp;再看内饰，撞色现在好像挺流行，不过我还是喜欢纯色的，到时候再说吧。话说法国人造车确实感觉脑子是实芯的呆呆的，面子功夫一点不会做，内饰进去根本感不到能和豪华挂钩，主驾驶车窗那个控制面板按键用手去按竟然还能左右咣当，松松垮垮，不知道是不是就展车这样，还是都这样，中控台硬塑，真是可惜了电子档杆和仪表盘这么高科技感的配件了。座椅看起来挺单薄，坐上去感觉倒是还可以，前后排空间和顶部高度绝对OK，够用，内饰勉强过关吧，毕竟本身就想选一辆很休闲的车，只要不是丑的过分，内饰豪华不豪华的不会产生决定',
+      mainLoading: true,
       list: [],
       total: null,
       listLoading: true,
@@ -403,6 +402,10 @@ export default {
         // console.log(this.list);
         this.total = response.data.total;
         this.listLoading = false;
+           // 渲染完执行函数
+        this.$nextTick(() => {
+          this.mainLoading = false;
+        })
       });
     },
     changeColor(item) {

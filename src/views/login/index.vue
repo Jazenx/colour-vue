@@ -46,7 +46,7 @@ export default {
     };
     return {
       loginForm: {
-        email: 'admin@colourdata.com.cn',
+        email: '',
         password: ''
       },
       loginRules: {

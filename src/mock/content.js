@@ -4,7 +4,7 @@ import {
 } from '@/utils'
 
 const List = []
-const count = 100
+const count = 1000
 const count2 = 5
 
 for (let i = 0; i < count; i++) {
