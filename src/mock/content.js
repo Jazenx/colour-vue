@@ -23,8 +23,8 @@ for (let i = 0; i < count; i++) {
     'submitor|1': [null, '@cname'],
     title: '@ctitle',
     url: '@url',
-    keyword: '草泥马',
-    content: '草泥马@cparagraph()草泥马',
+    keyword: '草泥马&傻逼',
+    content: '草泥马@cparagraph()草泥马@cparagraph()傻逼@cparagraph()傻逼',
     'wordtype|1': ['低俗信息', '涉政信息', '黄色信息', '广告信息'],
     judgedetail: '@cword(3, 8)', // 详细判断信息
     'optinfo|1': [0, 1, 2, 3] // 操作信息 对应通过删除忽略

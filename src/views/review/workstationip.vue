@@ -151,8 +151,20 @@ export default {
       getIpList(this.listQueryIp, this.pageQuery).then(response => {
         console.log(response.data);
         this.list = response.data.items.map(v => {
-          const content = v.content.replace(new RegExp(v.keyword, 'ig'), '<span style="color: red;font-weight: bold;background-color: yellow;">' + v.keyword + '</span>')
-          this.$set(v, 'content', content);
+          let mainword = [];
+          let maincontent = v.content;
+          mainword = v.keyword.split('&');
+          for (let word of mainword) {
+            if (word != null) {
+              maincontent = maincontent.replace(
+                new RegExp(word, 'ig'),
+                '<span style="color: red;font-weight: bold;background-color: yellow;">' +
+                word +
+                '</span>'
+              );
+            }
+          }
+          this.$set(v, 'content', maincontent);
           this.$set(v, 'checked', false);
           if (v.optinfo === 0) {
             this.$set(v, 'bgcolor', '#F0FFFF');

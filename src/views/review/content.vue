@@ -1,6 +1,6 @@
 <template>
-  <div class="app-container"> 
-    <div class="main-container"  v-loading="mainLoading">
+  <div class="app-container">
+    <div class="main-container" v-loading="mainLoading">
       <div style="margin: 20px">
         <div>
           <el-button type="info" size="small" @click="changeState(0)">全部</el-button>
@@ -20,13 +20,13 @@
         <div style="margin: 15px 0;"></div>
         <el-form>
           <!-- <el-form-item label="版块名称:">
-            <el-select v-model="listQuery.locations" multiple placeholder="请选择板块名">
-              <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
-                <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-option-group>
-            </el-select>
-          </el-form-item> -->
+                                          <el-select v-model="listQuery.locations" multiple placeholder="请选择板块名">
+                                            <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
+                                              <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
+                                              </el-option>
+                                            </el-option-group>
+                                          </el-select>
+                                        </el-form-item> -->
           <el-form-item label="当前状态:">
             <el-radio-group v-model="listQuery.currentState" size="small">
               <el-radio-button label="0">不限</el-radio-button>
@@ -60,16 +60,19 @@
               <el-radio-button label="3">涉恐</el-radio-button>
               <el-radio-button label="4">广告</el-radio-button>
               <el-radio-button label="5">低俗</el-radio-button>
+              <el-radio-button label="6">敏感</el-radio-button>
+              <el-radio-button label="7">灌水</el-radio-button>
+              <el-radio-button label="8">个性</el-radio-button>
             </el-radio-group>
           </el-form-item>
           <!-- <el-form-item label="识别类型:">
-            <el-radio-group v-model="listQuery.recognitionType" size="small">
-              <el-radio-button label="0">不限</el-radio-button>
-              <el-radio-button label="1">未确认</el-radio-button>
-              <el-radio-button label="2">已确认</el-radio-button>
-              <el-radio-button label="3">已忽略</el-radio-button>
-            </el-radio-group>
-          </el-form-item> -->
+                                          <el-radio-group v-model="listQuery.recognitionType" size="small">
+                                            <el-radio-button label="0">不限</el-radio-button>
+                                            <el-radio-button label="1">未确认</el-radio-button>
+                                            <el-radio-button label="2">已确认</el-radio-button>
+                                            <el-radio-button label="3">已忽略</el-radio-button>
+                                          </el-radio-group>
+                                        </el-form-item> -->
           <el-form-item label="彩数识别:">
             <el-radio-group v-model="listQuery.colourdataType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
@@ -185,11 +188,7 @@
 import Sticky from '@/components/Sticky'; // 粘性header组件
 import waves from '@/directive/waves.js'; // 水波纹指令
 import BackToTop from '@/components/BackToTop';
-import {
-  getContentList,
-  submitAllList,
-  submitOneOperation
-} from '@/api/content';
+import { getContentList, submitAllList, submitOneOperation } from '@/api/content';
 import store from '../../store';
 
 export default {
@@ -378,13 +377,20 @@ export default {
       getContentList(this.listQuery).then(response => {
         console.log(response.data);
         this.list = response.data.items.map(v => {
-          const content = v.content.replace(
-            new RegExp(v.keyword, 'ig'),
-            '<span style="color: red;font-weight: bold;background-color: yellow;">' +
-              v.keyword +
-              '</span>'
-          );
-          this.$set(v, 'content', content);
+          let mainword = [];
+          let maincontent = v.content;
+          mainword = v.keyword.split('&');
+          for (let word of mainword) {
+            if (word != null) {
+              maincontent = maincontent.replace(
+                new RegExp(word, 'ig'),
+                '<span style="color: red;font-weight: bold;background-color: yellow;">' +
+                word +
+                '</span>'
+              );
+            }
+          }
+          this.$set(v, 'content', maincontent);
           this.$set(v, 'checked', false);
           if (v.optinfo === 0) {
             this.$set(v, 'bgcolor', '#F0FFFF');
@@ -402,7 +408,7 @@ export default {
         // console.log(this.list);
         this.total = response.data.total;
         this.listLoading = false;
-           // 渲染完执行函数
+        // 渲染完执行函数
         this.$nextTick(() => {
           this.mainLoading = false;
         })
@@ -585,17 +591,23 @@ export default {
         if (newValue.timeDayPick === '' || newValue.timeDayPick == null) {
           newValue.timeDayPick = this.getNowDay();
         }
-        console.log(newValue.timeDayPick);
-        console.log(newValue);
         getContentList(newValue).then(response => {
           this.list = response.data.items.map(v => {
-            const content = v.content.replace(
-              new RegExp(v.keyword, 'ig'),
-              '<span style="color: red;font-weight: bold;background-color: yellow;">' +
-                v.keyword +
-                '</span>'
-            );
-            this.$set(v, 'content', content);
+            let mainword = [];
+            let maincontent = v.content;
+            mainword = v.keyword.split('&');
+            for (let word of mainword) {
+              if (word != null) {
+                maincontent = maincontent.replace(
+                  new RegExp(word, 'ig'),
+                  '<span style="color: red;font-weight: bold;background-color: yellow;">' +
+                  word +
+                  '</span>'
+                );
+              }
+            }
+            this.$set(v, 'content', maincontent);
+            this.$set(v, 'checked', false);
             if (v.optinfo === 0) {
               this.$set(v, 'bgcolor', '#F0FFFF');
             } else if (v.optinfo === 1) {
@@ -644,5 +656,22 @@ export default {
 
 .infoGrey {
   color: #808080;
+}
+
+
+.el-carousel__item h3 {
+  color: #475669;
+  font-size: 18px;
+  opacity: 0.75;
+  line-height: 300px;
+  margin: 0;
+}
+
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n+1) {
+  background-color: #d3dce6;
 }
 </style>

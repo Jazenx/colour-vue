@@ -16,6 +16,8 @@ for (let i = 0; i < count; i++) {
     updatetime: '@datetime',
     id: '@increment',
     classify: '@cname',
+    adsnoun: Mock.Random.cword(2, 4),
+    adsverb: Mock.Random.cword(2, 4),
     keyword: Mock.Random.cword(2, 8)
   }))
 }

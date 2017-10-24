@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
 
-    <div class="main-container">
+    <div class="main-container" v-loading="mainLoading">
       <div style="margin: 20px">
         <div>
           <el-button type="info" size="small" @click="changeState(0)">全部</el-button>
@@ -21,13 +21,13 @@
         <div style="margin: 15px 0;"></div>
         <el-form>
           <!-- <el-form-item label="版块名称:">
-            <el-select v-model="listQuery.locations" multiple placeholder="请选择板块名">
-              <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
-                <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-option-group>
-            </el-select>
-          </el-form-item> -->
+                    <el-select v-model="listQuery.locations" multiple placeholder="请选择板块名">
+                      <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
+                        <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                      </el-option-group>
+                    </el-select>
+                  </el-form-item> -->
           <el-form-item label="当前状态:">
             <el-radio-group v-model="listQuery.currentState" size="small">
               <el-radio-button label="0">不限</el-radio-button>
@@ -61,16 +61,19 @@
               <el-radio-button label="3">涉恐</el-radio-button>
               <el-radio-button label="4">广告</el-radio-button>
               <el-radio-button label="5">低俗</el-radio-button>
+              <el-radio-button label="6">敏感</el-radio-button>
+              <el-radio-button label="7">灌水</el-radio-button>
+              <el-radio-button label="8">个性</el-radio-button>
             </el-radio-group>
           </el-form-item>
           <!-- <el-form-item label="识别类型:">
-            <el-radio-group v-model="listQuery.recognitionType" size="small">
-              <el-radio-button label="0">不限</el-radio-button>
-              <el-radio-button label="1">未确认</el-radio-button>
-              <el-radio-button label="2">已确认</el-radio-button>
-              <el-radio-button label="3">已忽略</el-radio-button>
-            </el-radio-group>
-          </el-form-item> -->
+                    <el-radio-group v-model="listQuery.recognitionType" size="small">
+                      <el-radio-button label="0">不限</el-radio-button>
+                      <el-radio-button label="1">未确认</el-radio-button>
+                      <el-radio-button label="2">已确认</el-radio-button>
+                      <el-radio-button label="3">已忽略</el-radio-button>
+                    </el-radio-group>
+                  </el-form-item> -->
           <el-form-item label="彩数识别:">
             <el-radio-group v-model="listQuery.colourdataType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
@@ -196,8 +199,7 @@ export default {
   },
   data() {
     return {
-      testRadio: undefined,
-      testArea: '<span style="color: red;font-weight: bold;background-color: yellow;">草泥马</span>三轮全责，不要掏钱了事……凭啥给。下来就跟他要驾驶证，没有就说，你这属于机动车，无牌无证，按交通法需要扣你车，外加行政拘留。先吓唬他，让他赔钱，不行就报警。现在我们这里摩托电动三轮查的严的很。至于给他钱，凭啥？你自己修车还得第二年保费上涨呢。习大大提出法治社会，行人闯红灯都赔汽车了，别怕',
+      mainLoading: true,
       list: [],
       total: null,
       listLoading: true,
@@ -345,8 +347,20 @@ export default {
       getContentList(this.listQuery).then(response => {
         console.log(this.listQuery);
         this.list = response.data.items.map(v => {
-          const content = v.content.replace(new RegExp(v.keyword, 'ig'), '<span style="color: red;font-weight: bold;background-color: yellow;">' + v.keyword + '</span>')
-          this.$set(v, 'content', content);
+          let mainword = [];
+          let maincontent = v.content;
+          mainword = v.keyword.split('&');
+          for (let word of mainword) {
+            if (word != null) {
+              maincontent = maincontent.replace(
+                new RegExp(word, 'ig'),
+                '<span style="color: red;font-weight: bold;background-color: yellow;">' +
+                word +
+                '</span>'
+              );
+            }
+          }
+          this.$set(v, 'content', maincontent);
           this.$set(v, 'checked', false);
           if (v.optinfo === 0) {
             this.$set(v, 'bgcolor', '#F0FFFF');
@@ -364,6 +378,10 @@ export default {
         console.log(this.list);
         this.total = response.data.total
         this.listLoading = false
+        // 渲染完执行函数
+        this.$nextTick(() => {
+          this.mainLoading = false;
+        })
       })
     },
     changeUser(userid) {
@@ -532,8 +550,21 @@ export default {
         }
         getContentList(newValue).then(response => {
           this.list = response.data.items.map(v => {
-            const content = v.content.replace(new RegExp(v.keyword, 'ig'), '<span style="color: red;font-weight: bold;background-color: yellow;">' + v.keyword + '</span>')
-            this.$set(v, 'content', content);
+            let mainword = [];
+            let maincontent = v.content;
+            mainword = v.keyword.split('&');
+            for (let word of mainword) {
+              if (word != null) {
+                maincontent = maincontent.replace(
+                  new RegExp(word, 'ig'),
+                  '<span style="color: red;font-weight: bold;background-color: yellow;">' +
+                  word +
+                  '</span>'
+                );
+              }
+            }
+            this.$set(v, 'content', maincontent);
+            this.$set(v, 'checked', false);
             if (v.optinfo === 0) {
               this.$set(v, 'bgcolor', '#F0FFFF');
             } else if (v.optinfo === 1) {

@@ -52,7 +52,6 @@ export function changeKeywordsStatus(id, wordstate) {
 }
 
 
-
 export function deleteKeywords(keywordsID) {
   return fetch({
     url: 'graylist/banned/deletekeywords',
@@ -66,6 +65,74 @@ export function deleteKeywords(keywordsID) {
 export function deleteContacts(keywordsID) {
   return fetch({
     url: 'graylist/banned/deletecontacts',
+    method: 'post',
+    data: {
+      keywordsID
+    }
+  })
+}
+
+export function addAdsInfo(adsnoun, adsverb, validity, updatetime, submitor, location, wordstate, classify) {
+  return fetch({
+    url: 'graylist/banned/addadsinfo',
+    method: 'post',
+    data: {
+      adsnoun, // 动词
+      adsverb, // 名词
+      validity, // 有效日期
+      updatetime, // 提交时间
+      submitor, // 提交人
+      location, // 范围
+      wordstate, // 状态
+      classify
+    }
+  })
+}
+
+export function getAdsInfo(query) {
+  return fetch({
+    url: 'graylist/banned/getadsinfo',
+    method: 'get',
+    params: query
+  })
+}
+
+
+
+
+export function updateAdsInfo(id, adsnoun, adsverb, validity, updatetime, submitor, location) {
+  return fetch({
+    url: 'graylist/banned/updateadsinfo',
+    method: 'post',
+    data: {
+      id, // 编号
+      adsnoun, 
+      adsverb, 
+      validity, // 有效日期
+      updatetime, // 提交时间
+      submitor, // 提交人
+      location // 范围
+    }
+  })
+}
+
+
+export function changeAdsStatus(id, wordstate) {
+  return fetch({
+    url: 'graylist/banned/changeadsstatus',
+    method: 'post',
+    data: {
+      id,
+      wordstate
+    }
+  })
+}
+
+
+
+export function deleteAds(adsID) {
+  return fetch({
+    url: 'graylist/banned/deleteads',
     method: 'post',
     data: {
       keywordsID

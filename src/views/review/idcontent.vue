@@ -21,13 +21,13 @@
         <div style="margin: 15px 0;"></div>
         <el-form>
           <!-- <el-form-item label="版块名称:">
-            <el-select v-model="listQuery.locations" multiple placeholder="请选择板块名">
-              <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
-                <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-option-group>
-            </el-select>
-          </el-form-item> -->
+              <el-select v-model="listQuery.locations" multiple placeholder="请选择板块名">
+                <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
+                  <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
+                  </el-option>
+                </el-option-group>
+              </el-select>
+            </el-form-item> -->
           <el-form-item label="当前状态:">
             <el-radio-group v-model="listQuery.currentState" size="small">
               <el-radio-button label="0">不限</el-radio-button>
@@ -61,16 +61,19 @@
               <el-radio-button label="3">涉恐</el-radio-button>
               <el-radio-button label="4">广告</el-radio-button>
               <el-radio-button label="5">低俗</el-radio-button>
+              <el-radio-button label="6">敏感</el-radio-button>
+              <el-radio-button label="7">灌水</el-radio-button>
+              <el-radio-button label="8">个性</el-radio-button>
             </el-radio-group>
           </el-form-item>
           <!-- <el-form-item label="识别类型:">
-            <el-radio-group v-model="listQuery.recognitionType" size="small">
-              <el-radio-button label="0">不限</el-radio-button>
-              <el-radio-button label="1">未确认</el-radio-button>
-              <el-radio-button label="2">已确认</el-radio-button>
-              <el-radio-button label="3">已忽略</el-radio-button>
-            </el-radio-group>
-          </el-form-item> -->
+              <el-radio-group v-model="listQuery.recognitionType" size="small">
+                <el-radio-button label="0">不限</el-radio-button>
+                <el-radio-button label="1">未确认</el-radio-button>
+                <el-radio-button label="2">已确认</el-radio-button>
+                <el-radio-button label="3">已忽略</el-radio-button>
+              </el-radio-group>
+            </el-form-item> -->
           <el-form-item label="彩数识别:">
             <el-radio-group v-model="listQuery.colourdataType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
@@ -97,7 +100,7 @@
 
       <el-collapse v-for="(item, index) in list" :key="item.ip" v-loading="listLoading" accordion>
         <el-collapse-item :title="item.userid+' ('+item.username+')'+' (共'+item.total+'条)'" name="index">
-          <workstationid  :ip="item.id" :listQueryId="listQuery"></workstationid>
+          <workstationid :ip="item.id" :listQueryId="listQuery"></workstationid>
         </el-collapse-item>
       </el-collapse>
       <div v-show="!listLoading" class="pagination-container" style="  display: flex;justify-content: center;align-items: center;">
