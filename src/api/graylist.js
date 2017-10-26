@@ -130,7 +130,7 @@ export function changeAdsStatus(id, wordstate) {
 
 
 
-export function deleteAds(adsID) {
+export function deleteAds(keywordsID) {
   return fetch({
     url: 'graylist/banned/deleteads',
     method: 'post',

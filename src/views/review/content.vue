@@ -20,13 +20,13 @@
         <div style="margin: 15px 0;"></div>
         <el-form>
           <!-- <el-form-item label="版块名称:">
-                                          <el-select v-model="listQuery.locations" multiple placeholder="请选择板块名">
-                                            <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
-                                              <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
-                                              </el-option>
-                                            </el-option-group>
-                                          </el-select>
-                                        </el-form-item> -->
+                                                <el-select v-model="listQuery.locations" multiple placeholder="请选择板块名">
+                                                  <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
+                                                    <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
+                                                    </el-option>
+                                                  </el-option-group>
+                                                </el-select>
+                                              </el-form-item> -->
           <el-form-item label="当前状态:">
             <el-radio-group v-model="listQuery.currentState" size="small">
               <el-radio-button label="0">不限</el-radio-button>
@@ -66,13 +66,13 @@
             </el-radio-group>
           </el-form-item>
           <!-- <el-form-item label="识别类型:">
-                                          <el-radio-group v-model="listQuery.recognitionType" size="small">
-                                            <el-radio-button label="0">不限</el-radio-button>
-                                            <el-radio-button label="1">未确认</el-radio-button>
-                                            <el-radio-button label="2">已确认</el-radio-button>
-                                            <el-radio-button label="3">已忽略</el-radio-button>
-                                          </el-radio-group>
-                                        </el-form-item> -->
+                                                <el-radio-group v-model="listQuery.recognitionType" size="small">
+                                                  <el-radio-button label="0">不限</el-radio-button>
+                                                  <el-radio-button label="1">未确认</el-radio-button>
+                                                  <el-radio-button label="2">已确认</el-radio-button>
+                                                  <el-radio-button label="3">已忽略</el-radio-button>
+                                                </el-radio-group>
+                                              </el-form-item> -->
           <el-form-item label="彩数识别:">
             <el-radio-group v-model="listQuery.colourdataType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
@@ -231,10 +231,6 @@ export default {
           label: '主题ID'
         },
         {
-          value: '用户名',
-          label: '用户名'
-        },
-        {
           value: '用户ID',
           label: '用户ID'
         },
@@ -375,7 +371,7 @@ export default {
       this.listLoading = true;
       // console.log(this.listQuery)
       getContentList(this.listQuery).then(response => {
-        console.log(response.data);
+        console.log('获取列表');
         this.list = response.data.items.map(v => {
           let mainword = [];
           let maincontent = v.content;
@@ -429,10 +425,12 @@ export default {
     },
     handleSizeChange(val) {
       this.listQuery.limit = val;
+      console.log('一页展示的条数变了，load一次list');
       this.getList();
     },
     handleCurrentChange(val) {
       this.listQuery.page = val;
+      console.log('页数的条数变了，load一次list');
       this.getList();
     },
     passAllContent() {

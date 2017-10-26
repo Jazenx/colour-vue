@@ -21,13 +21,13 @@
         <div style="margin: 15px 0;"></div>
         <el-form>
           <!-- <el-form-item label="版块名称:">
-              <el-select v-model="listQuery.locations" multiple placeholder="请选择板块名">
-                <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
-                  <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
-                  </el-option>
-                </el-option-group>
-              </el-select>
-            </el-form-item> -->
+                <el-select v-model="listQuery.locations" multiple placeholder="请选择板块名">
+                  <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
+                    <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
+                    </el-option>
+                  </el-option-group>
+                </el-select>
+              </el-form-item> -->
           <el-form-item label="当前状态:">
             <el-radio-group v-model="listQuery.currentState" size="small">
               <el-radio-button label="0">不限</el-radio-button>
@@ -67,13 +67,13 @@
             </el-radio-group>
           </el-form-item>
           <!-- <el-form-item label="识别类型:">
-              <el-radio-group v-model="listQuery.recognitionType" size="small">
-                <el-radio-button label="0">不限</el-radio-button>
-                <el-radio-button label="1">未确认</el-radio-button>
-                <el-radio-button label="2">已确认</el-radio-button>
-                <el-radio-button label="3">已忽略</el-radio-button>
-              </el-radio-group>
-            </el-form-item> -->
+                <el-radio-group v-model="listQuery.recognitionType" size="small">
+                  <el-radio-button label="0">不限</el-radio-button>
+                  <el-radio-button label="1">未确认</el-radio-button>
+                  <el-radio-button label="2">已确认</el-radio-button>
+                  <el-radio-button label="3">已忽略</el-radio-button>
+                </el-radio-group>
+              </el-form-item> -->
           <el-form-item label="彩数识别:">
             <el-radio-group v-model="listQuery.colourdataType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
@@ -103,7 +103,7 @@
         </el-collapse-item>
       </el-collapse>
       <div v-show="!listLoading" class="pagination-container" style="  display: flex;justify-content: center;align-items: center;">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[20, 30 ,50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[10, 20, 30]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
       </div>
       <back-to-top transitionName="fade" :customStyle="myBackToTopStyle" :visibilityHeight="300" :backPosition="50"></back-to-top>
@@ -131,7 +131,7 @@ export default {
       massList: [],
       listQuery: {
         page: 1,
-        limit: 20,
+        limit: 10,
         currentState: 2,
         humanReview: 1,
         contentType: 0,
@@ -152,9 +152,6 @@ export default {
       }, {
         value: '主题ID',
         label: '主题ID'
-      }, {
-        value: '用户名',
-        label: '用户名'
       }, {
         value: '用户ID',
         label: '用户ID'
@@ -269,6 +266,7 @@ export default {
         this.list = response.data.items;
         this.total = response.data.total
         this.listLoading = false
+        console.log(this.list)
       })
     },
     handleSizeChange(val) {

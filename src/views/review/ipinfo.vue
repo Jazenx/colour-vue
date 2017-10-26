@@ -228,10 +228,7 @@ export default {
       }, {
         value: '主题ID',
         label: '主题ID'
-      }, {
-        value: '用户名',
-        label: '用户名'
-      }, {
+      },{
         value: '用户ID',
         label: '用户ID'
       }, {

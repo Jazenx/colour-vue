@@ -98,13 +98,13 @@
         <label style="float:left">总量：{{total}}</label>
       </div>
 
-      <el-collapse v-for="(item, index) in list" :key="item.ip" v-loading="listLoading" accordion>
+      <el-collapse v-for="(item, index) in list" :key="item.userid" v-loading="listLoading" accordion>
         <el-collapse-item :title="item.userid+' ('+item.username+')'+' (共'+item.total+'条)'" name="index">
-          <workstationid :ip="item.id" :listQueryId="listQuery"></workstationid>
+          <workstationid :id="item.userid" :listQueryId="listQuery"></workstationid>
         </el-collapse-item>
       </el-collapse>
       <div v-show="!listLoading" class="pagination-container" style="  display: flex;justify-content: center;align-items: center;">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[20, 30 ,50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[10, 20, 30]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
       </div>
       <back-to-top transitionName="fade" :customStyle="myBackToTopStyle" :visibilityHeight="300" :backPosition="50"></back-to-top>
@@ -132,7 +132,7 @@ export default {
       massList: [],
       listQuery: {
         page: 1,
-        limit: 20,
+        limit: 10,
         currentState: 2,
         humanReview: 1,
         contentType: 0,
@@ -153,10 +153,7 @@ export default {
       }, {
         value: '主题ID',
         label: '主题ID'
-      }, {
-        value: '用户名',
-        label: '用户名'
-      }, {
+      },{
         value: '用户ID',
         label: '用户ID'
       }, {

@@ -15,7 +15,7 @@
       </el-select>
       <el-button class="filter-item" type="primary" v-waves icon="search" @click="getList">搜索</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="plus">添加</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="minus" s @click="deleteKeyword()">删除</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="minus" @click="deleteKeyword()">删除</el-button>
       <el-button class="filter-item" type="primary" icon="document">导出</el-button>
     </div>
     <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="努力加载中..." border fit highlight-current-row style="width: 100%" @selection-change="handleSelectionChange">
@@ -23,14 +23,14 @@
       </el-table-column>
       <el-table-column align="center" label="动词">
         <template scope="scope">
-          <el-input v-show="scope.row.edit" size="small" v-model="scope.row.adsnoun"></el-input>
-          <span v-show="!scope.row.edit">{{ scope.row.adsnoun }}</span>
+          <el-input v-show="scope.row.edit" size="small" v-model="scope.row.adsverb"></el-input>
+          <span v-show="!scope.row.edit">{{ scope.row.adsverb }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="名词">
         <template scope="scope">
-          <el-input v-show="scope.row.edit" size="small" v-model="scope.row.adsverb"></el-input>
-          <span v-show="!scope.row.edit">{{ scope.row.adsverb }}</span>
+          <el-input v-show="scope.row.edit" size="small" v-model="scope.row.adsnoun"></el-input>
+          <span v-show="!scope.row.edit">{{ scope.row.adsnoun }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="范围" style="width: 10%">
@@ -95,7 +95,7 @@
         <el-form-item label="范围">
           <el-select v-model="location" multiple placeholder="请选择范围">
             <!-- <el-option v-for="item in locationSel" :key="item.label" :label="item.label" :value="item.value">
-                                                                                                                                                                                                                                                    </el-option> -->
+                                                                                                                                                                                                                                                        </el-option> -->
             <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
               <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
@@ -177,67 +177,20 @@ export default {
         value: '失效',
         label: '失效'
       }],
-      locationSel: [{
-        label: '汽车之家',
-        options: [{
-          value: '汽车之家',
-          label: '汽车之家'
-        }]
-      }, {
-        label: '论坛、评论',
-        options: [{
-          value: '论坛',
-          label: '论坛'
-        }, {
-          value: '评论',
-          label: '评论'
-        }, {
-          value: '回帖',
-          label: '回帖'
-        }, {
-          value: '历史数据清洗',
-          label: '历史数据清洗'
-        }]
-      }, {
-        label: '口碑',
-        options: [{
-          value: '口碑',
-          label: '口碑'
-        }]
-      }, {
-        label: '保养',
-        options: [{
-          value: '保养',
-          label: '保养'
-        }]
-      }, {
-        label: '问答',
-        options: [{
-          value: '提问',
-          label: '提问'
-        }, {
-          value: '答案',
-          label: '答案'
-        }, {
-          value: '追问',
-          label: '追问'
-        }]
-      }, {
-        label: '精华帖',
-        options: [{
-          value: '精华帖',
-          label: '精华贴'
-        }]
-      }, {
-        label: '说客拍客',
-        options: [{
-          value: '说客',
-          label: '说客'
-        }, {
-          value: '拍客',
-          label: '拍客'
-        }]
-      }]
+      locationSel: [
+        {
+          label: '论坛、评论',
+          options: [{
+            value: '论坛',
+            label: '论坛'
+          },
+          {
+            value: '回帖',
+            label: '回帖'
+          }
+          ]
+        }
+      ]
     }
   },
   filters: {
@@ -351,7 +304,7 @@ export default {
           tempLocation += v + '、';
         }
         row.location = tempLocation.substr(0, tempLocation.length - 1)
-        updateAdsInfo(row.id, row.adsnoun, row.adsverb,row.validity, row.updatetime, row.submitor, row.location).then(response => {
+        updateAdsInfo(row.id, row.adsnoun, row.adsverb, row.validity, row.updatetime, row.submitor, row.location).then(response => {
           console.log(response);
           this.$notify({
             title: '成功',
@@ -463,7 +416,7 @@ export default {
       }
     },
     deleteKeyword() {
-      this.$confirm('此操作将批量删除广告信息, 是否继续?', '提示', {
+      this.$confirm('此操作将批量删除关键词, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'error'
@@ -478,7 +431,8 @@ export default {
           })
           this.getList();
         })
-      }).catch(() => {
+      }).catch((e) => {
+        console.log(e)
         this.$message({
           type: 'info',
           message: '已取消'

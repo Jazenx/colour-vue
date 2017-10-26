@@ -85,7 +85,7 @@
       </el-row>
 
       <div v-show="!listLoading" class="pagination-container" style="display: flex;justify-content: center;align-items: center;">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="pageQuery.page" :page-sizes="[10, 20, 30]" :page-size="pageQuery.limit" layout="total, sizes, prev, pager, next" :total="total">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="pageQuery.page" :page-sizes="[5, 10, 20]" :page-size="pageQuery.limit" layout="total, sizes, prev, pager, next" :total="total">
         </el-pagination>
       </div>
     </div>
@@ -117,7 +117,7 @@ export default {
       massList: [],
       pageQuery: {
         page: 1,
-        limit: 10,
+        limit: 5,
         id: ''
       }
     };
@@ -142,9 +142,7 @@ export default {
   },
   created() {
     this.listLoading = false;
-    // console.log(this.ip);
     this.pageQuery.id = this.id;
-    // this.listQuery = this.listQueryIp;
     this.getList();
   },
   methods: {

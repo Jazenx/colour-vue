@@ -5,7 +5,7 @@ import {
 
 const List = []
 const count = 1000
-const count2 = 5
+const count2 = 100
 
 for (let i = 0; i < count; i++) {
   List.push(Mock.mock({

@@ -34,7 +34,8 @@
     "vue-router": "2.7.0",
     "vuedraggable": "2.14.1",
     "vuex": "2.3.1",
-    "xlsx": "^0.10.8"
+    "xlsx": "^0.10.8",
+    "vue-awesome-swiper": "^2.6.7"
   },
   "devDependencies": {
     "autoprefixer": "7.1.1",
