@@ -106,8 +106,8 @@ export function updateAdsInfo(id, adsnoun, adsverb, validity, updatetime, submit
     method: 'post',
     data: {
       id, // 编号
-      adsnoun, 
-      adsverb, 
+      adsnoun,
+      adsverb,
       validity, // 有效日期
       updatetime, // 提交时间
       submitor, // 提交人

@@ -347,7 +347,7 @@ export default {
           let mainword = [];
           let maincontent = v.content;
           mainword = v.keyword.split('&');
-          for (let word of mainword) {
+          for (const word of mainword) {
             if (word != null) {
               maincontent = maincontent.replace(
                 new RegExp(word, 'ig'),
@@ -550,7 +550,7 @@ export default {
             let mainword = [];
             let maincontent = v.content;
             mainword = v.keyword.split('&');
-            for (let word of mainword) {
+            for (const word of mainword) {
               if (word != null) {
                 maincontent = maincontent.replace(
                   new RegExp(word, 'ig'),

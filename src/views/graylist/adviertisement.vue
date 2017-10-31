@@ -87,15 +87,15 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" style="width: 900px;margin-left:23%">
       <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 300px; margin-left:50px;'>
         <el-form-item label="动词">
-          <el-input type="text" v-model="temp.adsnoun" placeholder="请输入动词"></el-input>
+          <el-input type="text" v-model="temp.adsverb" placeholder="请输入动词"></el-input>
         </el-form-item>
         <el-form-item label="名词">
-          <el-input type="text" v-model="temp.adsverb" placeholder="请输入名词"></el-input>
+          <el-input type="text" v-model="temp.adsnoun" placeholder="请输入名词"></el-input>
         </el-form-item>
         <el-form-item label="范围">
           <el-select v-model="location" multiple placeholder="请选择范围">
             <!-- <el-option v-for="item in locationSel" :key="item.label" :label="item.label" :value="item.value">
-                                                                                                                                                                                                                                                        </el-option> -->
+                                                                                                                                                                                                                                                                    </el-option> -->
             <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
               <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
@@ -431,7 +431,7 @@ export default {
           })
           this.getList();
         })
-      }).catch((e) => {
+      }).catch(e => {
         console.log(e)
         this.$message({
           type: 'info',

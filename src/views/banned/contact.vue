@@ -204,7 +204,7 @@ export default {
         value: '失效',
         label: '失效'
       }],
-    locationSel: [
+      locationSel: [
         {
           label: '论坛、评论',
           options: [{

@@ -13,7 +13,7 @@ for (let i = 0; i < count; i++) {
     rowkey: '@id',
     pid: '@id', // 帖子id
     userid: '@id',
-    username: '@cname', // 用户姓名
+    username: '@cname 傻逼', // 用户姓名
     threadid: '@id', // 主题id
     ip: '@ip',
     'state|1': ['待审核', '已通过'],
@@ -24,7 +24,7 @@ for (let i = 0; i < count; i++) {
     title: '@ctitle',
     url: '@url',
     keyword: '草泥马&傻逼',
-    content: '草泥马@cparagraph()草泥马@cparagraph()傻逼@cparagraph()傻逼',
+    content: '草泥马@cparagraph()草泥马@cparagraph()傻逼@cparagraph()',
     'wordtype|1': ['低俗信息', '涉政信息', '黄色信息', '广告信息'],
     judgedetail: '@cword(3, 8)', // 详细判断信息
     'optinfo|1': [0, 1, 2, 3] // 操作信息 对应通过删除忽略
@@ -80,7 +80,7 @@ for (let i = 0; i < count2; i++) {
       rowkey: '@id',
       pid: '@id', // 帖子id
       userid: '@id',
-      username: '@cname', // 用户姓名
+      username: '@cname傻逼', // 用户姓名
       threadid: '@id', // 主题id
       ip: '@ip',
       'state|1': ['待审核', '已通过'],

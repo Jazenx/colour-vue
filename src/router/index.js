@@ -70,60 +70,60 @@ export default new Router({
 });
 
 export const asyncRouterMap = [
-  {
-    path: '/review',
-    component: Layout,
-    redirect: '/review/content',
-    name: '审核',
-    icon: 'semantics',
-    children: [
-      {
-        path: 'content',
-        component: _import('review/content'),
-        icon: 'fenxi',
-        name: '内容'
-      },
-      {
-        path: 'ipcontent',
-        component: _import('review/ipcontent'),
-        icon: 'fenxi',
-        name: '用户IP'
-      },
-      {
-        path: 'idcontent',
-        component: _import('review/idcontent'),
-        icon: 'fenxi',
-        name: '用户ID'
-      }
-    ]
-  },
-  {
-    path: '/usercenter',
-    component: Layout,
-    redirect: '/usercenter/index',
-    name: '客户中心',
-    icon: 'shuju',
-    children: [
-      {
-        path: 'blacklist',
-        component: _import('banned/index'),
-        icon: 'jiankong',
-        name: '黑名单'
-      },
-      {
-        path: 'whitelist',
-        component: _import('whitelist/index'),
-        icon: 'jiankong',
-        name: '白名单'
-      },
-      {
-        path: 'graylist',
-        component: _import('graylist/index'),
-        icon: 'jiankong',
-        name: '灰名单'
-      }
-    ]
-  },
+    {
+      path: '/review',
+      component: Layout,
+      redirect: '/review/content',
+      name: '审核',
+      icon: 'semantics',
+      children: [
+        {
+          path: 'content',
+          component: _import('review/content'),
+          icon: 'fenxi',
+          name: '内容'
+        },
+        {
+          path: 'ipcontent',
+          component: _import('review/ipcontent'),
+          icon: 'fenxi',
+          name: '用户IP'
+        },
+        {
+          path: 'idcontent',
+          component: _import('review/idcontent'),
+          icon: 'fenxi',
+          name: '用户ID'
+        }
+      ]
+    },
+    {
+      path: '/usercenter',
+      component: Layout,
+      redirect: '/usercenter/index',
+      name: '客户中心',
+      icon: 'shuju',
+      children: [
+        {
+          path: 'blacklist',
+          component: _import('banned/index'),
+          icon: 'jiankong',
+          name: '黑名单'
+        },
+        {
+          path: 'whitelist',
+          component: _import('whitelist/index'),
+          icon: 'jiankong',
+          name: '白名单'
+        },
+        {
+          path: 'graylist',
+          component: _import('graylist/index'),
+          icon: 'jiankong',
+          name: '灰名单'
+        }
+      ]
+    },
   {
     path: '*',
     redirect: '/404',

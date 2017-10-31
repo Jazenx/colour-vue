@@ -9,26 +9,17 @@
           <el-button type="info" size="small" @click="changeState(3)">通过</el-button>
           <el-button type="info" size="small" @click="changeState(4)">误删</el-button>
           <el-button type="info" size="small" @click="changeState(5)">漏删</el-button>
-          <el-button type="info" size="small">复议</el-button>
-          <el-select v-model="listQuery.timeHourpick" placeholder="请选择时间段" style="float:right; width:110px">
+          <el-select v-model="state.timeHourpick" placeholder="请选择时间段" style="float:right; width:110px">
             <el-option v-for="item in timeSel" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
-          <el-date-picker v-model="listQuery.timeDayPick" type="date" placeholder="选择日期" style="float:right;margin-right:30px;width:120px" format="yyyy-MM-dd" @change="dateChange">
+          <el-date-picker v-model="state.timeDayPick" type="date" placeholder="选择日期" style="float:right;margin-right:30px;width:120px" format="yyyy-MM-dd" @change="dateChange">
           </el-date-picker>
         </div>
         <div style="margin: 15px 0;"></div>
         <el-form>
-          <!-- <el-form-item label="版块名称:">
-                                                <el-select v-model="listQuery.locations" multiple placeholder="请选择板块名">
-                                                  <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
-                                                    <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
-                                                    </el-option>
-                                                  </el-option-group>
-                                                </el-select>
-                                              </el-form-item> -->
           <el-form-item label="当前状态:">
-            <el-radio-group v-model="listQuery.currentState" size="small">
+            <el-radio-group v-model="state.currentState" size="small">
               <el-radio-button label="0">不限</el-radio-button>
               <el-radio-button label="1">通过</el-radio-button>
               <el-radio-button label="2">待审</el-radio-button>
@@ -38,7 +29,7 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="人工审核:">
-            <el-radio-group v-model="listQuery.humanReview" size="small">
+            <el-radio-group v-model="state.humanReview" size="small">
               <el-radio-button label="0">不限</el-radio-button>
               <el-radio-button label="1">未确认</el-radio-button>
               <el-radio-button label="2">已确认</el-radio-button>
@@ -46,14 +37,14 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="内容类型:">
-            <el-radio-group v-model="listQuery.contentType" size="small">
+            <el-radio-group v-model="state.contentType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
               <el-radio-button label="1">主题</el-radio-button>
               <el-radio-button label="2">回复</el-radio-button>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="识别类型:">
-            <el-radio-group v-model="listQuery.indentifyType" size="small">
+            <el-radio-group v-model="state.indentifyType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
               <el-radio-button label="1">涉政</el-radio-button>
               <el-radio-button label="2">涉黄</el-radio-button>
@@ -65,16 +56,8 @@
               <el-radio-button label="8">个性</el-radio-button>
             </el-radio-group>
           </el-form-item>
-          <!-- <el-form-item label="识别类型:">
-                                                <el-radio-group v-model="listQuery.recognitionType" size="small">
-                                                  <el-radio-button label="0">不限</el-radio-button>
-                                                  <el-radio-button label="1">未确认</el-radio-button>
-                                                  <el-radio-button label="2">已确认</el-radio-button>
-                                                  <el-radio-button label="3">已忽略</el-radio-button>
-                                                </el-radio-group>
-                                              </el-form-item> -->
           <el-form-item label="彩数识别:">
-            <el-radio-group v-model="listQuery.colourdataType" size="small">
+            <el-radio-group v-model="state.colourdataType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
               <el-radio-button label="1">通过</el-radio-button>
               <el-radio-button label="2">待审</el-radio-button>
@@ -122,7 +105,7 @@
             <el-row style="display: flex;align-items: center;height:22px">
               <!-- <input type="checkbox" :value="item.rowkey" v-model="item.checked"> -->
               <el-checkbox :value="item.rowkey" v-model="item.checked"></el-checkbox>
-              <h5 class="infoGrey" style="margin-left:10px">{{item.username}}</h5>
+              <h5 class="infoGrey" style="margin-left:10px" v-html="item.username">{{item.username}}</h5>
               <p class="infoGrey">(
                 <router-link class="aHref" :to="{ path: '/userinfo', query: { userid: item.userid }}">{{item.userid}}</router-link>） |
                 <router-link class="aHref" :to="{ path: '/ipinfo', query: { ip: item.ip }}">{{item.ip}}</router-link> | {{item.subtime}}
@@ -175,6 +158,20 @@
           </el-col>
         </el-row>
       </el-row>
+      <div style="margin: 15px; display: flex;justify-content:space-between;">
+        <label style="float:left">总量：{{total}}</label>
+        <div>
+          <el-button type="primary" size="small" @click="passAllContent">全部通过</el-button>
+          <el-button type="primary" size="small" @click="deleteAllContent">全部删除</el-button>
+          <el-button type="primary" size="small" @click="ignoreAllContent">全部忽略</el-button>
+          <el-button type="primary" size="small" @click="cancelAllContent">全部取消</el-button>
+          <el-button type="success" @click="submitAllOperation">提交</el-button>
+        </div>
+      </div>
+      <div style="margin: 15px;  display: flex;justify-content: space-between;">
+        <el-checkbox v-model="checkAll">全选</el-checkbox>
+        <el-button type="danger" size="small">封禁跳转提交</el-button>
+      </div>
       <div v-show="!listLoading" class="pagination-container" style="  display: flex;justify-content: center;align-items: center;">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[20, 30 ,50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
@@ -207,17 +204,18 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
+        seachCondition: null, //  查询种类 默认全部
+        seachContent: null //  查询详情 默认全部
+      },
+      state: {
         currentState: 2,
         humanReview: 1,
         contentType: 0,
         indentifyType: 0,
         recognitionType: 0,
         colourdataType: 0,
-        timeHourpick: '0024',
-        timeDayPick: this.getNowDay(),
-        locations: [],
-        seachCondition: null, //  查询种类 默认全部
-        seachContent: null //  查询详情 默认全部
+        timeHourpick: '0000',
+        timeDayPick: this.getNowDay()
       },
       seachCondition: '',
       seachContent: '',
@@ -241,8 +239,8 @@ export default {
       ],
       timeSel: [
         {
-          value: '0024',
-          label: '全天'
+          value: '0000',
+          label: '近2小时'
         },
         {
           value: '0002',
@@ -369,14 +367,13 @@ export default {
   methods: {
     getList() {
       this.listLoading = true;
-      // console.log(this.listQuery)
-      getContentList(this.listQuery).then(response => {
-        console.log('获取列表');
+      console.log(this.listQuery, this.state);
+      getContentList(this.listQuery, this.state).then(response => {
         this.list = response.data.items.map(v => {
           let mainword = [];
           let maincontent = v.content;
           mainword = v.keyword.split('&');
-          for (let word of mainword) {
+          for (const word of mainword) {
             if (word != null) {
               maincontent = maincontent.replace(
                 new RegExp(word, 'ig'),
@@ -386,6 +383,18 @@ export default {
               );
             }
           }
+          let username = v.username;
+          for (const word of mainword) {
+            if (word != null) {
+              username = username.replace(
+                new RegExp(word, 'ig'),
+                '<span style="color: red;font-weight: bold;background-color: yellow;">' +
+                word +
+                '</span>'
+              );
+            }
+          }
+          this.$set(v, 'username', username);
           this.$set(v, 'content', maincontent);
           this.$set(v, 'checked', false);
           if (v.optinfo === 0) {
@@ -500,52 +509,52 @@ export default {
     },
     changeState(state) {
       if (state === 0) {
-        this.listQuery.currentState = 0;
-        this.listQuery.humanReview = 1;
-        this.listQuery.contentType = 0;
-        this.listQuery.indentifyType = 0;
-        this.listQuery.recognitionType = 0;
-        this.listQuery.colourdataType = 0;
+        this.state.currentState = 0;
+        this.state.humanReview = 1;
+        this.state.contentType = 0;
+        this.state.indentifyType = 0;
+        this.state.recognitionType = 0;
+        this.state.colourdataType = 0;
       }
       if (state === 1) {
-        this.listQuery.currentState = 4;
-        this.listQuery.humanReview = 1;
-        this.listQuery.contentType = 0;
-        this.listQuery.indentifyType = 0;
-        this.listQuery.recognitionType = 0;
-        this.listQuery.colourdataType = 0;
+        this.state.currentState = 4;
+        this.state.humanReview = 1;
+        this.state.contentType = 0;
+        this.state.indentifyType = 0;
+        this.state.recognitionType = 0;
+        this.state.colourdataType = 0;
       }
       if (state === 2) {
-        this.listQuery.currentState = 3;
-        this.listQuery.humanReview = 1;
-        this.listQuery.contentType = 0;
-        this.listQuery.indentifyType = 0;
-        this.listQuery.recognitionType = 0;
-        this.listQuery.colourdataType = 0;
+        this.state.currentState = 3;
+        this.state.humanReview = 1;
+        this.state.contentType = 0;
+        this.state.indentifyType = 0;
+        this.state.recognitionType = 0;
+        this.state.colourdataType = 0;
       }
       if (state === 3) {
-        this.listQuery.currentState = 1;
-        this.listQuery.humanReview = 1;
-        this.listQuery.contentType = 0;
-        this.listQuery.indentifyType = 0;
-        this.listQuery.recognitionType = 0;
-        this.listQuery.colourdataType = 0;
+        this.state.currentState = 1;
+        this.state.humanReview = 1;
+        this.state.contentType = 0;
+        this.state.indentifyType = 0;
+        this.state.recognitionType = 0;
+        this.state.colourdataType = 0;
       }
       if (state === 4) {
-        this.listQuery.currentState = 1;
-        this.listQuery.humanReview = 2;
-        this.listQuery.contentType = 0;
-        this.listQuery.indentifyType = 0;
-        this.listQuery.recognitionType = 0;
-        this.listQuery.colourdataType = 3;
+        this.state.currentState = 1;
+        this.state.humanReview = 2;
+        this.state.contentType = 0;
+        this.state.indentifyType = 0;
+        this.state.recognitionType = 0;
+        this.state.colourdataType = 3;
       }
       if (state === 5) {
-        this.listQuery.currentState = 3;
-        this.listQuery.humanReview = 2;
-        this.listQuery.contentType = 0;
-        this.listQuery.indentifyType = 0;
-        this.listQuery.recognitionType = 0;
-        this.listQuery.colourdataType = 1;
+        this.state.currentState = 3;
+        this.state.humanReview = 2;
+        this.state.contentType = 0;
+        this.state.indentifyType = 0;
+        this.state.recognitionType = 0;
+        this.state.colourdataType = 1;
       }
     },
     getYMDTime(date) {
@@ -578,50 +587,42 @@ export default {
       return date.getFullYear() + seperator1 + month + seperator1 + strDate;
     },
     dateChange(val) {
-      console.log(val);
-      return this.listQuery.timeDayPick = val;
+      return this.state.timeDayPick = val;
+    },
+    debounce(func, wait, immediate) {
+      let timeout, args, context, timestamp, result;
+      const later = function() {
+        const last = _.now() - timestamp;
+        if (last < wait && last >= 0) {
+          timeout = setTimeout(later, wait - last);
+        } else {
+          timeout = null;
+          if (!immediate) {
+            result = func.apply(context, args);
+            if (!timeout) context = args = null;
+          }
+        }
+      };
+      return function() {
+        context = this;
+        args = arguments;
+        timestamp = _.now();
+        const callNow = immediate && !timeout;
+        if (!timeout) timeout = setTimeout(later, wait);
+        if (callNow) {
+          result = func.apply(context, args);
+          context = args = null;
+        }
+        return result;
+      }
     }
   },
   watch: {
-    listQuery: {
-      handler(newValue) {
-        this.listLoading = true;
-        if (newValue.timeDayPick === '' || newValue.timeDayPick == null) {
-          newValue.timeDayPick = this.getNowDay();
-        }
-        getContentList(newValue).then(response => {
-          this.list = response.data.items.map(v => {
-            let mainword = [];
-            let maincontent = v.content;
-            mainword = v.keyword.split('&');
-            for (let word of mainword) {
-              if (word != null) {
-                maincontent = maincontent.replace(
-                  new RegExp(word, 'ig'),
-                  '<span style="color: red;font-weight: bold;background-color: yellow;">' +
-                  word +
-                  '</span>'
-                );
-              }
-            }
-            this.$set(v, 'content', maincontent);
-            this.$set(v, 'checked', false);
-            if (v.optinfo === 0) {
-              this.$set(v, 'bgcolor', '#F0FFFF');
-            } else if (v.optinfo === 1) {
-              this.$set(v, 'bgcolor', '#CCE7CD');
-            } else if (v.optinfo === 2) {
-              this.$set(v, 'bgcolor', '#FFCCD5');
-            } else if (v.optinfo === 3) {
-              this.$set(v, 'bgcolor', '#D3D3D3');
-            } else {
-              this.$set(v, 'bgcolor', '#F0FFFF');
-            }
-            return v;
-          });
-          this.total = response.data.total;
-          this.listLoading = false;
-        });
+    state: {
+      handler() {
+        this.mainLoading = true;
+        this.listQuery.page = 1;
+        this.getList()
       },
       deep: true
     }
@@ -656,7 +657,6 @@ export default {
   color: #808080;
 }
 
-
 .el-carousel__item h3 {
   color: #475669;
   font-size: 18px;
@@ -669,7 +669,7 @@ export default {
   background-color: #99a9bf;
 }
 
-.el-carousel__item:nth-child(2n+1) {
+.el-carousel__item:nth-child(2n + 1) {
   background-color: #d3dce6;
 }
 </style>

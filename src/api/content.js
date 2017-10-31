@@ -1,11 +1,14 @@
 import fetch from '@/utils/fetch'
 
 
-export function getContentList(query) {
+export function getContentList(query, state) {
   return fetch({
     url: 'review/content/list',
     method: 'get',
-    params: query
+    params: {
+      query,
+      state
+    }
   })
 }
 

@@ -21,13 +21,13 @@
         <div style="margin: 15px 0;"></div>
         <el-form>
           <!-- <el-form-item label="版块名称:">
-                  <el-select v-model="listQuery.locations" multiple placeholder="请选择板块名">
-                    <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
-                      <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
-                      </el-option>
-                    </el-option-group>
-                  </el-select>
-                </el-form-item> -->
+                    <el-select v-model="listQuery.locations" multiple placeholder="请选择板块名">
+                      <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
+                        <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                      </el-option-group>
+                    </el-select>
+                  </el-form-item> -->
           <el-form-item label="当前状态:">
             <el-radio-group v-model="listQuery.currentState" size="small">
               <el-radio-button label="0">不限</el-radio-button>
@@ -67,13 +67,13 @@
             </el-radio-group>
           </el-form-item>
           <!-- <el-form-item label="识别类型:">
-                  <el-radio-group v-model="listQuery.recognitionType" size="small">
-                    <el-radio-button label="0">不限</el-radio-button>
-                    <el-radio-button label="1">未确认</el-radio-button>
-                    <el-radio-button label="2">已确认</el-radio-button>
-                    <el-radio-button label="3">已忽略</el-radio-button>
-                  </el-radio-group>
-                </el-form-item> -->
+                    <el-radio-group v-model="listQuery.recognitionType" size="small">
+                      <el-radio-button label="0">不限</el-radio-button>
+                      <el-radio-button label="1">未确认</el-radio-button>
+                      <el-radio-button label="2">已确认</el-radio-button>
+                      <el-radio-button label="3">已忽略</el-radio-button>
+                    </el-radio-group>
+                  </el-form-item> -->
           <el-form-item label="彩数识别:">
             <el-radio-group v-model="listQuery.colourdataType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
@@ -228,7 +228,7 @@ export default {
       }, {
         value: '主题ID',
         label: '主题ID'
-      },{
+      }, {
         value: '用户ID',
         label: '用户ID'
       }, {
@@ -345,7 +345,7 @@ export default {
           let mainword = [];
           let maincontent = v.content;
           mainword = v.keyword.split('&');
-          for (let word of mainword) {
+          for (const word of mainword) {
             if (word != null) {
               maincontent = maincontent.replace(
                 new RegExp(word, 'ig'),
@@ -548,7 +548,7 @@ export default {
             let mainword = [];
             let maincontent = v.content;
             mainword = v.keyword.split('&');
-            for (let word of mainword) {
+            for (const word of mainword) {
               if (word != null) {
                 maincontent = maincontent.replace(
                   new RegExp(word, 'ig'),
