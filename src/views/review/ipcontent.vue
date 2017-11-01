@@ -10,26 +10,17 @@
           <el-button type="info" size="small" @click="changeState(3)">通过</el-button>
           <el-button type="info" size="small" @click="changeState(4)">误删</el-button>
           <el-button type="info" size="small" @click="changeState(5)">漏删</el-button>
-          <el-button type="info" size="small">复议</el-button>
-          <el-select v-model="listQuery.timeHourpick" placeholder="请选择时间段" style="float:right; width:110px">
+          <el-select v-model="state.timeHourpick" placeholder="请选择时间段" style="float:right; width:110px">
             <el-option v-for="item in timeSel" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
-          <el-date-picker v-model="listQuery.timeDayPick" type="date" placeholder="选择日期" style="float:right;margin-right:30px;width:120px" format="yyyy-MM-dd" @change="dateChange">
+          <el-date-picker v-model="state.timeDayPick" type="date" placeholder="选择日期" style="float:right;margin-right:30px;width:120px" format="yyyy-MM-dd" @change="dateChange">
           </el-date-picker>
         </div>
         <div style="margin: 15px 0;"></div>
         <el-form>
-          <!-- <el-form-item label="版块名称:">
-                <el-select v-model="listQuery.locations" multiple placeholder="请选择板块名">
-                  <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
-                    <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
-                    </el-option>
-                  </el-option-group>
-                </el-select>
-              </el-form-item> -->
           <el-form-item label="当前状态:">
-            <el-radio-group v-model="listQuery.currentState" size="small">
+            <el-radio-group v-model="state.currentState" size="small">
               <el-radio-button label="0">不限</el-radio-button>
               <el-radio-button label="1">通过</el-radio-button>
               <el-radio-button label="2">待审</el-radio-button>
@@ -39,7 +30,7 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="人工审核:">
-            <el-radio-group v-model="listQuery.humanReview" size="small">
+            <el-radio-group v-model="state.humanReview" size="small">
               <el-radio-button label="0">不限</el-radio-button>
               <el-radio-button label="1">未确认</el-radio-button>
               <el-radio-button label="2">已确认</el-radio-button>
@@ -47,14 +38,14 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="内容类型:">
-            <el-radio-group v-model="listQuery.contentType" size="small">
+            <el-radio-group v-model="state.contentType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
               <el-radio-button label="1">主题</el-radio-button>
               <el-radio-button label="2">回复</el-radio-button>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="识别类型:">
-            <el-radio-group v-model="listQuery.indentifyType" size="small">
+            <el-radio-group v-model="state.indentifyType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
               <el-radio-button label="1">涉政</el-radio-button>
               <el-radio-button label="2">涉黄</el-radio-button>
@@ -66,16 +57,8 @@
               <el-radio-button label="8">个性</el-radio-button>
             </el-radio-group>
           </el-form-item>
-          <!-- <el-form-item label="识别类型:">
-                <el-radio-group v-model="listQuery.recognitionType" size="small">
-                  <el-radio-button label="0">不限</el-radio-button>
-                  <el-radio-button label="1">未确认</el-radio-button>
-                  <el-radio-button label="2">已确认</el-radio-button>
-                  <el-radio-button label="3">已忽略</el-radio-button>
-                </el-radio-group>
-              </el-form-item> -->
           <el-form-item label="彩数识别:">
-            <el-radio-group v-model="listQuery.colourdataType" size="small">
+            <el-radio-group v-model="state.colourdataType" size="small">
               <el-radio-button label="0">不限</el-radio-button>
               <el-radio-button label="1">通过</el-radio-button>
               <el-radio-button label="2">待审</el-radio-button>
@@ -99,7 +82,7 @@
       </div>
       <el-collapse v-for="(item, index) in list" :key="item.ip" v-loading="listLoading">
         <el-collapse-item :title="item.ip+' (共'+item.total+'条)'" name="item.ip">
-          <workstationip :ip="item.ip" :listQueryIp="listQuery"></workstationip>
+          <workstationip :ip="item.ip" :listQueryIp="listQuery" :state="state"></workstationip>
         </el-collapse-item>
       </el-collapse>
       <div v-show="!listLoading" class="pagination-container" style="  display: flex;justify-content: center;align-items: center;">
@@ -132,17 +115,18 @@ export default {
       listQuery: {
         page: 1,
         limit: 10,
+        seachCondition: null,  //  查询种类 默认全部
+        seachContent: null //  查询详情 默认全部
+      },
+      state: {
         currentState: 2,
         humanReview: 1,
         contentType: 0,
         indentifyType: 0,
         recognitionType: 0,
         colourdataType: 0,
-        timeHourpick: '0024',
-        timeDayPick: this.getNowDay(),
-        locations: [],
-        seachCondition: null,  //  查询种类 默认全部
-        seachContent: null //  查询详情 默认全部
+        timeHourpick: '0000',
+        timeDayPick: this.getNowDay()
       },
       seachCondition: '',
       seachContent: '',
@@ -156,10 +140,17 @@ export default {
         value: '用户ID',
         label: '用户ID'
       }, {
+        value: '用户名',
+        label: '用户名'
+      }, {
         value: '用户IP',
         label: '用户IP'
       }],
       timeSel: [{
+        value: '0000',
+        label: '近2小时'
+      },
+      {
         value: '0024',
         label: '全天'
       }, {
@@ -262,11 +253,10 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      getUserIPWorkStation(this.listQuery).then(response => {
+      getUserIPWorkStation(this.listQuery, this.state).then(response => {
         this.list = response.data.items;
         this.total = response.data.total
         this.listLoading = false
-        console.log(this.list)
       })
     },
     handleSizeChange(val) {
@@ -279,52 +269,52 @@ export default {
     },
     changeState(state) {
       if (state === 0) {
-        this.listQuery.currentState = 0;
-        this.listQuery.humanReview = 1;
-        this.listQuery.contentType = 0;
-        this.listQuery.indentifyType = 0;
-        this.listQuery.recognitionType = 0;
-        this.listQuery.colourdataType = 0;
+        this.state.currentState = 0;
+        this.state.humanReview = 1;
+        this.state.contentType = 0;
+        this.state.indentifyType = 0;
+        this.state.recognitionType = 0;
+        this.state.colourdataType = 0;
       }
       if (state === 1) {
-        this.listQuery.currentState = 4;
-        this.listQuery.humanReview = 1;
-        this.listQuery.contentType = 0;
-        this.listQuery.indentifyType = 0;
-        this.listQuery.recognitionType = 0;
-        this.listQuery.colourdataType = 0;
+        this.state.currentState = 4;
+        this.state.humanReview = 1;
+        this.state.contentType = 0;
+        this.state.indentifyType = 0;
+        this.state.recognitionType = 0;
+        this.state.colourdataType = 0;
       }
       if (state === 2) {
-        this.listQuery.currentState = 3;
-        this.listQuery.humanReview = 1;
-        this.listQuery.contentType = 0;
-        this.listQuery.indentifyType = 0;
-        this.listQuery.recognitionType = 0;
-        this.listQuery.colourdataType = 0;
+        this.state.currentState = 3;
+        this.state.humanReview = 1;
+        this.state.contentType = 0;
+        this.state.indentifyType = 0;
+        this.state.recognitionType = 0;
+        this.state.colourdataType = 0;
       }
       if (state === 3) {
-        this.listQuery.currentState = 1;
-        this.listQuery.humanReview = 1;
-        this.listQuery.contentType = 0;
-        this.listQuery.indentifyType = 0;
-        this.listQuery.recognitionType = 0;
-        this.listQuery.colourdataType = 0;
+        this.state.currentState = 1;
+        this.state.humanReview = 1;
+        this.state.contentType = 0;
+        this.state.indentifyType = 0;
+        this.state.recognitionType = 0;
+        this.state.colourdataType = 0;
       }
       if (state === 4) {
-        this.listQuery.currentState = 1;
-        this.listQuery.humanReview = 2;
-        this.listQuery.contentType = 0;
-        this.listQuery.indentifyType = 0;
-        this.listQuery.recognitionType = 0;
-        this.listQuery.colourdataType = 3;
+        this.state.currentState = 1;
+        this.state.humanReview = 2;
+        this.state.contentType = 0;
+        this.state.indentifyType = 0;
+        this.state.recognitionType = 0;
+        this.state.colourdataType = 3;
       }
       if (state === 5) {
-        this.listQuery.currentState = 3;
-        this.listQuery.humanReview = 2;
-        this.listQuery.contentType = 0;
-        this.listQuery.indentifyType = 0;
-        this.listQuery.recognitionType = 0;
-        this.listQuery.colourdataType = 1;
+        this.state.currentState = 3;
+        this.state.humanReview = 2;
+        this.state.contentType = 0;
+        this.state.indentifyType = 0;
+        this.state.recognitionType = 0;
+        this.state.colourdataType = 1;
       }
     },
     getNowDay() {
@@ -349,18 +339,11 @@ export default {
     }
   },
   watch: {
-    listQuery: {
-      handler(newValue) {
-        this.listLoading = true;
-        if (newValue.timeDayPick === '' || newValue.timeDayPick == null) {
-          newValue.timeDayPick = this.getNowDay();
-        }
-        this.list = null;
-        getUserIPWorkStation(newValue).then(response => {
-          this.list = response.data.items;
-          this.total = response.data.total
-          this.listLoading = false
-        })
+    state: {
+      handler() {
+        this.mainLoading = true;
+        this.listQuery.page = 1;
+        this.getList()
       },
       deep: true
     }

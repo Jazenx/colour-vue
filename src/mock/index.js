@@ -83,15 +83,15 @@ Mock.mock(/\/graylist\/banned\/deletekeywords/, 'post', bannedAPI)
 Mock.mock(/\/blacklist\/banned\/searchkeywords/, 'get', articleAPI.getList)
 
 // // content
-Mock.mock(/\/review\/content\/list/, 'get', contentAPI.getList);
+Mock.mock(/\/review\/content\/list/, 'post', contentAPI.getList);
 Mock.mock(/\/review\/content\/userlist/, 'get', contentAPI.getList);
 Mock.mock(/\/review\/content\/iplist/, 'get', contentAPI.getList);
 
 Mock.mock(/\/review\/content\/allsubmit/, 'post', bannedAPI)
 
 Mock.mock(/\/review\/content\/submitOneOperation/, 'post', bannedAPI)
-Mock.mock(/\/review\/ipcontent\/list/, 'get', contentAPI.getIpList);
-Mock.mock(/\/review\/idcontent\/list/, 'get', contentAPI.getIdList);
+Mock.mock(/\/review\/ipcontent\/list/, 'post', contentAPI.getIpList);
+Mock.mock(/\/review\/idcontent\/list/, 'post', contentAPI.getIdList);
 
 Mock.mock(/\/review\/ipworkstation\/list/, 'post', contentAPI.getList);
 Mock.mock(/\/review\/idworkstation\/list/, 'post', contentAPI.getList);

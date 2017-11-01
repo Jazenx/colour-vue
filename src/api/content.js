@@ -4,8 +4,8 @@ import fetch from '@/utils/fetch'
 export function getContentList(query, state) {
   return fetch({
     url: 'review/content/list',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       query,
       state
     }
@@ -13,24 +13,26 @@ export function getContentList(query, state) {
 }
 
 
-export function getIpList(query, page) {
+export function getIpList(query, state, page) {
   return fetch({
     url: 'review/ipworkstation/list',
     method: 'post',
     data: {
       query,
+      state,
       page
     }
   })
 }
 
 
-export function getIdList(query, page) {
+export function getIdList(query, state, page) {
   return fetch({
     url: 'review/idworkstation/list',
     method: 'post',
     data: {
       query,
+      state,
       page
     }
   })
@@ -83,19 +85,25 @@ export function submitOneOperation(detail) {
 }
 
 
-export function getUserIPWorkStation(query) {
+export function getUserIPWorkStation(query, state) {
   return fetch({
     url: 'review/ipcontent/list',
-    method: 'get',
-    params: query
+    method: 'post',
+    data: {
+      query,
+      state
+    }
   })
 }
 
 
-export function getUserIDWorkStation(query) {
+export function getUserIDWorkStation(query, state) {
   return fetch({
     url: 'review/idcontent/list',
-    method: 'get',
-    params: query
+    method: 'post',
+    data: {
+      query,
+      state
+    }
   })
 }

@@ -119,7 +119,7 @@ module.exports = {
         'no-useless-concat': 'error',
 
         // disallow unnecessary escape characters
-        'no-useless-escape': 'error',
+        // 'no-useless-escape': 'error',
 
         // disallow void operators
         'no-void': 'error',

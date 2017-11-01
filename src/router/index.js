@@ -15,8 +15,7 @@ import Layout from '../views/layout/Layout';
  * noDropdown : if `noDropdown:true` will has no submenu
  * meta : { role: ['admin'] }  will control the page role
  **/
-export const constantRouterMap = [
-  {
+export const constantRouterMap = [{
     path: '/login',
     component: _import('login/index'),
     hidden: true
@@ -69,64 +68,65 @@ export default new Router({
   routes: constantRouterMap
 });
 
-export const asyncRouterMap = [
-    {
-      path: '/review',
-      component: Layout,
-      redirect: '/review/content',
-      name: '审核',
-      icon: 'semantics',
-      children: [
-        {
-          path: 'content',
-          component: _import('review/content'),
-          icon: 'fenxi',
-          name: '内容'
-        },
-        {
-          path: 'ipcontent',
-          component: _import('review/ipcontent'),
-          icon: 'fenxi',
-          name: '用户IP'
-        },
-        {
-          path: 'idcontent',
-          component: _import('review/idcontent'),
-          icon: 'fenxi',
-          name: '用户ID'
-        }
-      ]
-    },
-    {
-      path: '/usercenter',
-      component: Layout,
-      redirect: '/usercenter/index',
-      name: '客户中心',
-      icon: 'shuju',
-      children: [
-        {
-          path: 'blacklist',
-          component: _import('banned/index'),
-          icon: 'jiankong',
-          name: '黑名单'
-        },
-        {
-          path: 'whitelist',
-          component: _import('whitelist/index'),
-          icon: 'jiankong',
-          name: '白名单'
-        },
-        {
-          path: 'graylist',
-          component: _import('graylist/index'),
-          icon: 'jiankong',
-          name: '灰名单'
-        }
-      ]
-    },
+export const asyncRouterMap = [{
+    path: '/review',
+    component: Layout,
+    redirect: '/review/content',
+    name: '审核',
+    icon: 'semantics',
+    children: [{
+        path: 'content',
+        component: _import('review/content'),
+        icon: 'fenxi',
+        name: '内容'
+      },
+      {
+        path: 'ipcontent',
+        component: _import('review/ipcontent'),
+        icon: 'fenxi',
+        name: '用户IP'
+      },
+      {
+        path: 'idcontent',
+        component: _import('review/idcontent'),
+        icon: 'fenxi',
+        name: '用户ID'
+      }
+    ]
+  },
+  {
+    path: '/usercenter',
+    component: Layout,
+    redirect: '/usercenter/index',
+    name: '客户中心',
+    icon: 'shuju',
+    children: [{
+        path: 'blacklist',
+        component: _import('banned/index'),
+        icon: 'jiankong',
+        name: '黑名单'
+      },
+      {
+        path: 'whitelist',
+        component: _import('whitelist/index'),
+        icon: 'jiankong',
+        name: '白名单'
+      },
+      {
+        path: 'graylist',
+        component: _import('graylist/index'),
+        icon: 'jiankong',
+        name: '灰名单'
+      }
+    ]
+  },
   {
     path: '*',
     redirect: '/404',
+    hidden: true
+  }, {
+    path: '/login',
+    component: _import('login/index'),
     hidden: true
   }
 ];

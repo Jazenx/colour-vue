@@ -231,6 +231,9 @@ export default {
         {
           value: '用户ID',
           label: '用户ID'
+        }, {
+          value: '用户名',
+          label: '用户名'
         },
         {
           value: '用户IP',
@@ -241,6 +244,10 @@ export default {
         {
           value: '0000',
           label: '近2小时'
+        },
+        {
+          value: '0024',
+          label: '全天'
         },
         {
           value: '0002',
@@ -372,15 +379,17 @@ export default {
         this.list = response.data.items.map(v => {
           let mainword = [];
           let maincontent = v.content;
-          mainword = v.keyword.split('&');
-          for (const word of mainword) {
-            if (word != null) {
-              maincontent = maincontent.replace(
-                new RegExp(word, 'ig'),
-                '<span style="color: red;font-weight: bold;background-color: yellow;">' +
-                word +
-                '</span>'
-              );
+          if (v.keyword != null && v.keyword !== '') {
+            mainword = v.keyword.split('&');
+            for (const word of mainword) {
+              if (word != null) {
+                maincontent = maincontent.replace(
+                  new RegExp(word, 'ig'),
+                  '<span style="color: red;font-weight: bold;background-color: yellow;">' +
+                  word +
+                  '</span>'
+                );
+              }
             }
           }
           let username = v.username;
@@ -410,7 +419,7 @@ export default {
           }
           return v;
         });
-        // console.log(this.list);
+        console.log(this.list);
         this.total = response.data.total;
         this.listLoading = false;
         // 渲染完执行函数

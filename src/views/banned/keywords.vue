@@ -122,7 +122,6 @@ import { fetchPv, addKeywords, getKeywords, updateKeywords, changeKeywordsStatus
 import waves from '@/directive/waves.js'// 水波纹指令
 import { parseTime } from '@/utils'
 import store from '../../store'
-
 export default {
   name: 'keywords',
   directives: {

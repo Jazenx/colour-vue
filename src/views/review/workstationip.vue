@@ -83,7 +83,20 @@
           </el-col>
         </el-row>
       </el-row>
-
+      <div style="margin: 15px; display: flex;justify-content:space-between;">
+        <label style="float:left">总量：{{total}}</label>
+        <div>
+          <el-button type="primary" size="small" @click="passAllContent">全部通过</el-button>
+          <el-button type="primary" size="small" @click="deleteAllContent">全部删除</el-button>
+          <el-button type="primary" size="small" @click="ignoreAllContent">全部忽略</el-button>
+          <el-button type="primary" size="small" @click="cancelAllContent">全部取消</el-button>
+          <el-button type="success" @click="submitAllOperation">提交</el-button>
+        </div>
+      </div>
+      <div style="margin: 15px;  display: flex;justify-content: space-between;">
+        <el-checkbox size="large" v-model="checkAll">全选</el-checkbox>
+        <el-button type="danger" size="small">封禁跳转提交</el-button>
+      </div>
       <div v-show="!listLoading" class="pagination-container" style="display: flex;justify-content: center;align-items: center;">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="pageQuery.page" :page-sizes="[5, 10, 20]" :page-size="pageQuery.limit" layout="total, sizes, prev, pager, next" :total="total">
         </el-pagination>
@@ -107,6 +120,7 @@ export default {
   },
   props: {
     listQueryIp: {},
+    state: {},
     ip: null
   },
   data() {
@@ -148,20 +162,22 @@ export default {
   },
   methods: {
     getList() {
-      getIpList(this.listQueryIp, this.pageQuery).then(response => {
+      getIpList(this.listQueryIp, this.state, this.pageQuery).then(response => {
         console.log(response.data);
         this.list = response.data.items.map(v => {
           let mainword = [];
           let maincontent = v.content;
-          mainword = v.keyword.split('&');
-          for (const word of mainword) {
-            if (word != null) {
-              maincontent = maincontent.replace(
-                new RegExp(word, 'ig'),
-                '<span style="color: red;font-weight: bold;background-color: yellow;">' +
-                word +
-                '</span>'
-              );
+          if (v.keyword != null && v.keyword !== '') {
+            mainword = v.keyword.split('&');
+            for (const word of mainword) {
+              if (word != null) {
+                maincontent = maincontent.replace(
+                  new RegExp(word, 'ig'),
+                  '<span style="color: red;font-weight: bold;background-color: yellow;">' +
+                  word +
+                  '</span>'
+                );
+              }
             }
           }
           this.$set(v, 'content', maincontent);
