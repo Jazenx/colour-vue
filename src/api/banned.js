@@ -54,7 +54,7 @@ export function addContacts(keywords, validity, updatetime, submitor, location, 
       submitor, // 提交人
       location, // 范围
       wordstate, // 状态
-      classify  // 分类
+      classify // 分类
     }
   })
 }
@@ -294,5 +294,14 @@ export function deleteIds(keywordsID) {
     data: {
       keywordsID
     }
+  })
+}
+
+
+
+export function getClassifyList() {
+  return fetch({
+    url: 'dropdown/blacklist/keyword',
+    method: 'get'
   })
 }

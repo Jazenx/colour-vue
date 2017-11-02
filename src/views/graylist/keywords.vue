@@ -16,7 +16,7 @@
       <el-button class="filter-item" type="primary" v-waves icon="search" @click="getList">搜索</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="plus">添加</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="minus" @click="deleteKeyword()">删除</el-button>
-      <el-button class="filter-item" type="primary" icon="document">导出</el-button>
+      <el-button class="filter-item" type="primary" icon="document"  @click="exportExcel">导出</el-button>
     </div>
     <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="努力加载中..." border fit highlight-current-row style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55">
@@ -91,7 +91,7 @@
         <el-form-item label="范围">
           <el-select v-model="location" multiple placeholder="请选择范围">
             <!-- <el-option v-for="item in locationSel" :key="item.label" :label="item.label" :value="item.value">
-                                                                                                                                                                                                                                              </el-option> -->
+                                                                                                                                                                                                                                                </el-option> -->
             <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
               <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
@@ -174,6 +174,9 @@ export default {
       }, {
         value: '低俗',
         label: '低俗'
+      }, {
+        value: '广告',
+        label: '广告'
       }],
       wordStateSel: [{
         value: '全部',
@@ -447,6 +450,15 @@ export default {
           message: '已取消'
         });
       });
+    },
+    exportExcel() {
+      location.href = 'export/excel/graylist/keywords';
+      this.$notify({
+        title: '成功',
+        message: '导出成功',
+        type: 'success',
+        duration: 2000
+      })
     }
   }
 }

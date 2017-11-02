@@ -47,6 +47,7 @@ Mock.mock(/\/whitelist\/banned\/addid/, 'post', bannedAPI)
 
 Mock.mock(/\/graylist\/banned\/addkeywords/, 'post', bannedAPI)
 
+Mock.mock(/\/dropdown\/blacklist\/keyword/, 'get', articleAPI.getClassify)
 
 Mock.mock(/\/blacklist\/banned\/updatekeywords/, 'post', bannedAPI)
 Mock.mock(/\/blacklist\/banned\/updatecontacts/, 'post', bannedAPI)

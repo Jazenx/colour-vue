@@ -20,7 +20,7 @@
       <el-button class="filter-item" type="primary" v-waves icon="search" @click="getList">搜索</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="plus">添加</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="minus" s @click="deleteKeyword()">删除</el-button>
-      <el-button class="filter-item" type="primary" icon="document">导出</el-button>
+      <el-button class="filter-item" type="primary" icon="document"  @click="exportExcel">导出</el-button>
     </div>
     <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="努力加载中..." border fit highlight-current-row style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55">
@@ -114,7 +114,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="create">创建</el-button>
-          <el-button>取消</el-button>
+          <el-button @click="dialogFormVisible = false">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -473,6 +473,15 @@ export default {
           message: '已取消'
         });
       });
+    },
+    exportExcel() {
+      location.href = 'export/excel/blacklist/contacts';
+      this.$notify({
+        title: '成功',
+        message: '导出成功',
+        type: 'success',
+        duration: 2000
+      })
     }
   }
 }

@@ -22,6 +22,15 @@ for (let i = 0; i < count; i++) {
   }))
 }
 
+const classifyList = []
+
+for (let i = 0; i < 5; i++) {
+  classifyList.push(Mock.mock({
+    value: '@cname',
+    label: '@cname'
+  }))
+}
+
 export default {
   getList: config => {
     const {
@@ -86,5 +95,8 @@ export default {
     status: 'published',
     tags: [],
     title: ''
+  }),
+  getClassify: () => ({
+    classify: classifyList
   })
 }
