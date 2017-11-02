@@ -139,3 +139,10 @@ export function deleteAds(keywordsID) {
     }
   })
 }
+
+export function getKeywordClassifyList() {
+  return fetch({
+    url: 'dropdown/graylist/keyword',
+    method: 'get'
+  })
+}

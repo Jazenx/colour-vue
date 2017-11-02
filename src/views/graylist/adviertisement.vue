@@ -85,31 +85,28 @@
       </el-pagination>
     </div>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" style="width: 900px;margin-left:23%">
-      <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 300px; margin-left:50px;'>
-        <el-form-item label="动词">
-          <el-input type="text" v-model="temp.adsverb" placeholder="请输入动词"></el-input>
+      <el-form class="small-space" :model="form" :rules="submitRules" ref="form" label-position="left" label-width="70px" style='width: 300px; margin-left:50px;'>
+        <el-form-item label="动词" prop="adsverb">
+          <el-input type="text" v-model="form.adsverb" placeholder="请输入动词"></el-input>
         </el-form-item>
-        <el-form-item label="名词">
-          <el-input type="text" v-model="temp.adsnoun" placeholder="请输入名词"></el-input>
+        <el-form-item label="名词" prop="adsnoun">
+          <el-input type="text" v-model="form.adsnoun" placeholder="请输入名词"></el-input>
         </el-form-item>
-        <el-form-item label="范围">
-          <el-select v-model="location" multiple placeholder="请选择范围">
-            <!-- <el-option v-for="item in locationSel" :key="item.label" :label="item.label" :value="item.value">
-                                                                                                                                                                                                                                                                    </el-option> -->
+        <el-form-item label="范围" prop="location">
+          <el-select v-model="form.location" multiple placeholder="请选择范围">
             <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
               <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-option-group>
           </el-select>
         </el-form-item>
-
-        <el-form-item label="有效期">
+        <el-form-item label="有效期" prop="classify">
           <el-date-picker v-model="validity" type="daterange" placeholder="选择日期范围" @change="dateChange">
           </el-date-picker>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="create">创建</el-button>
-          <el-button>取消</el-button>
+          <el-button @click="dialogFormVisible = false">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -140,13 +137,14 @@ export default {
         searchWordstate: null
       },
       // searchKeyword: '',
-      temp: {
-        validity: '',
+      form: {
+        validity: this.getCreateYMDTime(),
         wordstate: '',
         updatetime: '',
-        submitor: '',
+        keywords: '',
         adsnoun: '',
-        adsverb: ''
+        adsverb: '',
+        location: ['论坛', '回帖']
       },
       // statusOptions: ['published', 'draft', 'deleted'],
       dialogFormVisible: false,
@@ -161,7 +159,7 @@ export default {
       tableKey: 0,
       location: [],
       // searchLocation: [],
-      validity: '',
+      validity: [new Date(), new Date(2099, 11, 31, 0, 0)],
       addValidity: '',
       value6: '',
       multipleSelection: [],
@@ -190,7 +188,18 @@ export default {
           }
           ]
         }
-      ]
+      ],
+      submitRules: {
+        adsnoun: [
+          { required: true, message: '请输入名词', trigger: 'blur' }
+        ],
+        adsverb: [
+          { required: true, message: '请输入动词', trigger: 'blur' }
+        ],
+        location: [
+          { type: 'array', required: true, message: '请选择范围', trigger: 'change' }
+        ]
+      }
     }
   },
   filters: {
@@ -256,6 +265,20 @@ export default {
           message: '已取消'
         });
       });
+    },
+    getCreateYMDTime() {
+      const date = new Date();
+      const seperator1 = '-';
+      const seperator2 = ':';
+      let month = date.getMonth() + 1;
+      let strDate = date.getDate();
+      if (month >= 1 && month <= 9) {
+        month = '0' + month;
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = '0' + strDate;
+      }
+      return date.getFullYear() + seperator1 + month + seperator1 + strDate + ' - 2099-12-31';
     },
     getYMDTime(date) {
       if (typeof date !== 'object') {
@@ -336,33 +359,39 @@ export default {
       this.list.splice(index, 1)
     },
     create() {
-      this.temp.wordstate = '生效';
-      this.temp.submitor = store.state.user.name;
-      this.dialogFormVisible = false;
-      // 获取当前时间 之后可抽出
-      const date = new Date();
-      const seperator1 = '-';
-      const seperator2 = ':';
-      let month = date.getMonth() + 1;
-      let strDate = date.getDate();
-      if (month >= 1 && month <= 9) {
-        month = '0' + month;
-      }
-      if (strDate >= 0 && strDate <= 9) {
-        strDate = '0' + strDate;
-      }
-      const updatetime = date.getFullYear() + seperator1 + month + seperator1 + strDate + ' ' + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
-      // console.log(this.temp.validity, this.temp.submitor, updatetime, this.location, this.temp.wordstate, this.classify);
-      addAdsInfo(this.temp.adsnoun, this.temp.adsverb, this.temp.validity, updatetime, this.temp.submitor, this.location, this.temp.wordstate, this.classify).then(response => {
-        console.log(response);
-        this.getList();
-        this.$notify({
-          title: '成功',
-          message: '创建成功',
-          type: 'success',
-          duration: 2000
-        })
-      })
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.form.wordstate = '生效';
+          this.form.submitor = store.state.user.name;
+          this.dialogFormVisible = false;
+          // 获取当前时间 之后可抽出
+          const date = new Date();
+          const seperator1 = '-';
+          const seperator2 = ':';
+          let month = date.getMonth() + 1;
+          let strDate = date.getDate();
+          if (month >= 1 && month <= 9) {
+            month = '0' + month;
+          }
+          if (strDate >= 0 && strDate <= 9) {
+            strDate = '0' + strDate;
+          }
+          const updatetime = date.getFullYear() + seperator1 + month + seperator1 + strDate + ' ' + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
+          addAdsInfo(this.temp.adsnoun, this.temp.adsverb, this.form.validity, updatetime, this.form.submitor, this.form.location, this.form.wordstate, this.classify).then(response => {
+            // console.log(response);
+            this.getList();
+            this.$notify({
+              title: '成功',
+              message: '创建成功',
+              type: 'success',
+              duration: 2000
+            })
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     },
     update() {
       this.temp.timestamp = +this.temp.timestamp
@@ -439,7 +468,7 @@ export default {
         });
       });
     },
-      exportExcel() {
+    exportExcel() {
       location.href = 'export/excel/graylist/ads';
       this.$notify({
         title: '成功',

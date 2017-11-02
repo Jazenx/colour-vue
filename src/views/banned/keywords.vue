@@ -115,7 +115,7 @@
   </div>
 </template>
 <script>
-import { fetchPv, addKeywords, getKeywords, updateKeywords, changeKeywordsStatus, deleteKeywords, getClassifyList } from '@/api/banned'
+import { fetchPv, addKeywords, getKeywords, updateKeywords, changeKeywordsStatus, deleteKeywords, getKeywordClassifyList } from '@/api/banned'
 import waves from '@/directive/waves.js'// 水波纹指令
 import { parseTime } from '@/utils'
 import store from '../../store'
@@ -202,7 +202,6 @@ export default {
         classify: [
           { required: true, message: '请选择分类', trigger: 'change' }
         ]
-
       }
     }
   },
@@ -239,7 +238,7 @@ export default {
       })
     },
     getClassify() {
-      getClassifyList().then(response => {
+      getKeywordClassifyList().then(response => {
         console.log(response.data.classify);
         this.classifySel = response.data.classify
       })
@@ -390,8 +389,8 @@ export default {
           const updatetime = date.getFullYear() + seperator1 + month + seperator1 + strDate + ' ' + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
           let keywords = [];
           keywords = this.form.keywords.split('\n');
-          // console.log(keywords, this.form.validity, updatetime, this.form.submitor, this.location, this.form.wordstate, this.form.classify);
-          addKeywords(keywords, this.form.validity, updatetime, this.form.submitor, this.location, this.form.wordstate, this.classify).then(response => {
+          // console.log(keywords, this.form.validity, updatetime, this.form.submitor, this.form.location, this.form.wordstate, this.form.classify);
+          addKeywords(keywords, this.form.validity, updatetime, this.form.submitor, this.form.location, this.form.wordstate, this.classify).then(response => {
             // console.log(response);
             this.getList();
             this.$notify({

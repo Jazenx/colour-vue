@@ -299,9 +299,23 @@ export function deleteIds(keywordsID) {
 
 
 
-export function getClassifyList() {
+export function getKeywordClassifyList() {
   return fetch({
     url: 'dropdown/blacklist/keyword',
+    method: 'get'
+  })
+}
+export function getContactClassifyList() {
+  return fetch({
+    url: 'dropdown/blacklist/contact',
+    method: 'get'
+  })
+}
+
+// 暂留
+export function getIPClassifyList() {
+  return fetch({
+    url: 'dropdown/blacklist/ip',
     method: 'get'
   })
 }

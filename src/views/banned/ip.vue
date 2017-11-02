@@ -19,7 +19,7 @@
       <el-button class="filter-item" type="primary" v-waves icon="search" @click="getList">搜索</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="plus">添加</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="minus" s @click="deleteKeyword()">删除</el-button>
-      <el-button class="filter-item" type="primary" icon="document"  @click="exportExcel">导出</el-button>
+      <el-button class="filter-item" type="primary" icon="document" @click="exportExcel">导出</el-button>
     </div>
     <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="努力加载中..." border fit highlight-current-row style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55">
@@ -82,13 +82,12 @@
       </el-pagination>
     </div>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" style="width: 900px;margin-left:23%">
-      <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 300px; margin-left:50px;'>
-        <el-form-item label="IP">
-          <el-input type="textarea" :rows="2" v-model="temp.keywords" placeholder="请输入IP,多个以“回车符”换行！"></el-input>
+      <el-form class="small-space" :model="form" :rules="submitRules" ref="form" label-position="left" label-width="70px" style='width: 300px; margin-left:50px;'>
+        <el-form-item label="IP" prop="keywords">
+          <el-input type="textarea" :rows="2" v-model="form.keywords" placeholder="请输入IP,多个以“回车符”换行！"></el-input>
         </el-form-item>
-        <el-form-item label="范围">
-          <el-select v-model="location" multiple placeholder="请选择范围">
-            <!-- <el-option v-for="item in locationSel" :key="item.label" :label="item.label" :value="item.value">                                                                                                                                                                            </el-option> -->
+        <el-form-item label="范围" prop="location">
+          <el-select v-model="form.location" multiple placeholder="请选择范围">
             <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
               <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
@@ -101,7 +100,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="create">创建</el-button>
-          <el-button>取消</el-button>
+          <el-button @click="dialogFormVisible = false">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -133,12 +132,13 @@ export default {
         searchWordstate: null
       },
       // searchKeyword: '',
-      temp: {
-        validity: '',
+      form: {
+        validity: this.getCreateYMDTime(),
         wordstate: '',
         updatetime: '',
         keywords: '',
-        submitor: ''
+        submitor: '',
+        location: ['论坛', '回帖']
       },
       // statusOptions: ['published', 'draft', 'deleted'],
       dialogFormVisible: false,
@@ -153,34 +153,9 @@ export default {
       tableKey: 0,
       location: [],
       // searchLocation: [],
-      validity: '',
+      validity: [new Date(), new Date(2099, 11, 31, 0, 0)],
       addValidity: '',
-      value6: '',
       multipleSelection: [],
-      // searchWordstate: '全部',
-      classify: '',
-      classifySel: [{
-        value: 'QQ',
-        label: 'QQ'
-      }, {
-        value: '微信',
-        label: '微信'
-      }, {
-        value: '固定电话',
-        label: '固定电话'
-      }, {
-        value: '手机号',
-        label: '手机号'
-      }, {
-        value: 'URL',
-        label: 'URL'
-      }, {
-        value: 'MSN',
-        label: 'MSN'
-      }, {
-        value: '电子邮件',
-        label: '电子邮件'
-      }],
       wordStateSel: [{
         value: '全部',
         label: '全部'
@@ -191,6 +166,7 @@ export default {
         value: '失效',
         label: '失效'
       }],
+      // searchWordstate: '全部',
       locationSel: [
         {
           label: '论坛、评论',
@@ -204,7 +180,15 @@ export default {
           }
           ]
         }
-      ]
+      ],
+      submitRules: {
+        keywords: [
+          { required: true, message: '请输入关键词', trigger: 'blur' }
+        ],
+        location: [
+          { type: 'array', required: true, message: '请选择范围', trigger: 'change' }
+        ]
+      }
     }
   },
   filters: {
@@ -288,6 +272,20 @@ export default {
       }
       return date.getFullYear() + seperator1 + month + seperator1 + strDate;
     },
+    getCreateYMDTime() {
+      const date = new Date();
+      const seperator1 = '-';
+      const seperator2 = ':';
+      let month = date.getMonth() + 1;
+      let strDate = date.getDate();
+      if (month >= 1 && month <= 9) {
+        month = '0' + month;
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = '0' + strDate;
+      }
+      return date.getFullYear() + seperator1 + month + seperator1 + strDate + ' - 2099-12-31';
+    },
     getNowTime() {
       const date = new Date();
       const seperator1 = '-';
@@ -351,35 +349,42 @@ export default {
       this.list.splice(index, 1)
     },
     create() {
-      this.temp.wordstate = '生效';
-      this.temp.submitor = store.state.user.name;
-      this.dialogFormVisible = false;
-      // 获取当前时间 之后可抽出
-      const date = new Date();
-      const seperator1 = '-';
-      const seperator2 = ':';
-      let month = date.getMonth() + 1;
-      let strDate = date.getDate();
-      if (month >= 1 && month <= 9) {
-        month = '0' + month;
-      }
-      if (strDate >= 0 && strDate <= 9) {
-        strDate = '0' + strDate;
-      }
-      const updatetime = date.getFullYear() + seperator1 + month + seperator1 + strDate + ' ' + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
-      let keywords = [];
-      keywords = this.temp.keywords.split('\n');
-      console.log(keywords, this.temp.validity, this.temp.submitor, updatetime, this.location, this.temp.wordstate, this.classify);
-      addIp(keywords, this.temp.validity, updatetime, this.temp.submitor, this.location, this.temp.wordstate).then(response => {
-        console.log(response);
-        this.getList();
-        this.$notify({
-          title: '成功',
-          message: '创建成功',
-          type: 'success',
-          duration: 2000
-        })
-      })
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.form.wordstate = '生效';
+          this.form.submitor = store.state.user.name;
+          this.dialogFormVisible = false;
+          // 获取当前时间 之后可抽出
+          const date = new Date();
+          const seperator1 = '-';
+          const seperator2 = ':';
+          let month = date.getMonth() + 1;
+          let strDate = date.getDate();
+          if (month >= 1 && month <= 9) {
+            month = '0' + month;
+          }
+          if (strDate >= 0 && strDate <= 9) {
+            strDate = '0' + strDate;
+          }
+          const updatetime = date.getFullYear() + seperator1 + month + seperator1 + strDate + ' ' + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
+          let keywords = [];
+          keywords = this.form.keywords.split('\n');
+          // console.log(keywords, this.form.validity, updatetime, this.form.submitor, this.location, this.form.wordstate, this.form.classify);
+          addIp(keywords, this.form.validity, updatetime, this.form.submitor, this.form.location, this.form.wordstate).then(response => {
+            // console.log(response);
+            this.getList();
+            this.$notify({
+              title: '成功',
+              message: '创建成功',
+              type: 'success',
+              duration: 2000
+            })
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     },
     update() {
       this.temp.timestamp = +this.temp.timestamp

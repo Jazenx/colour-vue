@@ -16,7 +16,6 @@ export function addIp(keywords, validity, updatetime, submitor, location, wordst
   })
 }
 
-
 export function addId(keywords, validity, updatetime, submitor, location, wordstate) {
   return fetch({
     url: 'whitelist/banned/addid',

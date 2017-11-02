@@ -20,7 +20,7 @@
       <el-button class="filter-item" type="primary" v-waves icon="search" @click="getList">搜索</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="plus">添加</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="minus" s @click="deleteKeyword()">删除</el-button>
-      <el-button class="filter-item" type="primary" icon="document"  @click="exportExcel">导出</el-button>
+      <el-button class="filter-item" type="primary" icon="document" @click="exportExcel">导出</el-button>
     </div>
     <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="努力加载中..." border fit highlight-current-row style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55">
@@ -88,12 +88,12 @@
       </el-pagination>
     </div>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" style="width: 900px;margin-left:23%">
-      <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 300px; margin-left:50px;'>
-        <el-form-item label="联系方式">
-          <el-input type="textarea" :rows="2" v-model="temp.keywords" placeholder="请输入联系方式,多个以“回车符”换行！"></el-input>
+      <el-form class="small-space" :model="form" :rules="submitRules" ref="form" label-position="left" label-width="70px" style='width: 300px; margin-left:50px;'>
+        <el-form-item label="联系方式" prop="keywords">
+          <el-input type="textarea" :rows="2" v-model="form.keywords" placeholder="请输入联系方式,多个以“回车符”换行！"></el-input>
         </el-form-item>
-        <el-form-item label="范围">
-          <el-select v-model="location" multiple placeholder="请选择范围">
+        <el-form-item label="范围" prop="location">
+          <el-select v-model="form.location" multiple placeholder="请选择范围">
             <!-- <el-option v-for="item in locationSel" :key="item.label" :label="item.label" :value="item.value">                                                                                                                                                                            </el-option> -->
             <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
               <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
@@ -101,8 +101,8 @@
             </el-option-group>
           </el-select>
         </el-form-item>
-        <el-form-item label="分类">
-          <el-select v-model="classify" placeholder="请选择分类">
+        <el-form-item label="分类" prop="classify">
+          <el-select v-model="form.classify" placeholder="请选择分类">
             <el-option v-for="item in classifySel" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
@@ -121,7 +121,7 @@
   </div>
 </template>
 <script>
-import { fetchPv, addContacts, getContacts, updateContacts, changeContactsStatus, deleteContacts } from '@/api/banned'
+import { fetchPv, addContacts, getContacts, updateContacts, changeContactsStatus, deleteContacts, getContactClassifyList } from '@/api/banned'
 import waves from '@/directive/waves.js'// 水波纹指令
 import { parseTime } from '@/utils'
 import store from '../../store'
@@ -146,12 +146,14 @@ export default {
         searchWordstate: null
       },
       // searchKeyword: '',
-      temp: {
-        validity: '',
+      form: {
+        validity: this.getCreateYMDTime(),
         wordstate: '',
         updatetime: '',
         keywords: '',
-        submitor: ''
+        submitor: '',
+        location: ['论坛', '回帖'],
+        classify: ''
       },
       // statusOptions: ['published', 'draft', 'deleted'],
       dialogFormVisible: false,
@@ -166,34 +168,13 @@ export default {
       tableKey: 0,
       location: [],
       // searchLocation: [],
-      validity: '',
+      validity: [new Date(), new Date(2099, 11, 31, 0, 0)],
       addValidity: '',
       value6: '',
       multipleSelection: [],
       // searchWordstate: '全部',
       classify: '',
-      classifySel: [{
-        value: 'QQ',
-        label: 'QQ'
-      }, {
-        value: '微信',
-        label: '微信'
-      }, {
-        value: '固定电话',
-        label: '固定电话'
-      }, {
-        value: '手机号',
-        label: '手机号'
-      }, {
-        value: 'URL',
-        label: 'URL'
-      }, {
-        value: 'MSN',
-        label: 'MSN'
-      }, {
-        value: '电子邮件',
-        label: '电子邮件'
-      }],
+      classifySel: null,
       wordStateSel: [{
         value: '全部',
         label: '全部'
@@ -217,7 +198,18 @@ export default {
           }
           ]
         }
-      ]
+      ],
+      submitRules: {
+        keywords: [
+          { required: true, message: '请输入联系方式', trigger: 'blur' }
+        ],
+        location: [
+          { type: 'array', required: true, message: '请选择范围', trigger: 'change' }
+        ],
+        classify: [
+          { required: true, message: '请选择分类', trigger: 'change' }
+        ]
+      }
     }
   },
   filters: {
@@ -233,7 +225,8 @@ export default {
     }
   },
   created() {
-    this.getList()
+    this.getList();
+    this.getClassify()
   },
   methods: {
     getList() {
@@ -250,6 +243,12 @@ export default {
         })
         this.total = response.data.total
         this.listLoading = false
+      })
+    },
+    getClassify() {
+      getContactClassifyList().then(response => {
+        console.log(response.data.classify);
+        this.classifySel = response.data.classify
       })
     },
     handleFilter() {
@@ -364,11 +363,7 @@ export default {
       const index = this.list.indexOf(row)
       this.list.splice(index, 1)
     },
-    create() {
-      this.temp.wordstate = '生效';
-      this.temp.submitor = store.state.user.name;
-      this.dialogFormVisible = false;
-      // 获取当前时间 之后可抽出
+    getCreateYMDTime() {
       const date = new Date();
       const seperator1 = '-';
       const seperator2 = ':';
@@ -380,19 +375,45 @@ export default {
       if (strDate >= 0 && strDate <= 9) {
         strDate = '0' + strDate;
       }
-      const updatetime = date.getFullYear() + seperator1 + month + seperator1 + strDate + ' ' + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
-      let keywords = [];
-      keywords = this.temp.keywords.split('\n');
-      console.log(keywords, this.temp.validity, this.temp.submitor, updatetime, this.location, this.temp.wordstate, this.classify);
-      addContacts(keywords, this.temp.validity, updatetime, this.temp.submitor, this.location, this.temp.wordstate, this.classify).then(response => {
-        console.log(response);
-        this.$notify({
-          title: '成功',
-          message: '创建成功',
-          type: 'success',
-          duration: 2000
-        })
-      })
+      return date.getFullYear() + seperator1 + month + seperator1 + strDate + ' - 2099-12-31';
+    },
+    create() {
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.form.wordstate = '生效';
+          this.form.submitor = store.state.user.name;
+          this.dialogFormVisible = false;
+          // 获取当前时间 之后可抽出
+          const date = new Date();
+          const seperator1 = '-';
+          const seperator2 = ':';
+          let month = date.getMonth() + 1;
+          let strDate = date.getDate();
+          if (month >= 1 && month <= 9) {
+            month = '0' + month;
+          }
+          if (strDate >= 0 && strDate <= 9) {
+            strDate = '0' + strDate;
+          }
+          const updatetime = date.getFullYear() + seperator1 + month + seperator1 + strDate + ' ' + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
+          let keywords = [];
+          keywords = this.form.keywords.split('\n');
+          // console.log(keywords, this.form.validity, updatetime, this.form.submitor, this.location, this.form.wordstate, this.form.classify);
+          addContacts(keywords, this.form.validity, updatetime, this.form.submitor, this.form.location, this.form.wordstate, this.classify).then(response => {
+            // console.log(response);
+            this.getList();
+            this.$notify({
+              title: '成功',
+              message: '创建成功',
+              type: 'success',
+              duration: 2000
+            })
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     },
     update() {
       this.temp.timestamp = +this.temp.timestamp
@@ -439,7 +460,7 @@ export default {
     },
     dateChange(val) {
       console.log(val);
-      return this.temp.validity = val;
+      return this.form.validity = val;
     },
     filterTag(value, row) {
       console.log(value);
