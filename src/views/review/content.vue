@@ -35,35 +35,39 @@
               <el-radio-button label="2">已确认</el-radio-button>
               <el-radio-button label="3">已忽略</el-radio-button>
             </el-radio-group>
+            <el-button v-show="!listViewOpen" size="mini" type="warning" plain style="float:right" @click="listViewOpen=true">完整选项</el-button>
           </el-form-item>
-          <el-form-item label="内容类型:">
-            <el-radio-group v-model="state.contentType" size="small">
-              <el-radio-button label="0">不限</el-radio-button>
-              <el-radio-button label="1">主题</el-radio-button>
-              <el-radio-button label="2">回复</el-radio-button>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="识别类型:">
-            <el-radio-group v-model="state.indentifyType" size="small">
-              <el-radio-button label="0">不限</el-radio-button>
-              <el-radio-button label="1">涉政</el-radio-button>
-              <el-radio-button label="2">涉黄</el-radio-button>
-              <el-radio-button label="3">涉恐</el-radio-button>
-              <el-radio-button label="4">广告</el-radio-button>
-              <el-radio-button label="5">低俗</el-radio-button>
-              <el-radio-button label="6">敏感</el-radio-button>
-              <el-radio-button label="7">灌水</el-radio-button>
-              <el-radio-button label="8">个性</el-radio-button>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="彩数识别:">
-            <el-radio-group v-model="state.colourdataType" size="small">
-              <el-radio-button label="0">不限</el-radio-button>
-              <el-radio-button label="1">通过</el-radio-button>
-              <el-radio-button label="2">待审</el-radio-button>
-              <el-radio-button label="3">删除</el-radio-button>
-            </el-radio-group>
-          </el-form-item>
+          <div v-show="listViewOpen">
+            <el-form-item label="内容类型:">
+              <el-radio-group v-model="state.contentType" size="small">
+                <el-radio-button label="0">不限</el-radio-button>
+                <el-radio-button label="1">主题</el-radio-button>
+                <el-radio-button label="2">回复</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="识别类型:">
+              <el-radio-group v-model="state.indentifyType" size="small">
+                <el-radio-button label="0">不限</el-radio-button>
+                <el-radio-button label="1">涉政</el-radio-button>
+                <el-radio-button label="2">涉黄</el-radio-button>
+                <el-radio-button label="3">涉恐</el-radio-button>
+                <el-radio-button label="4">广告</el-radio-button>
+                <el-radio-button label="5">低俗</el-radio-button>
+                <el-radio-button label="6">敏感</el-radio-button>
+                <el-radio-button label="7">灌水</el-radio-button>
+                <el-radio-button label="8">个性</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="彩数识别:">
+              <el-radio-group v-model="state.colourdataType" size="small">
+                <el-radio-button label="0">不限</el-radio-button>
+                <el-radio-button label="1">通过</el-radio-button>
+                <el-radio-button label="2">待审</el-radio-button>
+                <el-radio-button label="3">删除</el-radio-button>
+              </el-radio-group>
+              <el-button size="mini" type="warning" plain style="float:right" @click="listViewOpen=false">简略选项</el-button>
+            </el-form-item>
+          </div>
         </el-form>
       </div>
       <sticky className="sub-navbar">
@@ -101,11 +105,12 @@
               <label>
                 <a class="aTitle" :href="item.url" target="_blank">{{item.title}}</a>
               </label>
+              <el-tag v-if="item.contenttype != null" type="danger">{{item.contenttype}}</el-tag>
             </el-row>
             <el-row style="display: flex;align-items: center;height:22px">
               <!-- <input type="checkbox" :value="item.rowkey" v-model="item.checked"> -->
               <el-checkbox :value="item.rowkey" v-model="item.checked"></el-checkbox>
-              <h5 class="infoGrey" style="margin-left:10px" v-html="item.username">{{item.username}}</h5>
+              <h5 class="infoGrey" style="margin-left:10px;cursor:pointer" v-html="item.username" v-clipboard:copy='item.usernamereal' v-clipboard:success='clipboardSuccess'>{{item.username}}</h5>
               <p class="infoGrey">(
                 <router-link class="aHref" :to="{ path: '/userinfo', query: { userid: item.userid }}">{{item.userid}}</router-link>） |
                 <router-link class="aHref" :to="{ path: '/ipinfo', query: { ip: item.ip }}">{{item.ip}}</router-link> | {{item.subtime}}
@@ -187,23 +192,27 @@ import waves from '@/directive/waves.js'; // 水波纹指令
 import BackToTop from '@/components/BackToTop';
 import { getContentList, submitAllList, submitOneOperation } from '@/api/content';
 import store from '../../store';
+import clip from '@/utils/clipboard' // use clipboard directly
+import clipboard from '@/directive/clipboard/index.js'  // use clipboard by v-directive
 
 export default {
   name: 'contentTemplate',
   components: { Sticky, BackToTop },
   directives: {
-    waves
+    waves,
+    clipboard
   },
   data() {
     return {
       mainLoading: true,
+      listViewOpen: false,
       list: [],
       total: null,
       listLoading: true,
       massList: [],
       listQuery: {
         page: 1,
-        limit: 20,
+        limit: 50,
         seachCondition: null, //  查询种类 默认全部
         seachContent: null //  查询详情 默认全部
       },
@@ -403,6 +412,7 @@ export default {
               );
             }
           }
+          this.$set(v, 'usernamereal', v.username);
           this.$set(v, 'username', username);
           this.$set(v, 'content', maincontent);
           this.$set(v, 'checked', false);
@@ -597,6 +607,13 @@ export default {
     },
     dateChange(val) {
       return this.state.timeDayPick = val;
+    },
+    clipboardSuccess() {
+      this.$message({
+        message: '复制成功',
+        type: 'success',
+        duration: 1500
+      })
     },
     debounce(func, wait, immediate) {
       let timeout, args, context, timestamp, result;

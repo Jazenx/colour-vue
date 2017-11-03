@@ -51,6 +51,7 @@ Mock.mock(/\/graylist\/banned\/addadsinfo/, 'post', bannedAPI)
 Mock.mock(/\/dropdown\/blacklist\/keyword/, 'get', articleAPI.getClassify)
 Mock.mock(/\/dropdown\/blacklist\/contact/, 'get', articleAPI.getClassify)
 Mock.mock(/\/dropdown\/blacklist\/ip/, 'get', articleAPI.getClassify)
+Mock.mock(/\/dropdown\/graylist\/keyword/, 'get', articleAPI.getClassify)
 
 Mock.mock(/\/blacklist\/banned\/updatekeywords/, 'post', bannedAPI)
 Mock.mock(/\/blacklist\/banned\/updatecontacts/, 'post', bannedAPI)

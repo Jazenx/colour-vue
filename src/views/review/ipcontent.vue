@@ -36,35 +36,39 @@
               <el-radio-button label="2">已确认</el-radio-button>
               <el-radio-button label="3">已忽略</el-radio-button>
             </el-radio-group>
+            <el-button v-show="!listViewOpen" size="mini" type="warning" plain style="float:right" @click="listViewOpen=true">完整选项</el-button>
           </el-form-item>
-          <el-form-item label="内容类型:">
-            <el-radio-group v-model="state.contentType" size="small">
-              <el-radio-button label="0">不限</el-radio-button>
-              <el-radio-button label="1">主题</el-radio-button>
-              <el-radio-button label="2">回复</el-radio-button>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="识别类型:">
-            <el-radio-group v-model="state.indentifyType" size="small">
-              <el-radio-button label="0">不限</el-radio-button>
-              <el-radio-button label="1">涉政</el-radio-button>
-              <el-radio-button label="2">涉黄</el-radio-button>
-              <el-radio-button label="3">涉恐</el-radio-button>
-              <el-radio-button label="4">广告</el-radio-button>
-              <el-radio-button label="5">低俗</el-radio-button>
-              <el-radio-button label="6">敏感</el-radio-button>
-              <el-radio-button label="7">灌水</el-radio-button>
-              <el-radio-button label="8">个性</el-radio-button>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="彩数识别:">
-            <el-radio-group v-model="state.colourdataType" size="small">
-              <el-radio-button label="0">不限</el-radio-button>
-              <el-radio-button label="1">通过</el-radio-button>
-              <el-radio-button label="2">待审</el-radio-button>
-              <el-radio-button label="3">删除</el-radio-button>
-            </el-radio-group>
-          </el-form-item>
+          <div v-show="listViewOpen">
+            <el-form-item label="内容类型:">
+              <el-radio-group v-model="state.contentType" size="small">
+                <el-radio-button label="0">不限</el-radio-button>
+                <el-radio-button label="1">主题</el-radio-button>
+                <el-radio-button label="2">回复</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="识别类型:">
+              <el-radio-group v-model="state.indentifyType" size="small">
+                <el-radio-button label="0">不限</el-radio-button>
+                <el-radio-button label="1">涉政</el-radio-button>
+                <el-radio-button label="2">涉黄</el-radio-button>
+                <el-radio-button label="3">涉恐</el-radio-button>
+                <el-radio-button label="4">广告</el-radio-button>
+                <el-radio-button label="5">低俗</el-radio-button>
+                <el-radio-button label="6">敏感</el-radio-button>
+                <el-radio-button label="7">灌水</el-radio-button>
+                <el-radio-button label="8">个性</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="彩数识别:">
+              <el-radio-group v-model="state.colourdataType" size="small">
+                <el-radio-button label="0">不限</el-radio-button>
+                <el-radio-button label="1">通过</el-radio-button>
+                <el-radio-button label="2">待审</el-radio-button>
+                <el-radio-button label="3">删除</el-radio-button>
+              </el-radio-group>
+              <el-button size="mini" type="warning" plain style="float:right" @click="listViewOpen=false">简略选项</el-button>
+            </el-form-item>
+          </div>
         </el-form>
       </div>
       <sticky className="sub-navbar">
@@ -111,6 +115,7 @@ export default {
       list: [],
       total: null,
       listLoading: true,
+      listViewOpen: false,
       massList: [],
       listQuery: {
         page: 1,

@@ -399,7 +399,7 @@ export default {
           let keywords = [];
           keywords = this.form.keywords.split('\n');
           // console.log(keywords, this.form.validity, updatetime, this.form.submitor, this.location, this.form.wordstate, this.form.classify);
-          addContacts(keywords, this.form.validity, updatetime, this.form.submitor, this.form.location, this.form.wordstate, this.classify).then(response => {
+          addContacts(keywords, this.form.validity, updatetime, this.form.submitor, this.form.location, this.form.wordstate, this.form.classify).then(response => {
             // console.log(response);
             this.getList();
             this.$notify({

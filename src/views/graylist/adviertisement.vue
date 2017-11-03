@@ -377,7 +377,7 @@ export default {
             strDate = '0' + strDate;
           }
           const updatetime = date.getFullYear() + seperator1 + month + seperator1 + strDate + ' ' + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
-          addAdsInfo(this.temp.adsnoun, this.temp.adsverb, this.form.validity, updatetime, this.form.submitor, this.form.location, this.form.wordstate, this.classify).then(response => {
+          addAdsInfo(this.form.adsnoun, this.form.adsverb, this.form.validity, updatetime, this.form.submitor, this.form.location, this.form.wordstate, this.form.classify).then(response => {
             // console.log(response);
             this.getList();
             this.$notify({

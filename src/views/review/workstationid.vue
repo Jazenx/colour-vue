@@ -27,10 +27,11 @@
               <label>
                 <a class="aTitle" :href="item.url" target="_blank">{{item.title}}</a>
               </label>
+              <el-tag type="danger">{{item.contenttype}}</el-tag>
             </el-row>
             <el-row style="display: flex;align-items: center;height:22px">
               <el-checkbox :value="item.rowkey" v-model="item.checked"></el-checkbox>
-              <h5 class="infoGrey" style="margin-left:10px">{{item.username}}</h5>
+              <h5 class="infoGrey" style="margin-left:10px;cursor:pointer" v-html="item.username" v-clipboard:copy='item.usernamereal' v-clipboard:success='clipboardSuccess'>{{item.username}}</h5>
               <p class="infoGrey">(
                 <router-link class="aHref" :to="{ path: '/userinfo', query: { userid: item.userid }}">{{item.userid}}</router-link>） |
                 <router-link class="aHref" :to="{ path: '/ipinfo', query: { ip: item.ip }}">{{item.ip}}</router-link> | {{item.subtime}}
@@ -111,12 +112,14 @@ import waves from '@/directive/waves.js'// 水波纹指令
 import BackToTop from '@/components/BackToTop'
 import { getIdList, submitAllList, submitOneOperation } from '@/api/content'
 import store from '../../store'
-
+import clip from '@/utils/clipboard' // use clipboard directly
+import clipboard from '@/directive/clipboard/index.js'  // use clipboard by v-directive
 export default {
   name: 'workstationid',
   components: { Sticky, BackToTop },
   directives: {
-    waves
+    waves,
+    clipboard
   },
   props: {
     listQueryId: {},
@@ -165,7 +168,7 @@ export default {
         console.log(this.pageQuery);
         this.list = response.data.items.map(v => {
           let mainword = [];
-         let maincontent = v.content;
+          let maincontent = v.content;
           if (v.keyword != null && v.keyword !== '') {
             mainword = v.keyword.split('&');
             for (const word of mainword) {
@@ -179,6 +182,19 @@ export default {
               }
             }
           }
+          let username = v.username;
+          for (const word of mainword) {
+            if (word != null) {
+              username = username.replace(
+                new RegExp(word, 'ig'),
+                '<span style="color: red;font-weight: bold;background-color: yellow;">' +
+                word +
+                '</span>'
+              );
+            }
+          }
+          this.$set(v, 'usernamereal', v.username);
+          this.$set(v, 'username', username);
           this.$set(v, 'content', maincontent);
           this.$set(v, 'checked', false);
           if (v.optinfo === 0) {
@@ -230,6 +246,13 @@ export default {
       this.list.map(v => {
         this.$set(v, 'optinfo', 2);
         return v
+      })
+    },
+    clipboardSuccess() {
+      this.$message({
+        message: '复制成功',
+        type: 'success',
+        duration: 1500
       })
     },
     ignoreAllContent() {
