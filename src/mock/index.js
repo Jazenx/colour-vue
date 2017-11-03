@@ -47,6 +47,7 @@ Mock.mock(/\/whitelist\/banned\/addid/, 'post', bannedAPI)
 
 Mock.mock(/\/graylist\/banned\/addkeywords/, 'post', bannedAPI)
 Mock.mock(/\/graylist\/banned\/addadsinfo/, 'post', bannedAPI)
+Mock.mock(/\/graylist\/banned\/transferkeyword/, 'post', bannedAPI)
 
 Mock.mock(/\/dropdown\/blacklist\/keyword/, 'get', articleAPI.getClassify)
 Mock.mock(/\/dropdown\/blacklist\/contact/, 'get', articleAPI.getClassify)
@@ -57,6 +58,7 @@ Mock.mock(/\/blacklist\/banned\/updatekeywords/, 'post', bannedAPI)
 Mock.mock(/\/blacklist\/banned\/updatecontacts/, 'post', bannedAPI)
 Mock.mock(/\/blacklist\/banned\/updateip/, 'post', bannedAPI)
 Mock.mock(/\/blacklist\/banned\/updateid/, 'post', bannedAPI)
+Mock.mock(/\/blacklist\/banned\/transferkeyword/, 'post', bannedAPI)
 
 Mock.mock(/\/whitelist\/banned\/updateip/, 'post', bannedAPI)
 Mock.mock(/\/whitelist\/banned\/updateid/, 'post', bannedAPI)

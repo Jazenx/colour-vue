@@ -146,3 +146,14 @@ export function getKeywordClassifyList() {
     method: 'get'
   })
 }
+
+
+export function transferKeyword(keywordsID) {
+  return fetch({
+    url: 'graylist/banned/transferkeyword',
+    method: 'post',
+    data: {
+      keywordsID
+    }
+  })
+}

@@ -27,7 +27,7 @@
               <label>
                 <a class="aTitle" :href="item.url" target="_blank">{{item.title}}</a>
               </label>
-              <el-tag type="danger">{{item.contenttype}}</el-tag>
+              <el-tag v-if="item.contenttype != null" type="danger">{{item.contenttype}}</el-tag>
             </el-row>
             <el-row style="display: flex;align-items: center;height:22px">
               <el-checkbox :value="item.rowkey" v-model="item.checked"></el-checkbox>

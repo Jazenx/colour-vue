@@ -69,13 +69,14 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="150px">
+      <el-table-column align="center" label="操作" width="200px">
         <template scope="scope">
           <el-button :type="scope.row.edit?'success':'primary'" @click='updateKeywordDetail(scope.row)' size="small">{{scope.row.edit?'完成':'编辑'}}</el-button>
           <el-button v-if="scope.row.wordstate!='生效'" size="small" @click="handleModifyStatus(scope.row,'生效')">生效
           </el-button>
           <el-button v-if="scope.row.wordstate!='失效'" size="small" type="danger" @click="handleModifyStatus(scope.row,'失效')"> 失效
           </el-button>
+          <el-button size="small" type="warning" @click="transferKeyword(scope.row)">转移</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -115,7 +116,7 @@
   </div>
 </template>
 <script>
-import { addKeywords, getKeywords, updateKeywords, changeKeywordsStatus, deleteKeywords, getKeywordClassifyList } from '@/api/graylist'
+import { addKeywords, getKeywords, updateKeywords, changeKeywordsStatus, deleteKeywords, getKeywordClassifyList, transferKeyword } from '@/api/graylist'
 import waves from '@/directive/waves.js'// 水波纹指令
 import { parseTime } from '@/utils'
 import store from '../../store'
@@ -367,6 +368,26 @@ export default {
       })
       const index = this.list.indexOf(row)
       this.list.splice(index, 1)
+    }, transferKeyword(row) {
+      this.$confirm('此操作会将 ' + row.keyword + ' 从灰名单转移到黑名单, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        console.log(row.id);
+        transferKeyword(row.id, status).then(response => {
+          // console.log(response);
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        });
+      });
     },
     create() {
       this.$refs.form.validate(valid => {

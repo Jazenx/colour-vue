@@ -319,3 +319,13 @@ export function getIPClassifyList() {
     method: 'get'
   })
 }
+
+export function transferKeyword(keywordsID) {
+  return fetch({
+    url: 'blacklist/banned/transferkeyword',
+    method: 'post',
+    data: {
+      keywordsID
+    }
+  })
+}
