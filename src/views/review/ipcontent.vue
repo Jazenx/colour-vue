@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-
     <div class="main-container">
       <div style="margin: 20px">
         <div>
@@ -84,6 +83,12 @@
       <div style="margin: 15px; display: flex;justify-content:space-between;">
         <label style="float:left">总量：{{total}}</label>
       </div>
+
+      <!-- <div v-for="(item, index) in list" :key="item.ip" v-loading="listLoading">
+    
+      </div> -->
+
+
       <el-collapse v-for="(item, index) in list" :key="item.ip" v-loading="listLoading">
         <el-collapse-item :title="item.ip+' (共'+item.total+'条)'" name="item.ip">
           <workstationip :ip="item.ip" :listQueryIp="listQuery" :state="state"></workstationip>
@@ -337,7 +342,7 @@ export default {
     },
     dateChange(val) {
       console.log(val);
-      return this.listQuery.timeDayPick = val;
+      return this.state.timeDayPick = val;
     },
     testCollapse(val) {
       console.log(val);

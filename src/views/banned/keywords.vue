@@ -286,6 +286,8 @@ export default {
         console.log(row.id);
         transferKeyword(row.id, status).then(response => {
           // console.log(response);
+          const index = this.list.indexOf(row)
+          this.list.splice(index, 1)
           this.$message({
             message: '操作成功',
             type: 'success'

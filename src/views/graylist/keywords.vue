@@ -368,7 +368,8 @@ export default {
       })
       const index = this.list.indexOf(row)
       this.list.splice(index, 1)
-    }, transferKeyword(row) {
+    },
+    transferKeyword(row) {
       this.$confirm('此操作会将 ' + row.keyword + ' 从灰名单转移到黑名单, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -377,6 +378,8 @@ export default {
         console.log(row.id);
         transferKeyword(row.id, status).then(response => {
           // console.log(response);
+          const index = this.list.indexOf(row)
+          this.list.splice(index, 1)
           this.$message({
             message: '操作成功',
             type: 'success'

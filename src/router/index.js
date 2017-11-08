@@ -92,6 +92,13 @@ export const asyncRouterMap = [{
         icon: 'fenxi',
         name: '用户ID'
       }
+      // ,
+      // {
+      //   path: 'demo',
+      //   component: _import('review/demo'),
+      //   icon: 'fenxi',
+      //   name: 'Demo'
+      // }
     ]
   },
   {

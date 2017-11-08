@@ -339,7 +339,7 @@ export default {
     },
     dateChange(val) {
       console.log(val);
-      return this.listQuery.timeDayPick = val;
+      return thiss.state.timeDayPick = val;
     }
   },
   watch: {
