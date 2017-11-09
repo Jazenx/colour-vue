@@ -85,15 +85,24 @@
       </div>
 
       <!-- <div v-for="(item, index) in list" :key="item.ip" v-loading="listLoading">
-    
-      </div> -->
+            
+              </div> -->
 
+      <!-- <el-collapse v-for="(item, index) in list" :key="item.ip" v-loading="listLoading">
+                <el-collapse-item :title="item.ip+' (共'+item.total+'条)'" name="item.ip">
+                  <workstationip :ip="item.ip" :listQueryIp="listQuery" :state="state"></workstationip>
+                </el-collapse-item>
+              </el-collapse> -->
+      <div v-for="(item, index) in list" :key="item.userid" v-loading="listLoading">
+        <el-row style="height:44px;border:1px solid #D3D3D3;display:flex;align-items:center;padding-left:10px;color:#48576a">
+          <i @click="boxIsShow(item)" ref="clickBtn" class="el-icon-arrow-right" style="cursor: pointer" :name="item.userid"></i>
+          <p style="margin-left:10px">{{item.ip+' (共'+item.total+'条)'}}</p>
+        </el-row>
+        <el-row style="background: white" v-if="item.boxshow">
+          <workstationip :id="item.userid" :listQueryId="listQuery" :state="state"></workstationip>
+        </el-row>
+      </div>
 
-      <el-collapse v-for="(item, index) in list" :key="item.ip" v-loading="listLoading">
-        <el-collapse-item :title="item.ip+' (共'+item.total+'条)'" name="item.ip">
-          <workstationip :ip="item.ip" :listQueryIp="listQuery" :state="state"></workstationip>
-        </el-collapse-item>
-      </el-collapse>
       <div v-show="!listLoading" class="pagination-container" style="  display: flex;justify-content: center;align-items: center;">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[10, 20, 30]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
@@ -264,7 +273,10 @@ export default {
     getList() {
       this.listLoading = true
       getUserIPWorkStation(this.listQuery, this.state).then(response => {
-        this.list = response.data.items;
+        this.list = response.data.items.map(v => {
+          this.$set(v, 'boxshow', false);
+          return v
+        });
         this.total = response.data.total
         this.listLoading = false
       })
@@ -346,6 +358,15 @@ export default {
     },
     testCollapse(val) {
       console.log(val);
+    },
+    boxIsShow(row) {
+      const clickTarget = event.currentTarget;
+      if (row.boxshow) {
+        clickTarget.style.transform = 'rotate(0deg)';
+      } else {
+        clickTarget.style.transform = 'rotate(90deg)';
+      }
+      row.boxshow = !row.boxshow
     }
   },
   watch: {

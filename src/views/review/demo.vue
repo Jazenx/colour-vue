@@ -1,25 +1,24 @@
 <template>
   <div>
-    <el-row style="background: red;height:50px;">
-      <button type="primary" @click="boxIsShow">
-        <i class="el-icon-arrow-right"></i>
-      </button>
+    <el-row style="height:44px;border:1px solid #D3D3D3;display:flex;align-items:center">
+      <i @click="boxIsShow" ref="clickBtn" class="el-icon-arrow-right" style="cursor: pointer"></i>
+      <p style="margin-left:10px">xxxxxxxxxxxxxxxxxxxxxx</p>
     </el-row>
     <el-row style="background: green" v-if="boxshow">
-      <workstationid :id="list.item[0].userid" :listQueryId="listQuery" :state="state"></workstationid>
+      <workstationid :id="123" :listQueryId="listQuery" :state="state"></workstationid>
     </el-row>
   </div>
 </template>
 
 <script>
-
 import workstationid from './workstationid'
 import { getUserIDWorkStation } from '@/api/content'
 
 export default {
+  components: { workstationid },
   data() {
     return {
-      boxshow: true,
+      boxshow: false,
       listQuery: {
         page: 1,
         limit: 10,
@@ -42,8 +41,13 @@ export default {
     this.getList()
   },
   methods: {
-    boxIsShow() {
-      console.log(this.boxshow);
+    boxIsShow(e) {
+      console.log(e);
+      if (this.boxshow) {
+        this.$refs.clickBtn.style.transform = 'rotate(0deg)';
+      } else {
+        this.$refs.clickBtn.style.transform = 'rotate(90deg)';
+      }
       this.boxshow = !this.boxshow
     },
     getList() {
@@ -56,5 +60,6 @@ export default {
   }
 }
 </script>
+
 
 

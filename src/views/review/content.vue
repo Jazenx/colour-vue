@@ -383,7 +383,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true;
-      console.log(this.listQuery, this.state);
+      console.log(this.state.timeDayPick);
       getContentList(this.listQuery, this.state).then(response => {
         this.list = response.data.items.map(v => {
           let mainword = [];
