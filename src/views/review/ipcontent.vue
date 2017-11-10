@@ -99,7 +99,7 @@
           <p style="margin-left:10px">{{item.ip+' (共'+item.total+'条)'}}</p>
         </el-row>
         <el-row style="background: white" v-if="item.boxshow">
-          <workstationip :id="item.userid" :listQueryId="listQuery" :state="state"></workstationip>
+          <workstationip :ip="item.ip" :listQueryIp="listQuery" :state="state"></workstationip>
         </el-row>
       </div>
 

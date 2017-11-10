@@ -144,7 +144,7 @@ export default {
         keywords: '',
         adsnoun: '',
         adsverb: '',
-        location: ['论坛', '回帖']
+        location: ['评论']
       },
       // statusOptions: ['published', 'draft', 'deleted'],
       dialogFormVisible: false,
@@ -179,6 +179,9 @@ export default {
         {
           label: '论坛、评论',
           options: [{
+            value: '评论',
+            label: '评论'
+          }, {
             value: '论坛',
             label: '论坛'
           },

@@ -138,7 +138,7 @@ export default {
         updatetime: '',
         keywords: '',
         submitor: '',
-        location: ['论坛', '回帖']
+        location: ['评论']
       },
       // statusOptions: ['published', 'draft', 'deleted'],
       dialogFormVisible: false,
@@ -170,6 +170,9 @@ export default {
         {
           label: '论坛、评论',
           options: [{
+            value: '评论',
+            label: '评论'
+          }, {
             value: '论坛',
             label: '论坛'
           },
@@ -270,7 +273,7 @@ export default {
         strDate = '0' + strDate;
       }
       return date.getFullYear() + seperator1 + month + seperator1 + strDate;
-    },    
+    },
     getCreateYMDTime() {
       const date = new Date();
       const seperator1 = '-';
