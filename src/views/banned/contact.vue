@@ -51,7 +51,7 @@
       <el-table-column align="center" label="有效期" width="270px">
         <template scope="scope">
           <span v-show="!scope.row.edit">{{scope.row.validity}}</span>
-          <el-date-picker v-show="scope.row.edit" v-model="scope.row.validity" type="daterange" placeholder="选择日期范围">
+          <el-date-picker v-show="scope.row.edit" v-model="scope.row.validity" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions">
           </el-date-picker>
         </template>
       </el-table-column>
@@ -109,7 +109,7 @@
         </el-form-item>
 
         <el-form-item label="有效期">
-          <el-date-picker v-model="validity" type="daterange" placeholder="选择日期范围" @change="dateChange">
+          <el-date-picker v-model="validity" type="daterange" placeholder="选择日期范围" @change="dateChange" :picker-options="pickerOptions">
           </el-date-picker>
         </el-form-item>
         <el-form-item>
@@ -186,7 +186,7 @@ export default {
         label: '失效'
       }],
       locationSel: [
-       {
+        {
           label: '论坛、评论',
           options: [{
             value: '评论',
@@ -211,6 +211,50 @@ export default {
         ],
         classify: [
           { required: true, message: '请选择分类', trigger: 'change' }
+        ]
+      },
+      pickerOptions: {
+        shortcuts: [{
+          text: '1天',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            end.setTime(start.getTime() + 3600 * 1000 * 24 * 1);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '3天',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            end.setTime(start.getTime() + 3600 * 1000 * 24 * 3);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '7天',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            end.setTime(start.getTime() + 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '30天',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            end.setTime(start.getTime() + 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '永久',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            end.setTime(start.getTime() + 3600 * 1000 * 24 * 2999);
+            picker.$emit('pick', [start, end]);
+          }
+        }
         ]
       }
     }
