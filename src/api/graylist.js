@@ -157,3 +157,10 @@ export function transferKeyword(keywordsID) {
     }
   })
 }
+
+export function getLocationDropdownList() {
+  return fetch({
+    url: 'dropdown/location/',
+    method: 'get'
+  })
+}

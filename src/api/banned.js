@@ -263,8 +263,6 @@ export function deleteKeywords(keywordsID) {
   })
 }
 
-
-
 export function deleteContacts(keywordsID) {
   return fetch({
     url: 'blacklist/banned/deletecontacts',
@@ -274,7 +272,6 @@ export function deleteContacts(keywordsID) {
     }
   })
 }
-
 
 export function deleteIps(keywordsID) {
   return fetch({
@@ -286,7 +283,6 @@ export function deleteIps(keywordsID) {
   })
 }
 
-
 export function deleteIds(keywordsID) {
   return fetch({
     url: 'blacklist/banned/deleteids',
@@ -296,8 +292,6 @@ export function deleteIds(keywordsID) {
     }
   })
 }
-
-
 
 export function getKeywordClassifyList() {
   return fetch({
@@ -327,5 +321,12 @@ export function transferKeyword(keywordsID) {
     data: {
       keywordsID
     }
+  })
+}
+
+export function getLocationDropdownList() {
+  return fetch({
+    url: 'dropdown/location/',
+    method: 'get'
   })
 }

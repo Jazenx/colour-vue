@@ -31,6 +31,18 @@ for (let i = 0; i < 5; i++) {
   }))
 }
 
+const locationList = []
+
+for (let i = 0; i < 5; i++) {
+  locationList.push(Mock.mock({
+    value: '@cname',
+    label: '@cname'
+  }))
+}
+
+
+
+
 export default {
   getList: config => {
     const {
@@ -98,5 +110,8 @@ export default {
   }),
   getClassify: () => ({
     classify: classifyList
+  }),
+  getLocation: () => ({
+    location: locationList
   })
 }

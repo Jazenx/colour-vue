@@ -4,10 +4,8 @@
       <el-input style="width: 250px;" class="filter-item" placeholder="请输入用户ID" v-model="listQuery.searchKeyword">
       </el-input>
       <el-select clearable style="width: 200px" class="filter-item" v-model="listQuery.searchLocation" multiple placeholder="请选择范围">
-        <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
-          <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
-          </el-option>
-        </el-option-group>
+        <el-option v-for="item in locationSel" :key="item.value" :label="item.label" :value="item.value">
+        </el-option>
       </el-select>
       <el-input style="width: 250px;" class="filter-item" placeholder="请输入提交人" v-model="listQuery.searchSubmitor">
       </el-input>
@@ -33,10 +31,8 @@
       <el-table-column align="center" label="范围" style="width: 10%">
         <template scope="scope">
           <el-select v-model="scope.row.locations" multiple placeholder="请选择" v-show="scope.row.edit">
-            <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
-              <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-option-group>
+            <el-option v-for="item in locationSel" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
           </el-select>
           <span v-show="!scope.row.edit">{{scope.row.location}}</span>
           </span>
@@ -88,10 +84,8 @@
         </el-form-item>
         <el-form-item label="范围" prop="location">
           <el-select v-model="form.location" multiple placeholder="请选择范围">
-            <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
-              <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-option-group>
+            <el-option v-for="item in locationSel" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="有效期">
@@ -107,7 +101,7 @@
   </div>
 </template>
 <script>
-import { fetchPv, addId, getId, updateId, changeIdStatus, deleteIds } from '@/api/banned'
+import { fetchPv, addId, getId, updateId, changeIdStatus, deleteIds, getLocationDropdownList } from '@/api/banned'
 import waves from '@/directive/waves.js'// 水波纹指令
 import { parseTime } from '@/utils'
 import store from '../../store'
@@ -191,23 +185,7 @@ export default {
         value: '失效',
         label: '失效'
       }],
-      locationSel: [
-        {
-          label: '论坛、评论',
-          options: [{
-            value: '评论',
-            label: '评论'
-          }, {
-            value: '论坛',
-            label: '论坛'
-          },
-          {
-            value: '回帖',
-            label: '回帖'
-          }
-          ]
-        }
-      ],
+      locationSel: [],
       submitRules: {
         keywords: [
           { required: true, message: '请输入关键词', trigger: 'blur' }
@@ -216,7 +194,7 @@ export default {
           { type: 'array', required: true, message: '请选择范围', trigger: 'change' }
         ]
       },
-       pickerOptions: {
+      pickerOptions: {
         shortcuts: [{
           text: '1天',
           onClick(picker) {
@@ -275,7 +253,8 @@ export default {
     }
   },
   created() {
-    this.getList()
+    this.getList();
+    this.getLocation();
   },
   methods: {
     getList() {
@@ -292,6 +271,12 @@ export default {
         })
         this.total = response.data.total
         this.listLoading = false
+      })
+    },
+    getLocation() {
+      getLocationDropdownList().then(response => {
+        console.log(response.data);
+        this.locationSel = response.data.location
       })
     },
     handleFilter() {

@@ -4,10 +4,8 @@
       <el-input style="width: 250px;" class="filter-item" placeholder="请输入联系方式" v-model="listQuery.searchKeyword">
       </el-input>
       <el-select clearable style="width: 200px" class="filter-item" v-model="listQuery.searchLocation" multiple placeholder="请选择范围">
-        <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
-          <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
-          </el-option>
-        </el-option-group>
+        <el-option v-for="item in locationSel" :key="item.value" :label="item.label" :value="item.value">
+        </el-option>
       </el-select>
       <el-select clearable style="width: 200px" class="filter-item" v-model="listQuery.searchWordType" placeholder="请选择类别">
         <el-option v-for="item in classifySel" :key="item.value" :label="item.label" :value="item.value">
@@ -39,10 +37,8 @@
       <el-table-column align="center" label="范围" style="width: 10%">
         <template scope="scope">
           <el-select v-model="scope.row.locations" multiple placeholder="请选择" v-show="scope.row.edit">
-            <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
-              <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-option-group>
+            <el-option v-for="item in locationSel" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
           </el-select>
           <span v-show="!scope.row.edit">{{scope.row.location}}</span>
           </span>
@@ -94,11 +90,8 @@
         </el-form-item>
         <el-form-item label="范围" prop="location">
           <el-select v-model="form.location" multiple placeholder="请选择范围">
-            <!-- <el-option v-for="item in locationSel" :key="item.label" :label="item.label" :value="item.value">                                                                                                                                                                            </el-option> -->
-            <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
-              <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-option-group>
+            <el-option v-for="item in locationSel" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="分类" prop="classify">
@@ -121,7 +114,7 @@
   </div>
 </template>
 <script>
-import { fetchPv, addContacts, getContacts, updateContacts, changeContactsStatus, deleteContacts, getContactClassifyList } from '@/api/banned'
+import { fetchPv, addContacts, getContacts, updateContacts, changeContactsStatus, deleteContacts, getContactClassifyList, getLocationDropdownList } from '@/api/banned'
 import waves from '@/directive/waves.js'// 水波纹指令
 import { parseTime } from '@/utils'
 import store from '../../store'
@@ -185,23 +178,7 @@ export default {
         value: '失效',
         label: '失效'
       }],
-      locationSel: [
-        {
-          label: '论坛、评论',
-          options: [{
-            value: '评论',
-            label: '评论'
-          }, {
-            value: '论坛',
-            label: '论坛'
-          },
-          {
-            value: '回帖',
-            label: '回帖'
-          }
-          ]
-        }
-      ],
+      locationSel: [],
       submitRules: {
         keywords: [
           { required: true, message: '请输入联系方式', trigger: 'blur' }
@@ -273,7 +250,8 @@ export default {
   },
   created() {
     this.getList();
-    this.getClassify()
+    this.getClassify();
+    this.getLocation();
   },
   methods: {
     getList() {
@@ -290,6 +268,12 @@ export default {
         })
         this.total = response.data.total
         this.listLoading = false
+      })
+    },
+    getLocation() {
+      getLocationDropdownList().then(response => {
+        console.log(response.data);
+        this.locationSel = response.data.location
       })
     },
     getClassify() {

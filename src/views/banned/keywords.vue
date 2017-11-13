@@ -4,10 +4,8 @@
       <el-input style="width: 250px;" class="filter-item" placeholder="请输入关键词" v-model="listQuery.searchKeyword">
       </el-input>
       <el-select clearable style="width: 200px" class="filter-item" v-model="listQuery.searchLocation" multiple placeholder="请选择范围">
-        <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
-          <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
-          </el-option>
-        </el-option-group>
+        <el-option v-for="item in locationSel" :key="item.value" :label="item.label" :value="item.value">
+        </el-option>
       </el-select>
       <el-select clearable style="width: 200px" class="filter-item" v-model="listQuery.searchWordstate" placeholder="请选择状态">
         <el-option v-for="item in wordStateSel" :key="item.value" :label="item.label" :value="item.value">
@@ -30,10 +28,8 @@
       <el-table-column align="center" label="范围" style="width: 10%">
         <template scope="scope">
           <el-select v-model="scope.row.locations" multiple placeholder="请选择" v-show="scope.row.edit">
-            <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
-              <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-option-group>
+            <el-option v-for="item in locationSel" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
           </el-select>
           <span v-show="!scope.row.edit">{{scope.row.location}}</span>
           </span>
@@ -91,10 +87,8 @@
         </el-form-item>
         <el-form-item label="范围" prop="location">
           <el-select v-model="form.location" multiple placeholder="请选择范围">
-            <el-option-group v-for="group in locationSel" :key="group.label" :label="group.label">
-              <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-option-group>
+            <el-option v-for="item in locationSel" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="分类" prop="classify">
@@ -116,7 +110,7 @@
   </div>
 </template>
 <script>
-import { fetchPv, addKeywords, getKeywords, updateKeywords, changeKeywordsStatus, deleteKeywords, getKeywordClassifyList, transferKeyword } from '@/api/banned'
+import { fetchPv, addKeywords, getKeywords, updateKeywords, changeKeywordsStatus, deleteKeywords, getKeywordClassifyList, transferKeyword, getLocationDropdownList } from '@/api/banned'
 import waves from '@/directive/waves.js'// 水波纹指令
 import { parseTime } from '@/utils'
 import store from '../../store'
@@ -179,23 +173,7 @@ export default {
         value: '失效',
         label: '失效'
       }],
-      locationSel: [
-        {
-          label: '论坛、评论',
-          options: [{
-            value: '评论',
-            label: '评论'
-          }, {
-            value: '论坛',
-            label: '论坛'
-          },
-          {
-            value: '回帖',
-            label: '回帖'
-          }
-          ]
-        }
-      ],
+      locationSel: [],
       submitRules: {
         keywords: [
           { required: true, message: '请输入关键词', trigger: 'blur' }
@@ -267,7 +245,8 @@ export default {
   },
   created() {
     this.getList();
-    this.getClassify()
+    this.getClassify();
+    this.getLocation();
   },
   methods: {
     getList() {
@@ -287,8 +266,14 @@ export default {
     },
     getClassify() {
       getKeywordClassifyList().then(response => {
-        console.log(response.data.classify);
+        // console.log(response.data.classify);
         this.classifySel = response.data.classify
+      })
+    },
+    getLocation() {
+      getLocationDropdownList().then(response => {
+        console.log(response.data);
+        this.locationSel = response.data.location
       })
     },
     handleFilter() {
@@ -330,9 +315,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        console.log(row.id);
         transferKeyword(row.id, status).then(response => {
-          // console.log(response);
           const index = this.list.indexOf(row)
           this.list.splice(index, 1)
           this.$message({
@@ -521,12 +504,9 @@ export default {
       }))
     },
     dateChange(val) {
-      console.log(val);
       return this.form.validity = val;
     },
     filterTag(value, row) {
-      console.log(value);
-      console.log(row);
       return row.wordstate === value;
     },
     handleSelectionChange(val) {

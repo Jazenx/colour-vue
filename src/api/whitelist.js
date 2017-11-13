@@ -132,3 +132,10 @@ export function deleteIds(keywordsID) {
     }
   })
 }
+
+export function getLocationDropdownList() {
+  return fetch({
+    url: 'dropdown/location/',
+    method: 'get'
+  })
+}
