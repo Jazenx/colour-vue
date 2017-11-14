@@ -143,7 +143,9 @@
                 <el-button type="primary" size="mini" @click="submitOneOperation(item,index,3)">忽略</el-button>
                 <el-button type="primary" size="mini" @click="submitOneOperation(item,index,4)">禁ID</el-button>
                 <!-- <el-button type="danger" size="mini" @click="submitOneOperation(item,index,5)">封杀用户</el-button> -->
-                <el-button type="danger" size="mini">封杀用户</el-button>
+                <a :href="item.authorurl" target="_blank" style="margin-left:10px">
+                  <el-button type="danger" size="mini">封杀用户</el-button>
+                </a>
               </el-col>
             </el-row>
           </el-col>

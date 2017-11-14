@@ -132,7 +132,7 @@ export default {
         updatetime: '',
         keywords: '',
         submitor: '',
-        location: ['评论']
+        location: []
       },
       // statusOptions: ['published', 'draft', 'deleted'],
       dialogFormVisible: false,
@@ -395,14 +395,29 @@ export default {
           keywords = this.form.keywords.split('\n');
           // console.log(keywords, this.form.validity, updatetime, this.form.submitor, this.location, this.form.wordstate, this.form.classify);
           addIp(keywords, this.form.validity, updatetime, this.form.submitor, this.form.location, this.form.wordstate).then(response => {
-            // console.log(response);
+                   if (response.data.result === 1) {
+              this.$notify({
+                title: '重复',
+                message: response.data.msg + '内容重复',
+                type: 'warning',
+                duration: 2000
+              })
+            } else if (response.data.result === 2) {
+              this.$notify({
+                title: '错误',
+                message: response.data.msg,
+                type: 'error',
+                duration: 2000
+              })
+            } else {
+              this.$notify({
+                title: '成功',
+                message: '创建成功',
+                type: 'success',
+                duration: 2000
+              })
+            }
             this.getList();
-            this.$notify({
-              title: '成功',
-              message: '创建成功',
-              type: 'success',
-              duration: 2000
-            })
           })
         } else {
           console.log('error submit!!');

@@ -141,7 +141,7 @@ export default {
         updatetime: '',
         keywords: '',
         submitor: '',
-        location: ['评论'],
+        location: [],
         classify: ''
       },
       // statusOptions: ['published', 'draft', 'deleted'],
