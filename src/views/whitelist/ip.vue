@@ -202,14 +202,6 @@ export default {
             end.setTime(start.getTime() + 3600 * 1000 * 24 * 30);
             picker.$emit('pick', [start, end]);
           }
-        }, {
-          text: '永久',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            end.setTime(start.getTime() + 3600 * 1000 * 24 * 2999);
-            picker.$emit('pick', [start, end]);
-          }
         }
         ]
       }

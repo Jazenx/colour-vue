@@ -107,7 +107,7 @@
                 <a class="aTitle" :href="item.url" target="_blank">{{item.title}}</a>
               </label>
               <el-tag v-if="item.contenttype != null" type="danger">{{item.contenttype}}</el-tag>
-              <el-tag v-if="item.bbsname != null" type="success">论坛:{{item.bbsname}}</el-tag>
+              <el-tag v-if="item.bbsname != null" type="success">{{item.bbsname}}</el-tag>
             </el-row>
             <el-row style="display: flex;align-items: center;height:22px">
               <!-- <input type="checkbox" :value="item.rowkey" v-model="item.checked"> -->
