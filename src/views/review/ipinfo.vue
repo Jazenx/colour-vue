@@ -136,7 +136,9 @@
             <el-row style="margin-top:140px">
               <el-col :span="16" style="display: flex;align-items: center;height:30px">
                 <h4 style="color: red">{{item.wordtype}}</h4>
-                <p class="infoGrey" style="margin-left:15px">{{item.judgedetail}}</p>
+                <el-tooltip class="item" effect="dark" :content="item.judgedetail" placement="top">
+                  <p class="infoGrey" style="margin-left:15px">{{item.judgedetail.substring(0,30)+'...'}}</p>
+                </el-tooltip>
               </el-col>
               <el-col :span="8" style="display: flex;align-items: center;margin-top:5px">
                 <el-button type="primary" size="mini" @click="submitOneOperation(item,index,1)">通过</el-button>
