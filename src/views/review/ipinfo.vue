@@ -137,7 +137,8 @@
               <el-col :span="16" style="display: flex;align-items: center;height:30px">
                 <h4 style="color: red">{{item.wordtype}}</h4>
                 <el-tooltip class="item" effect="dark" :content="item.judgedetail" placement="top">
-                  <p class="infoGrey" style="margin-left:15px">{{item.judgedetail.substring(0,30)+'...'}}</p>
+                  <p class="infoGrey" v-if="item.judgedetail.length<=30" style="margin-left:15px">{{item.judgedetail}}</p>
+                  <p class="infoGrey" v-if="item.judgedetail.length>30" style="margin-left:15px">{{item.judgedetail.substring(0,30)+'...'}}</p>
                 </el-tooltip>
               </el-col>
               <el-col :span="8" style="display: flex;align-items: center;margin-top:5px">
