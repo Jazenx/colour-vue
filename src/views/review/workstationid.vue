@@ -14,7 +14,7 @@
       </div>
       <div style="margin: 15px;  display: flex;justify-content: space-between;">
         <el-checkbox size="large" v-model="checkAll">全选</el-checkbox>
-        <el-button type="danger" size="small">封禁跳转提交</el-button>
+        <el-button type="danger" size="small" @click="bannedAndSubmit" :disabled="banBtn">封禁跳转提交</el-button>
       </div>
 
       <el-row v-for="(item, index) in list" :key="item.pid" v-loading="listLoading" style="margin:12px">
@@ -102,7 +102,7 @@
       </div>
       <div style="margin: 15px;  display: flex;justify-content: space-between;">
         <el-checkbox size="large" v-model="checkAll">全选</el-checkbox>
-        <el-button type="danger" size="small">封禁跳转提交</el-button>
+        <el-button type="danger" size="small" @click="bannedAndSubmit" :disabled="banBtn">封禁跳转提交</el-button>
       </div>
       <div v-show="!listLoading" class="pagination-container" style="display: flex;justify-content: center;align-items: center;">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="pageQuery.page" :page-sizes="[5, 10, 20]" :page-size="pageQuery.limit" layout="total, sizes, prev, pager, next" :total="total">
@@ -136,6 +136,8 @@ export default {
     return {
       list: [],
       total: null,
+      banurl: null,
+      banBtn: false,
       listLoading: true,
       massList: [],
       pageQuery: {
@@ -217,7 +219,11 @@ export default {
           return v
         })
         console.log(this.list);
-        this.total = response.data.total
+        this.total = response.data.total;
+        this.banurl = response.data.banurl;
+        if (this.banurl === '' || this.banurl == null) {
+          this.banBtn = true
+        }
         this.listLoading = false
       })
     },
@@ -312,6 +318,35 @@ export default {
           duration: 2000
         });
       });
+    },
+    bannedAndSubmit() {
+      this.massList = [];
+      this.listLoading = true;
+      this.list.map(v => {
+        if (v.checked) {
+          this.massList.push(v.usernamereal);
+        }
+        return v;
+      });
+      const list = this.massList;
+      let nameUrl = '';
+      for (const n of list) {
+        nameUrl += n + ',';
+      }
+      if (nameUrl === '' || nameUrl == null) {
+        this.$notify({
+          title: '警告',
+          message: '未选取用户',
+          type: 'warning',
+          duration: 2000
+        });
+        this.listLoading = false;
+        return
+      }
+      nameUrl = nameUrl.substring(0, nameUrl.length - 1);
+      const url = encodeURI(this.banurl + nameUrl);
+      window.open(url);
+      this.getList();
     }
   }
 }

@@ -135,6 +135,7 @@ export default {
 
     return {
       total: mockList.length,
+      banurl: 'https://www.baidu.com/search/',
       items: pageList
     }
   },
