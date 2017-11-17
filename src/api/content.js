@@ -42,6 +42,10 @@ export function getIdList(query, state, page) {
 
 
 
+
+
+
+
 export function getUserInfoList(query) {
   return fetch({
     url: 'review/content/userlist',
@@ -61,6 +65,8 @@ export function getIpInfoList(query) {
 
 
 
+
+
 export function submitAllList(listInfo, submitor) {
   return fetch({
     url: 'review/content/allsubmit',
@@ -72,6 +78,15 @@ export function submitAllList(listInfo, submitor) {
   })
 }
 
+export function getBanurl(nameList) {
+  return fetch({
+    url: 'review/content/banurl',
+    method: 'post',
+    data: {
+      nameList
+    }
+  })
+}
 
 
 export function submitOneOperation(detail) {

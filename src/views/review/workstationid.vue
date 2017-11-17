@@ -116,7 +116,7 @@
 import Sticky from '@/components/Sticky' // 粘性header组件
 import waves from '@/directive/waves.js'// 水波纹指令
 import BackToTop from '@/components/BackToTop'
-import { getIdList, submitAllList, submitOneOperation } from '@/api/content'
+import { getIdList, submitAllList, submitOneOperation, getBanurl } from '@/api/content'
 import store from '../../store'
 import clip from '@/utils/clipboard' // use clipboard directly
 import clipboard from '@/directive/clipboard/index.js'  // use clipboard by v-directive
@@ -319,7 +319,7 @@ export default {
         });
       });
     },
-    bannedAndSubmit() {
+   bannedAndSubmit() {
       this.massList = [];
       this.listLoading = true;
       this.list.map(v => {
@@ -329,11 +329,7 @@ export default {
         return v;
       });
       const list = this.massList;
-      let nameUrl = '';
-      for (const n of list) {
-        nameUrl += n + ',';
-      }
-      if (nameUrl === '' || nameUrl == null) {
+      if (list.length === 0) {
         this.$notify({
           title: '警告',
           message: '未选取用户',
@@ -343,9 +339,11 @@ export default {
         this.listLoading = false;
         return
       }
-      nameUrl = nameUrl.substring(0, nameUrl.length - 1);
-      const url = encodeURI(this.banurl + nameUrl);
-      window.open(url);
+      let url = '';
+      getBanurl(list).then(response => {
+        url = response.data.result
+        window.open(url);
+      })
       this.getList();
     }
   }

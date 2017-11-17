@@ -56,6 +56,7 @@ Mock.mock(/\/dropdown\/graylist\/keyword/, 'get', articleAPI.getClassify)
 
 Mock.mock(/\/dropdown\/location/, 'get', articleAPI.getLocation)
 
+Mock.mock(/\/dropdown\/rules/, 'get', articleAPI.getRules)
 
 
 Mock.mock(/\/blacklist\/banned\/updatekeywords/, 'post', bannedAPI)

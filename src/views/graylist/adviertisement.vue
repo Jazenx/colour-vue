@@ -25,7 +25,7 @@
           <span v-show="!scope.row.edit">{{ scope.row.adsverb }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="名词">
+      <el-table-column align="center" label="名词/规则">
         <template scope="scope">
           <el-input v-show="scope.row.edit" size="small" v-model="scope.row.adsnoun"></el-input>
           <span v-show="!scope.row.edit">{{ scope.row.adsnoun }}</span>
@@ -85,8 +85,14 @@
         <el-form-item label="动词" prop="adsverb">
           <el-input type="text" v-model="form.adsverb" placeholder="请输入动词"></el-input>
         </el-form-item>
-        <el-form-item label="名词" prop="adsnoun">
-          <el-input type="text" v-model="form.adsnoun" placeholder="请输入名词"></el-input>
+        <!-- <el-form-item label="名词" prop="adsnoun">
+                  <el-input type="text" v-model="form.adsnoun" placeholder="请输入名词"></el-input>
+                </el-form-item> -->
+        <el-form-item label="名词/规则" prop="adsnoun">
+          <el-select v-model="form.adsnoun" filterable allow-create placeholder="请输入名词或选择规则">
+            <el-option v-for="item in rulesSel" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="范围" prop="location">
           <el-select v-model="form.location" multiple placeholder="请选择范围">
@@ -107,7 +113,7 @@
   </div>
 </template>
 <script>
-import { addAdsInfo, getAdsInfo, updateAdsInfo, changeAdsStatus, deleteAds, getLocationDropdownList } from '@/api/graylist'
+import { addAdsInfo, getAdsInfo, updateAdsInfo, changeAdsStatus, deleteAds, getLocationDropdownList, getRulesDropdownList } from '@/api/graylist'
 import waves from '@/directive/waves.js'// 水波纹指令
 import { parseTime } from '@/utils'
 import store from '../../store'
@@ -170,6 +176,7 @@ export default {
         label: '失效'
       }],
       locationSel: [],
+      rulesSel: [],
       submitRules: {
         adsnoun: [
           { required: true, message: '请输入名词', trigger: 'blur' }
@@ -234,6 +241,7 @@ export default {
   created() {
     this.getList();
     this.getLocation();
+    this.getRules();
   },
   methods: {
     getList() {
@@ -255,6 +263,11 @@ export default {
       getLocationDropdownList().then(response => {
         console.log(response.data);
         this.locationSel = response.data.location
+      })
+    },
+    getRules() {
+      getRulesDropdownList().then(response => {
+        this.rulesSel = response.data.rules
       })
     },
     handleFilter() {

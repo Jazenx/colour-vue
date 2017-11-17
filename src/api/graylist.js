@@ -164,3 +164,10 @@ export function getLocationDropdownList() {
     method: 'get'
   })
 }
+
+export function getRulesDropdownList() {
+  return fetch({
+    url: 'dropdown/rules',
+    method: 'get'
+  })
+}

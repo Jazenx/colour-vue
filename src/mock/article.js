@@ -113,5 +113,9 @@ export default {
   }),
   getLocation: () => ({
     location: locationList
+  }),
+  getRules: () => ({
+    rules: locationList
   })
+
 }
