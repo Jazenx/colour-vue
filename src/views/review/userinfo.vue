@@ -13,7 +13,7 @@
             <el-option v-for="item in timeSel" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
-          <el-date-picker v-model="state.timeDayPick" type="date" placeholder="选择日期" style="float:right;margin-right:30px;width:120px" format="yyyy-MM-dd" @change="dateChange">
+          <el-date-picker v-model="state.timeDayPick" type="date" placeholder="选择日期" style="float:right;margin-right:30px;width:120px" :clearable="false" format="yyyy-MM-dd" @change="dateChange">
           </el-date-picker>
         </div>
         <div style="margin: 15px 0;"></div>
