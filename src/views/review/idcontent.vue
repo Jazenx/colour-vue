@@ -130,7 +130,7 @@ export default {
       massList: [],
       listQuery: {
         page: 1,
-        limit: 10,
+        limit: 50,
         seachCondition: null,  //  查询种类 默认全部
         seachContent: null //  查询详情 默认全部
       },

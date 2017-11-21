@@ -24,8 +24,8 @@ for (let i = 0; i < count; i++) {
     title: '@ctitle',
     url: '@url',
     bbsname: '@cname',
-    keyword: '草泥马&傻逼',
-    content: '<div class=\"relyhf\"><div class=\"qmhfimg\"></div><div class=\"relyhfcon\"><p><a href=\"http://i.autohome.com.cn/13041327/home.html\" target=\"_blank\">順齊自然2014</a> 2017/11/01 10:31:45 发表在 <a href=\"http://club.autohome.com.cn/bbs/thread-c-4133-68008228-6.html#115\">115楼 </a></p><p class=\"rrlycontxt\">我拍的细节也不行  你得就算了  遭罪看吧</p></div><div class=\"relyhfimg\"></div></div><div class=\"yy_reply_cont\"><div layer1=\"text-s\"></div>你已经很优秀了，无需这么苛刻要求自己<div layer1=\"text-e\"></div></div>',
+    keyword: '草泥马&傻逼&（92)',
+    content: '<div class=\"relyhf\"><div class=\"qmhfimg\"></div><div class=\"relyhfcon\"><p><a href=\"http://i.autohome.com.cn/13041327/home.html\" target=\"_blank\">順齊自然2014</a> 2017/11/01 10:31:45 发表在 <a href=\"http://club.autohome.com.cn/bbs/thread-c-4133-68008228-6.html#115\">115楼 </a></p><p class=\"rrlycontxt\">我拍的细节也不行（92)  你得就（92)算了  遭罪（92)看吧</p></div><div class=\"relyhfimg\"></div></div><div class=\"yy_reply_cont\"><div layer1=\"text-s\"></div>你已经很优秀了，无需这么苛刻要求自己<div layer1=\"text-e\"></div></div>',
     'wordtype|1': ['低俗信息', '涉政信息', '黄色信息', '广告信息'],
     'contenttype|1': ['精华帖', '推荐帖', null],
     judgedetail: '@cword(3, 30)', // 详细判断信息

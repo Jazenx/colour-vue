@@ -373,7 +373,7 @@ export default {
             for (const word of mainword) {
               if (word != null) {
                 maincontent = maincontent.replace(
-                  new RegExp(word, 'ig'),
+                  new RegExp(word.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&'), 'ig'),
                   '<span style="color: red;font-weight: bold;background-color: yellow;">' +
                   word +
                   '</span>'
@@ -385,7 +385,7 @@ export default {
           for (const word of mainword) {
             if (word != null) {
               username = username.replace(
-                new RegExp(word, 'ig'),
+                new RegExp(word.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&'), 'ig'),
                 '<span style="color: red;font-weight: bold;background-color: yellow;">' +
                 word +
                 '</span>'
@@ -395,7 +395,11 @@ export default {
           this.$set(v, 'usernamereal', v.username);
           this.$set(v, 'username', username);
           this.$set(v, 'content', maincontent);
-          this.$set(v, 'checked', false);
+          if ((this.state.currentState === 2 || this.state.currentState === '2') && (this.state.humanReview === 1 || this.state.humanReview === '1')) {
+            this.$set(v, 'checked', true);
+          } else {
+            this.$set(v, 'checked', false);
+          }
           if (v.optinfo === 0) {
             this.$set(v, 'bgcolor', '#F0FFFF');
           } else if (v.optinfo === 1) {
@@ -585,7 +589,7 @@ export default {
       console.log(val);
       return this.listQuery.timeDayPick = val;
     },
-   bannedAndSubmit() {
+    bannedAndSubmit() {
       this.massList = [];
       this.listLoading = true;
       this.list.map(v => {
