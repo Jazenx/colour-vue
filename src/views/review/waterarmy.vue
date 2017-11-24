@@ -1,7 +1,6 @@
 <template>
   <div class="app-container">
-
-    <div class="main-container">
+    <div class="main-container" v-loading="mainLoading">
       <div style="margin: 20px">
         <div>
           <el-button type="info" size="small" @click="changeState(0)">全部</el-button>
@@ -72,67 +71,120 @@
         </el-form>
       </div>
       <sticky className="sub-navbar">
-        <el-select v-model="listQuery.seachCondition" placeholder="请选择筛选条件" class="filter-item" style="float:left;margin-left:20px">
+        <label style="float:left;margin-left:20px;font-size:16px">论坛:</label>
+        <el-select v-model="listQuery.forum" placeholder="请选择论坛" class="filter-item" style="float:left;margin-left:20px">
           <el-option v-for="item in seachSel" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
-        <el-input style="width: 250px;float:left;margin-left:20px" class="filter-item" :placeholder="'请输入'+seachCondition" v-model="listQuery.seachContent">
-        </el-input>
-        <el-button class="filter-item" type="success" style="float:left;margin-left:20px;margin-top:8px" v-waves icon="search" @click="getList">搜索</el-button>
+        <label style="float:left;margin-left:20px;font-size:16px">用户类型:</label>
+        <el-select v-model="listQuery.userType" placeholder="请选择用户类型" class="filter-item" style="float:left;margin-left:20px">
+          <el-option v-for="item in seachSel" :key="item.value" :label="item.label" :value="item.value">
+          </el-option>
+        </el-select>
+        <label style="float:left;margin-left:20px;font-size:16px">范围:</label>
+        <el-date-picker style="float:left;margin-left:20px" v-model="listQuery.date" type="daterange" placeholder="选择日期范围">
+        </el-date-picker>
+        <el-button class="filter-item" type="success" style="float:left;margin-left:20px;margin-top:8px" v-waves icon="search" @click="getList">查询</el-button>
       </sticky>
       <div style="margin: 15px 0;"></div>
-      <div style="margin: 15px; display: flex;justify-content:space-between;">
-        <label style="float:left">总量：{{total}}</label>
-      </div>
-
-      <!-- <el-collapse v-for="(item, index) in list" :key="item.userid" v-loading="listLoading" accordion>
-                    <el-collapse-item :title="item.userid+' ('+item.username+')'+' (共'+item.total+'条)'" name="index">
-                      <workstationid :id="item.userid" :listQueryId="listQuery" :state="state"></workstationid>
-                    </el-collapse-item>
-                  </el-collapse> -->
-      <div v-for="(item, index) in list" :key="item.userid" v-loading="listLoading">
-        <el-row style="height:44px;border:1px solid #D3D3D3;display:flex;align-items:center;padding-left:10px;color:#48576a">
-          <i @click="boxIsShow(item)" ref="clickBtn" class="el-icon-arrow-right" style="cursor: pointer" :name="item.userid"></i>
-          <p style="margin-left:10px">{{item.userid+' ('+item.username+')'+' (共'+item.total+'条)'}}</p>
-        </el-row>
-        <el-row style="background: white" v-if="item.boxshow">
-          <workstationid :id="item.userid" :listQueryId="listQuery" :state="state"></workstationid>
-        </el-row>
-      </div>
-
+      <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="努力加载中..." border fit highlight-current-row style="width: 100%">
+        <el-table-column align="center" label="用户ID">
+          <template scope="scope">
+            <span style="margin-left:10px;cursor:pointer" v-html="scope.row.authorid" v-clipboard:copy='scope.row.authorid' v-clipboard:success='clipboardSuccess'>{{scope.row.authorid}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="用户类型">
+          <template scope="scope">
+            <el-tag v-if="scope.row.thread_suspicion<1" type="warning">嫌疑</el-tag>
+            <el-tag v-if="scope.row.thread_suspicion>=1" type="danger">建议删除</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="主贴重复">
+          <template scope="scope">
+            {{scope.row.thread_suspicion}}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="回贴重复">
+          <template scope="scope">
+            {{scope.row.reply_suspicion}}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="异常行为">
+          <template scope="scope">
+            {{scope.row.behavior_suspicion}}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="目前状态">
+          <template scope="scope">
+            <el-tag v-if="scope.row.mark_banned!==1" type="success">正常</el-tag>
+            <el-tag v-if="scope.row.mark_banned===1" type="danger">关禁闭</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="暂不封禁">
+          <template scope="scope">
+            <el-checkbox v-if="scope.row.mark_banned!==1"></el-checkbox>
+            <el-checkbox v-if="scope.row.mark_banned===1" checked></el-checkbox>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="采取封禁操作">
+          <template scope="scope">
+            <el-checkbox v-if="scope.row.mark_banned!==1"></el-checkbox>
+            <el-checkbox v-if="scope.row.mark_banned===1" checked></el-checkbox>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="机器判断结果有误">
+          <template scope="scope">
+            <el-checkbox v-if="scope.row.mark_banned!==1"></el-checkbox>
+            <el-checkbox v-if="scope.row.mark_banned===1" checked></el-checkbox>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="撤销操作">
+          <template scope="scope">
+            <el-button type="info" plain size="mini">撤销</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
       <div v-show="!listLoading" class="pagination-container" style="  display: flex;justify-content: center;align-items: center;">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[10, 20, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[20, 30 ,50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
       </div>
       <back-to-top transitionName="fade" :customStyle="myBackToTopStyle" :visibilityHeight="300" :backPosition="50"></back-to-top>
     </div>
   </div>
 </template>
-
 <script>
-import Sticky from '@/components/Sticky' // 粘性header组件
-import waves from '@/directive/waves.js'// 水波纹指令
-import BackToTop from '@/components/BackToTop'
-import { getUserIDWorkStation } from '@/api/content'
-import workstationid from './workstationid'
+import Sticky from '@/components/Sticky'; // 粘性header组件
+import waves from '@/directive/waves.js'; // 水波纹指令
+import BackToTop from '@/components/BackToTop';
+import { getWaterArmyList } from '@/api/waterarmy';
+import store from '../../store';
+import clip from '@/utils/clipboard' // use clipboard directly
+import clipboard from '@/directive/clipboard/index.js'  // use clipboard by v-directive
 
 export default {
-  components: { Sticky, BackToTop, workstationid },
+  name: 'contentTemplate',
+  components: { Sticky, BackToTop },
   directives: {
-    waves
+    waves,
+    clipboard
   },
   data() {
     return {
+      mainLoading: true,
+      listViewOpen: false,
       list: [],
       total: null,
+      banurl: null,
+      banBtn: false,
       listLoading: true,
-      listViewOpen: false,
+      tableKey: 0,
       massList: [],
       listQuery: {
         page: 1,
         limit: 50,
-        seachCondition: null,  //  查询种类 默认全部
-        seachContent: null //  查询详情 默认全部
+        forum: 0, //  查询种类 默认全部
+        userType: 0,
+        date: null
       },
       state: {
         currentState: 2,
@@ -144,96 +196,111 @@ export default {
         timeHourpick: '0000',
         timeDayPick: this.getNowDay()
       },
-      seachCondition: '',
-      seachContent: '',
-      seachSel: [{
-        value: '帖子ID',
-        label: '帖子ID'
-      }, {
-        value: '主题ID',
-        label: '主题ID'
-      }, {
-        value: '用户ID',
-        label: '用户ID'
-      }, {
-        value: '用户名',
-        label: '用户名'
-      }, {
-        value: '用户IP',
-        label: '用户IP'
-      }],
-      timeSel: [{
-        value: '0000',
-        label: '近2小时'
-      },
-      {
-        value: '0024',
-        label: '全天'
-      }, {
-        value: '0002',
-        label: '0点-2点'
-      }, {
-        value: '0204',
-        label: '2点-4点'
-      }, {
-        value: '0406',
-        label: '4点-6点'
-      }, {
-        value: '0608',
-        label: '6点-8点'
-      }, {
-        value: '0810',
-        label: '8点-10点'
-      }, {
-        value: '1012',
-        label: '10点-12点'
-      }, {
-        value: '1214',
-        label: '12点-14点'
-      }, {
-        value: '1416',
-        label: '14点-16点'
-      }, {
-        value: '1618',
-        label: '16点-18点'
-      }, {
-        value: '1820',
-        label: '18点-20点'
-      }, {
-        value: '2022',
-        label: '20点-22点'
-      }, {
-        value: '2224',
-        label: '22点-24点'
-      }],
-      locationSel: [{
-        label: '论坛、评论',
-        options: [{
-          value: '论坛',
-          label: '论坛'
-        }, {
-          value: '回帖',
-          label: '回帖'
-        }, {
-          value: '历史数据清洗',
-          label: '历史数据清洗'
-        }]
-      }, {
-        label: '问答',
-        options: [{
-          value: '提问',
-          label: '提问'
-        }, {
-          value: '答案',
-          label: '答案'
-        }]
-      }, {
-        label: '精华帖',
-        options: [{
-          value: '精华帖',
-          label: '精华贴'
-        }]
-      }],
+      seachSel: [
+        {
+          value: 0,
+          label: '全部'
+        }
+      ],
+      timeSel: [
+        {
+          value: '0000',
+          label: '近2小时'
+        },
+        {
+          value: '0024',
+          label: '全天'
+        },
+        {
+          value: '0002',
+          label: '0点-2点'
+        },
+        {
+          value: '0204',
+          label: '2点-4点'
+        },
+        {
+          value: '0406',
+          label: '4点-6点'
+        },
+        {
+          value: '0608',
+          label: '6点-8点'
+        },
+        {
+          value: '0810',
+          label: '8点-10点'
+        },
+        {
+          value: '1012',
+          label: '10点-12点'
+        },
+        {
+          value: '1214',
+          label: '12点-14点'
+        },
+        {
+          value: '1416',
+          label: '14点-16点'
+        },
+        {
+          value: '1618',
+          label: '16点-18点'
+        },
+        {
+          value: '1820',
+          label: '18点-20点'
+        },
+        {
+          value: '2022',
+          label: '20点-22点'
+        },
+        {
+          value: '2224',
+          label: '22点-24点'
+        }
+      ],
+      locationSel: [
+        {
+          label: '论坛、评论',
+          options: [
+            {
+              value: '论坛',
+              label: '论坛'
+            },
+            {
+              value: '回帖',
+              label: '回帖'
+            },
+            {
+              value: '历史数据清洗',
+              label: '历史数据清洗'
+            }
+          ]
+        },
+        {
+          label: '问答',
+          options: [
+            {
+              value: '提问',
+              label: '提问'
+            },
+            {
+              value: '答案',
+              label: '答案'
+            }
+          ]
+        },
+        {
+          label: '精华帖',
+          options: [
+            {
+              value: '精华帖',
+              label: '精华贴'
+            }
+          ]
+        }
+      ],
       myBackToTopStyle: {
         right: '50px',
         bottom: '50px',
@@ -241,7 +308,7 @@ export default {
         height: '40px',
         'border-radius': '4px',
         'line-height': '45px', // 请保持与高度一致以垂直居中
-        background: '#e7eaf1'// 按钮的背景颜色
+        background: '#e7eaf1' // 按钮的背景颜色
       }
     };
   },
@@ -264,28 +331,27 @@ export default {
     }
   },
   created() {
-    this.getList()
+    this.getList();
   },
   methods: {
     getList() {
-      this.listLoading = true
-      getUserIDWorkStation(this.listQuery, this.state).then(response => {
-        this.list = response.data.items.map(v => {
-          this.$set(v, 'boxshow', false);
-          return v
-        });
-        console.log(response.data);
-        this.total = response.data.total
-        this.listLoading = false
-      })
+      this.listLoading = true;
+      getWaterArmyList(this.listQuery, this.state).then(response => {
+        this.list = response.data.items;
+        this.total = response.data.total;
+        this.listLoading = false;
+        this.mainLoading = false;
+      });
     },
     handleSizeChange(val) {
-      this.listQuery.limit = val
-      this.getList()
+      this.listQuery.limit = val;
+      console.log('一页展示的条数变了，load一次list');
+      this.getList();
     },
     handleCurrentChange(val) {
-      this.listQuery.page = val
-      this.getList()
+      this.listQuery.page = val;
+      console.log('页数的条数变了，load一次list');
+      this.getList();
     },
     changeState(state) {
       if (state === 0) {
@@ -337,6 +403,22 @@ export default {
         this.state.colourdataType = 1;
       }
     },
+    getYMDTime(date) {
+      if (typeof date !== 'object') {
+        console.log('不是日期对象');
+        return null;
+      }
+      const seperator1 = '-';
+      let month = date.getMonth() + 1;
+      let strDate = date.getDate();
+      if (month >= 1 && month <= 9) {
+        month = '0' + month;
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = '0' + strDate;
+      }
+      return date.getFullYear() + seperator1 + month + seperator1 + strDate;
+    },
     getNowDay() {
       const date = new Date();
       const seperator1 = '-';
@@ -351,19 +433,14 @@ export default {
       return date.getFullYear() + seperator1 + month + seperator1 + strDate;
     },
     dateChange(val) {
-      console.log(val);
       return this.state.timeDayPick = val;
     },
-    boxIsShow(row) {
-      console.log(row);
-      console.log(event.currentTarget)
-      const clickTarget = event.currentTarget;
-      if (row.boxshow) {
-        clickTarget.style.transform = 'rotate(0deg)';
-      } else {
-        clickTarget.style.transform = 'rotate(90deg)';
-      }
-      row.boxshow = !row.boxshow
+    clipboardSuccess() {
+      this.$message({
+        message: '复制成功',
+        type: 'success',
+        duration: 1500
+      })
     }
   },
   watch: {
@@ -376,9 +453,8 @@ export default {
       deep: true
     }
   }
-}
+};
 </script>
-
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
@@ -386,7 +462,7 @@ export default {
   border: 1px solid #d3dce6;
   margin: 80px;
   margin-top: 10px;
-  background: #f3f3f3
+  background: #f3f3f3;
 }
 
 .detail-box {
@@ -394,15 +470,31 @@ export default {
 }
 
 .aTitle {
-  color: #4682B4;
+  color: #4682b4;
 }
 
 .aHref {
-  color: #00BFFF;
+  color: #00bfff;
   text-decoration: underline;
 }
 
 .infoGrey {
   color: #808080;
+}
+
+.el-carousel__item h3 {
+  color: #475669;
+  font-size: 18px;
+  opacity: 0.75;
+  line-height: 300px;
+  margin: 0;
+}
+
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n + 1) {
+  background-color: #d3dce6;
 }
 </style>

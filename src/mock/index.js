@@ -5,6 +5,7 @@ import article_tableAPI from './article_table';
 import remoteSearchAPI from './remoteSearch';
 import bannedAPI from './banned'
 import contentAPI from './content';
+import waterArmyAPI from './waterarmy';
 
 // 登录相关
 Mock.mock(/\/login\/loginbyemail/, 'post', loginAPI.loginByEmail);
@@ -98,6 +99,9 @@ Mock.mock(/\/blacklist\/banned\/searchkeywords/, 'get', articleAPI.getList)
 
 // // content
 Mock.mock(/\/review\/content\/list/, 'post', contentAPI.getList);
+
+Mock.mock(/\/review\/WaterArmy\/list/, 'post', waterArmyAPI.getList);
+
 Mock.mock(/\/review\/content\/userlist/, 'get', contentAPI.getList);
 Mock.mock(/\/review\/content\/iplist/, 'get', contentAPI.getList);
 
