@@ -82,7 +82,7 @@
           </el-option>
         </el-select>
         <label style="float:left;margin-left:20px;font-size:16px">范围:</label>
-        <el-date-picker style="float:left;margin-left:20px" v-model="listQuery.date" type="daterange" placeholder="选择日期范围">
+        <el-date-picker style="float:left;margin-left:20px" v-model="validity" type="daterange" placeholder="选择日期范围" @change="dateChange">
         </el-date-picker>
         <el-button class="filter-item" type="success" style="float:left;margin-left:20px;margin-top:8px" v-waves icon="search" @click="getList">查询</el-button>
       </sticky>
@@ -184,8 +184,9 @@ export default {
         limit: 50,
         forum: 0, //  查询种类 默认全部
         userType: 0,
-        date: null
+        date: this.getCreateYMDTime()
       },
+      validity: [new Date(), new Date()],
       state: {
         currentState: 2,
         humanReview: 1,
@@ -336,12 +337,27 @@ export default {
   methods: {
     getList() {
       this.listLoading = true;
+      console.log(this.listQuery);
       getWaterArmyList(this.listQuery, this.state).then(response => {
         this.list = response.data.items;
         this.total = response.data.total;
         this.listLoading = false;
         this.mainLoading = false;
       });
+    },
+    getCreateYMDTime() {
+      const date = new Date();
+      const seperator1 = '-';
+      const seperator2 = ':';
+      let month = date.getMonth() + 1;
+      let strDate = date.getDate();
+      if (month >= 1 && month <= 9) {
+        month = '0' + month;
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = '0' + strDate;
+      }
+      return date.getFullYear() + seperator1 + month + seperator1 + strDate + ' - ' + date.getFullYear() + seperator1 + month + seperator1 + strDate;
     },
     handleSizeChange(val) {
       this.listQuery.limit = val;
@@ -433,7 +449,8 @@ export default {
       return date.getFullYear() + seperator1 + month + seperator1 + strDate;
     },
     dateChange(val) {
-      return this.state.timeDayPick = val;
+      console.log(val);
+      return this.listQuery.date = val;
     },
     clipboardSuccess() {
       this.$message({
