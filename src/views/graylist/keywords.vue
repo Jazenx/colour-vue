@@ -437,7 +437,7 @@ export default {
           const updatetime = date.getFullYear() + seperator1 + month + seperator1 + strDate + ' ' + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
           let keywords = [];
           keywords = this.form.keywords.split('\n');
-          // console.log(keywords, this.form.validity, updatetime, this.form.submitor, this.location, this.form.wordstate, this.form.classify);
+          console.log(keywords, this.form.validity, updatetime, this.form.submitor, this.location, this.form.wordstate, this.form.classify);
           addKeywords(keywords, this.form.validity, updatetime, this.form.submitor, this.form.location, this.form.wordstate, this.form.classify).then(response => {
             if (response.data.result === 1) {
               this.$notify({
@@ -508,7 +508,7 @@ export default {
     },
     dateChange(val) {
       console.log(val);
-      return this.temp.validity = val;
+      return this.form.validity = val;
     },
     filterTag(value, row) {
       console.log(value);
