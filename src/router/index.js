@@ -97,6 +97,12 @@ export const asyncRouterMap = [{
         component: _import('review/waterarmy'),
         icon: 'fenxi',
         name: '水军'
+      },
+      {
+        path: 'swiper',
+        component: _import('review/swiper'),
+        icon: 'fenxi',
+        name: '轮播图测试'
       }
       // ,
       // {
