@@ -392,11 +392,6 @@ export default {
     getList() {
       this.listLoading = true;
       getContentList(this.listQuery, this.state).then(response => {
-        this.listLoading = false;
-        // 渲染完执行函数
-        // this.$nextTick(() => {
-          this.mainLoading = false;
-        // })
         this.list = response.data.items.map(v => {
           let mainword = [];
           let maincontent = v.content;
@@ -449,6 +444,11 @@ export default {
         if (this.banurl === '' || this.banurl == null) {
           this.banBtn = true
         }
+        this.listLoading = false;
+        // 渲染完执行函数
+        this.$nextTick(() => {
+          this.mainLoading = false;
+        })
       });
     },
     changeColor(item) {

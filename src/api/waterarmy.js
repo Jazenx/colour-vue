@@ -10,3 +10,34 @@ export function getWaterArmyList(query, state) {
     }
   })
 }
+
+export function bannedAndSubmit(nameList) {
+  return fetch({
+    url: 'review/WaterArmy/banurl',
+    method: 'post',
+    data: {
+      nameList
+    }
+  })
+}
+
+
+export function getPostList(userid) {
+  return fetch({
+    url: 'review/WaterArmy/post',
+    method: 'post',
+    data: {
+      userid
+    }
+  })
+}
+
+export function getPostSimilarity(thread) {
+  return fetch({
+    url: 'review/WaterArmy/Similarity',
+    method: 'post',
+    data: {
+      thread
+    }
+  })
+}

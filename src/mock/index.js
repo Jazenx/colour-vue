@@ -101,6 +101,8 @@ Mock.mock(/\/blacklist\/banned\/searchkeywords/, 'get', articleAPI.getList)
 Mock.mock(/\/review\/content\/list/, 'post', contentAPI.getList);
 
 Mock.mock(/\/review\/WaterArmy\/list/, 'post', waterArmyAPI.getList);
+Mock.mock(/\/review\/WaterArmy\/post/, 'post', waterArmyAPI.getPostList);
+Mock.mock(/\/review\/WaterArmy\/Similarity/, 'post', waterArmyAPI.getPostList);
 
 Mock.mock(/\/review\/content\/userlist/, 'get', contentAPI.getList);
 Mock.mock(/\/review\/content\/iplist/, 'get', contentAPI.getList);

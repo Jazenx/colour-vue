@@ -87,10 +87,15 @@
         <el-button class="filter-item" type="success" style="float:left;margin-left:20px;margin-top:8px" v-waves icon="search" @click="getList">查询</el-button>
       </sticky>
       <div style="margin: 15px 0;"></div>
-      <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="努力加载中..." border fit highlight-current-row style="width: 100%">
+      <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="努力加载中..." border fit highlight-current-row style="width: 100%;">
         <el-table-column align="center" label="用户ID">
           <template scope="scope">
             <span style="margin-left:10px;cursor:pointer" v-html="scope.row.authorid" v-clipboard:copy='scope.row.authorid' v-clipboard:success='clipboardSuccess'>{{scope.row.authorid}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="用户名">
+          <template scope="scope">
+            <span style="margin-left:10px;cursor:pointer" v-html="scope.row.username" v-clipboard:copy='scope.row.username' v-clipboard:success='clipboardSuccess'>{{scope.row.username}}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="用户类型">
@@ -101,12 +106,7 @@
         </el-table-column>
         <el-table-column align="center" label="主贴重复">
           <template scope="scope">
-            {{scope.row.thread_suspicion}}
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="回贴重复">
-          <template scope="scope">
-            {{scope.row.reply_suspicion}}
+            <span style="color:#4682B4" @click="showPostDetails(scope.row)">{{scope.row.thread_suspicion}}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="异常行为">
@@ -116,38 +116,43 @@
         </el-table-column>
         <el-table-column align="center" label="目前状态">
           <template scope="scope">
-            <el-tag v-if="scope.row.mark_banned!==1" type="success">正常</el-tag>
-            <el-tag v-if="scope.row.mark_banned===1" type="danger">关禁闭</el-tag>
+            <el-tag :type="scope.row.userstate | statusFilter" close-transition>{{scope.row.userstate === 0 ? "正常" : "已封禁"}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="暂不封禁">
+        <el-table-column align="center" label="封禁操作">
           <template scope="scope">
-            <el-checkbox v-if="scope.row.mark_banned!==1"></el-checkbox>
-            <el-checkbox v-if="scope.row.mark_banned===1" checked></el-checkbox>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="采取封禁操作">
-          <template scope="scope">
-            <el-checkbox v-if="scope.row.mark_banned!==1"></el-checkbox>
-            <el-checkbox v-if="scope.row.mark_banned===1" checked></el-checkbox>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="机器判断结果有误">
-          <template scope="scope">
-            <el-checkbox v-if="scope.row.mark_banned!==1"></el-checkbox>
-            <el-checkbox v-if="scope.row.mark_banned===1" checked></el-checkbox>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="撤销操作">
-          <template scope="scope">
-            <el-button type="info" plain size="mini">撤销</el-button>
+            <el-button v-if="scope.row.userstate===0" size="small" type="danger" @click="bannedAndSubmit(scope.row)">封禁</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <div v-show="!listLoading" class="pagination-container" style="  display: flex;justify-content: center;align-items: center;">
+      <div v-show="!listLoading" class="pagination-container" style="display: flex;justify-content: center;align-items: center;">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[20, 30 ,50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
       </div>
+
+      <el-dialog :title="this.postTitle+'-主贴详情'" :visible.sync="dialogVisible" width="30%">
+        <el-row v-for="(item, index) in postDetail" :key="item.id" style="border: 1px solid #d3dce6;background: #f3f3f3; border-radius:5px;margin-top:10px">
+          <el-row style="margin: 5px">
+            <el-row>
+              <a class="aTitle">PID:{{ item.thread }}</a>
+              <el-tag type="success" v-if="item.forumname">{{item.forumname}}</el-tag>
+              <i class="el-icon-time" style="float:right">{{item.replydate}}</i>
+            </el-row>
+            <el-row style="margin:10px;overflow:auto;max-height:60px" v-html="item.content">
+            </el-row>
+          </el-row>
+          <el-row v-for="(similarity, index) in item.similarity" :key="similarity.id"   style="margin: 20px;border: 1px solid #d3dce6;background: #F0F8FF; border-radius:5px;margin-top:10px">
+            <el-row style="margin: 5px">
+              <a class="aTitle">关联PID:{{ similarity.thread }}</a>
+              <el-tag type="danger">作者:{{similarity.author}}</el-tag>
+                 <el-tag type="success" v-if="similarity.forumname">{{similarity.forumname}}</el-tag>
+              <i class="el-icon-time" style="float:right">{{similarity.replydate}}</i>
+            </el-row>
+            <el-row style="margin:10px;overflow:auto;max-height:60px" v-html="similarity.content">
+            </el-row>
+          </el-row>
+        </el-row>
+      </el-dialog>
       <back-to-top transitionName="fade" :customStyle="myBackToTopStyle" :visibilityHeight="300" :backPosition="50"></back-to-top>
     </div>
   </div>
@@ -156,7 +161,7 @@
 import Sticky from '@/components/Sticky'; // 粘性header组件
 import waves from '@/directive/waves.js'; // 水波纹指令
 import BackToTop from '@/components/BackToTop';
-import { getWaterArmyList } from '@/api/waterarmy';
+import { getWaterArmyList, bannedAndSubmit, getPostList, getPostSimilarity } from '@/api/waterarmy';
 import store from '../../store';
 import clip from '@/utils/clipboard' // use clipboard directly
 import clipboard from '@/directive/clipboard/index.js'  // use clipboard by v-directive
@@ -172,6 +177,9 @@ export default {
     return {
       mainLoading: true,
       listViewOpen: false,
+      dialogVisible: false,
+      postTitle: '',
+      postDetail: null,
       list: [],
       total: null,
       banurl: null,
@@ -331,6 +339,18 @@ export default {
       }
     }
   },
+  filters: {
+    statusFilter(status) {
+      const statusMap = {
+        0: 'success',
+        1: 'danger'
+      }
+      return statusMap[status]
+    },
+    typeFilter(type) {
+      return calendarTypeKeyValue[type]
+    }
+  },
   created() {
     this.getList();
   },
@@ -458,6 +478,30 @@ export default {
         type: 'success',
         duration: 1500
       })
+    },
+    bannedAndSubmit(row) {
+      const username = [];
+      row.userstate = 1;
+      username.push(row.username);
+      bannedAndSubmit(username).then(response => {
+        url = response.data.result
+        window.open(url);
+      })
+      // this.getList();
+    },
+    showPostDetails(row) {
+      this.dialogVisible = true
+      this.postTitle = row.username;
+      console.log(row)
+      getPostList(row.authorid).then(response => {
+        this.postDetail = response.data.items.map(v => {
+          getPostSimilarity(v.thread).then(response => {
+            this.$set(v, 'similarity', response.data.items);
+          })
+          return v
+        })
+      })
+      console.log(this.postDetail)
     }
   },
   watch: {
