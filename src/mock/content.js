@@ -21,7 +21,7 @@ for (let i = 0; i < count; i++) {
     subtime: '@time',
     submitor: '@cname', // 操作者姓名
     'submitor|1': [null, '@cname'],
-    title: '@ctitle',
+    title: '@ctitle 傻逼',
     url: '@url',
     bbsname: '@cname',
     keyword: '草泥马&傻逼&r a v ⒋ -З б',

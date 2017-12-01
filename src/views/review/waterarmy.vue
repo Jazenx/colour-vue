@@ -121,7 +121,7 @@
         </el-table-column>
         <el-table-column align="center" label="封禁操作">
           <template scope="scope">
-            <el-button v-if="scope.row.userstate===0" size="small" type="danger" @click="bannedAndSubmit(scope.row)">封禁</el-button>
+            <el-button size="small" type="danger" @click="bannedAndSubmit(scope.row)">封禁</el-button>
           </template>
         </el-table-column>
       </el-table>

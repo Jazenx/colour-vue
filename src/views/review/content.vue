@@ -103,7 +103,7 @@
                 <a class="aTitle">{{item.location}}</a>
               </label>>
               <label>
-                <a class="aTitle" :href="item.url" target="_blank">{{item.title}}</a>
+                <a class="aTitle" :href="item.url" target="_blank" v-html="item.title">{{item.title}}</a>
               </label>
               <el-tag v-if="item.contenttype != null" type="danger">{{item.contenttype}}</el-tag>
               <el-tag v-if="item.bbsname != null" type="success">{{item.bbsname}}</el-tag>
@@ -417,6 +417,20 @@ export default {
               );
             }
           }
+
+          let title = v.title;
+          for (const word of mainword) {
+            if (word != null) {
+              title = title.replace(
+                new RegExp(word.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&'), 'ig'),
+                '<span style="color: red;font-weight: bold;background-color: yellow;">' +
+                word +
+                '</span>'
+              );
+            }
+          }
+          this.$set(v, 'title', title);
+
           this.$set(v, 'usernamereal', v.username);
           this.$set(v, 'username', username);
           this.$set(v, 'content', maincontent);
