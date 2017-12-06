@@ -391,6 +391,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true;
+      console.log(this.listQuery, this.state);
       getContentList(this.listQuery, this.state).then(response => {
         this.list = response.data.items.map(v => {
           let mainword = [];

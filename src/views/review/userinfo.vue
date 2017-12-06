@@ -599,7 +599,7 @@ export default {
     },
     dateChange(val) {
       console.log(val);
-      return this.listQuery.timeDayPick = val;
+      return this.state.timeDayPick = val;
     },
     bannedAndSubmit() {
       this.massList = [];
