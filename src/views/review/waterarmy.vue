@@ -1,75 +1,75 @@
 <template>
   <div class="app-container">
     <div class="main-container" v-loading="mainLoading">
-      <div style="margin: 20px">
-        <div>
-          <el-button type="info" size="small" @click="changeState(0)">全部</el-button>
-          <el-button type="info" size="small" @click="changeState(1)">待审</el-button>
-          <el-button type="info" size="small" @click="changeState(2)">删除</el-button>
-          <el-button type="info" size="small" @click="changeState(3)">通过</el-button>
-          <el-button type="info" size="small" @click="changeState(4)">误删</el-button>
-          <el-button type="info" size="small" @click="changeState(5)">漏删</el-button>
-          <el-select v-model="state.timeHourpick" placeholder="请选择时间段" style="float:right; width:110px">
-            <el-option v-for="item in timeSel" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-          <el-date-picker v-model="state.timeDayPick" type="date" placeholder="选择日期" style="float:right;margin-right:30px;width:120px" :clearable="false" format="yyyy-MM-dd" @change="dateChange">
-          </el-date-picker>
-        </div>
-        <div style="margin: 15px 0;"></div>
-        <el-form>
-          <el-form-item label="当前状态:">
-            <el-radio-group v-model="state.currentState" size="small">
-              <el-radio-button label="0">不限</el-radio-button>
-              <el-radio-button label="1">通过</el-radio-button>
-              <el-radio-button label="2">待审</el-radio-button>
-              <el-radio-button label="3">删除</el-radio-button>
-              <el-radio-button label="4">通过+待审</el-radio-button>
-              <el-radio-button label="5">通过+删除</el-radio-button>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="人工审核:">
-            <el-radio-group v-model="state.humanReview" size="small">
-              <el-radio-button label="0">不限</el-radio-button>
-              <el-radio-button label="1">未确认</el-radio-button>
-              <el-radio-button label="2">已确认</el-radio-button>
-              <el-radio-button label="3">已忽略</el-radio-button>
-            </el-radio-group>
-            <el-button v-show="!listViewOpen" size="mini" type="warning" plain style="float:right" @click="listViewOpen=true">完整选项</el-button>
-          </el-form-item>
-          <div v-show="listViewOpen">
-            <el-form-item label="内容类型:">
-              <el-radio-group v-model="state.contentType" size="small">
-                <el-radio-button label="0">不限</el-radio-button>
-                <el-radio-button label="1">主题</el-radio-button>
-                <el-radio-button label="2">回复</el-radio-button>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="识别类型:">
-              <el-radio-group v-model="state.indentifyType" size="small">
-                <el-radio-button label="0">不限</el-radio-button>
-                <el-radio-button label="1">涉政</el-radio-button>
-                <el-radio-button label="2">涉黄</el-radio-button>
-                <el-radio-button label="3">涉恐</el-radio-button>
-                <el-radio-button label="4">广告</el-radio-button>
-                <el-radio-button label="5">低俗</el-radio-button>
-                <el-radio-button label="6">敏感</el-radio-button>
-                <el-radio-button label="7">灌水</el-radio-button>
-                <el-radio-button label="8">个性</el-radio-button>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="彩数识别:">
-              <el-radio-group v-model="state.colourdataType" size="small">
-                <el-radio-button label="0">不限</el-radio-button>
-                <el-radio-button label="1">通过</el-radio-button>
-                <el-radio-button label="2">待审</el-radio-button>
-                <el-radio-button label="3">删除</el-radio-button>
-              </el-radio-group>
-              <el-button size="mini" type="warning" plain style="float:right" @click="listViewOpen=false">简略选项</el-button>
-            </el-form-item>
-          </div>
-        </el-form>
-      </div>
+      <!-- <div style="margin: 20px">
+                                                                                          <div>
+                                                                                            <el-button type="info" size="small" @click="changeState(0)">全部</el-button>
+                                                                                            <el-button type="info" size="small" @click="changeState(1)">待审</el-button>
+                                                                                            <el-button type="info" size="small" @click="changeState(2)">删除</el-button>
+                                                                                            <el-button type="info" size="small" @click="changeState(3)">通过</el-button>
+                                                                                            <el-button type="info" size="small" @click="changeState(4)">误删</el-button>
+                                                                                            <el-button type="info" size="small" @click="changeState(5)">漏删</el-button>
+                                                                                            <el-select v-model="state.timeHourpick" placeholder="请选择时间段" style="float:right; width:110px">
+                                                                                              <el-option v-for="item in timeSel" :key="item.value" :label="item.label" :value="item.value">
+                                                                                              </el-option>
+                                                                                            </el-select>
+                                                                                            <el-date-picker v-model="state.timeDayPick" type="date" placeholder="选择日期" style="float:right;margin-right:30px;width:120px" :clearable="false" format="yyyy-MM-dd" @change="dateChange">
+                                                                                            </el-date-picker>
+                                                                                          </div>
+                                                                                          <div style="margin: 15px 0;"></div>
+                                                                                          <el-form>
+                                                                                            <el-form-item label="当前状态:">
+                                                                                              <el-radio-group v-model="state.currentState" size="small">
+                                                                                                <el-radio-button label="0">不限</el-radio-button>
+                                                                                                <el-radio-button label="1">通过</el-radio-button>
+                                                                                                <el-radio-button label="2">待审</el-radio-button>
+                                                                                                <el-radio-button label="3">删除</el-radio-button>
+                                                                                                <el-radio-button label="4">通过+待审</el-radio-button>
+                                                                                                <el-radio-button label="5">通过+删除</el-radio-button>
+                                                                                              </el-radio-group>
+                                                                                            </el-form-item>
+                                                                                            <el-form-item label="人工审核:">
+                                                                                              <el-radio-group v-model="state.humanReview" size="small">
+                                                                                                <el-radio-button label="0">不限</el-radio-button>
+                                                                                                <el-radio-button label="1">未确认</el-radio-button>
+                                                                                                <el-radio-button label="2">已确认</el-radio-button>
+                                                                                                <el-radio-button label="3">已忽略</el-radio-button>
+                                                                                              </el-radio-group>
+                                                                                              <el-button v-show="!listViewOpen" size="mini" type="warning" plain style="float:right" @click="listViewOpen=true">完整选项</el-button>
+                                                                                            </el-form-item>
+                                                                                            <div v-show="listViewOpen">
+                                                                                              <el-form-item label="内容类型:">
+                                                                                                <el-radio-group v-model="state.contentType" size="small">
+                                                                                                  <el-radio-button label="0">不限</el-radio-button>
+                                                                                                  <el-radio-button label="1">主题</el-radio-button>
+                                                                                                  <el-radio-button label="2">回复</el-radio-button>
+                                                                                                </el-radio-group>
+                                                                                              </el-form-item>
+                                                                                              <el-form-item label="识别类型:">
+                                                                                                <el-radio-group v-model="state.indentifyType" size="small">
+                                                                                                  <el-radio-button label="0">不限</el-radio-button>
+                                                                                                  <el-radio-button label="1">涉政</el-radio-button>
+                                                                                                  <el-radio-button label="2">涉黄</el-radio-button>
+                                                                                                  <el-radio-button label="3">涉恐</el-radio-button>
+                                                                                                  <el-radio-button label="4">广告</el-radio-button>
+                                                                                                  <el-radio-button label="5">低俗</el-radio-button>
+                                                                                                  <el-radio-button label="6">敏感</el-radio-button>
+                                                                                                  <el-radio-button label="7">灌水</el-radio-button>
+                                                                                                  <el-radio-button label="8">个性</el-radio-button>
+                                                                                                </el-radio-group>
+                                                                                              </el-form-item>
+                                                                                              <el-form-item label="彩数识别:">
+                                                                                                <el-radio-group v-model="state.colourdataType" size="small">
+                                                                                                  <el-radio-button label="0">不限</el-radio-button>
+                                                                                                  <el-radio-button label="1">通过</el-radio-button>
+                                                                                                  <el-radio-button label="2">待审</el-radio-button>
+                                                                                                  <el-radio-button label="3">删除</el-radio-button>
+                                                                                                </el-radio-group>
+                                                                                                <el-button size="mini" type="warning" plain style="float:right" @click="listViewOpen=false">简略选项</el-button>
+                                                                                              </el-form-item>
+                                                                                            </div>
+                                                                                          </el-form>
+                                                                                        </div> -->
       <sticky className="sub-navbar">
         <label style="float:left;margin-left:20px;font-size:16px">论坛:</label>
         <el-select v-model="listQuery.forum" placeholder="请选择论坛" class="filter-item" style="float:left;margin-left:20px">
@@ -106,14 +106,14 @@
         </el-table-column>
         <el-table-column align="center" label="主贴重复">
           <template scope="scope">
-            <span style="color:#4682B4" @click="showPostDetails(scope.row)">{{scope.row.thread_suspicion}}</span>
+            <span style="color:#4682B4;cursor:pointer" @click="showPostDetails(scope.row)">{{scope.row.thread_suspicion}}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="异常行为">
-          <template scope="scope">
-            {{scope.row.behavior_suspicion}}
-          </template>
-        </el-table-column>
+        <!-- <el-table-column align="center" label="异常行为">
+                                                                                            <template scope="scope">
+                                                                                              {{scope.row.behavior_suspicion}}
+                                                                                            </template>
+                                                                                          </el-table-column> -->
         <el-table-column align="center" label="目前状态">
           <template scope="scope">
             <el-tag :type="scope.row.userstate | statusFilter" close-transition>{{scope.row.userstate === 0 ? "正常" : "已封禁"}}</el-tag>
@@ -131,27 +131,25 @@
       </div>
 
       <el-dialog :title="this.postTitle+'-主贴详情'" :visible.sync="dialogVisible" width="30%">
-        <el-row v-for="(item, index) in postDetail" :key="item.id" style="border: 1px solid #d3dce6;background: #f3f3f3; border-radius:5px;margin-top:10px">
-          <el-row style="margin: 5px">
-            <el-row>
-              <a class="aTitle">PID:{{ item.thread }}</a>
-              <el-tag type="success" v-if="item.forumname">{{item.forumname}}</el-tag>
-              <i class="el-icon-time" style="float:right">{{item.replydate}}</i>
-            </el-row>
-            <el-row style="margin:10px;overflow:auto;max-height:60px" v-html="item.content">
-            </el-row>
-          </el-row>
-          <el-row v-for="(similarity, index) in item.similarity" :key="similarity.id"   style="margin: 20px;border: 1px solid #d3dce6;background: #F0F8FF; border-radius:5px;margin-top:10px">
+        <div v-for="(item, index) in postDetail" :key="item.id" v-loading="listLoading">
+          <el-row style="border: 1px solid #d3dce6;background:#D3D3D3; border-radius:5px;margin-top:30px">
             <el-row style="margin: 5px">
-              <a class="aTitle">关联PID:{{ similarity.thread }}</a>
-              <el-tag type="danger">作者:{{similarity.author}}</el-tag>
-                 <el-tag type="success" v-if="similarity.forumname">{{similarity.forumname}}</el-tag>
-              <i class="el-icon-time" style="float:right">{{similarity.replydate}}</i>
+              <el-row>
+                <a class="aTitle" :href="item.url" target="_blank">PID:{{ item.thread }}</a>
+                <el-tag type="success" v-if="item.forumname">{{item.forumname}}</el-tag>
+                <i class="el-icon-time" style="float:right">{{item.replydate}}</i>
+              </el-row>
+              <el-row style="margin:10px;overflow:auto;max-height:60px" v-html="item.content">
+              </el-row>
+              <el-row style="display:flex;justify-content: center;">
+                <i @click="boxIsShow(item)" ref="clickBtn" class="el-icon-arrow-right" style="cursor: pointer;transform: rotate(90deg);" :name="item.userid"></i>
+              </el-row>
             </el-row>
-            <el-row style="margin:10px;overflow:auto;max-height:60px" v-html="similarity.content">
+            <el-row v-if="item.boxshow">
+              <Similarity :thread="item.thread"></Similarity>
             </el-row>
           </el-row>
-        </el-row>
+        </div>
       </el-dialog>
       <back-to-top transitionName="fade" :customStyle="myBackToTopStyle" :visibilityHeight="300" :backPosition="50"></back-to-top>
     </div>
@@ -165,10 +163,11 @@ import { getWaterArmyList, bannedAndSubmit, getPostList, getPostSimilarity } fro
 import store from '../../store';
 import clip from '@/utils/clipboard' // use clipboard directly
 import clipboard from '@/directive/clipboard/index.js'  // use clipboard by v-directive
+import Similarity from './similarity'
 
 export default {
   name: 'contentTemplate',
-  components: { Sticky, BackToTop },
+  components: { Sticky, BackToTop, Similarity },
   directives: {
     waves,
     clipboard
@@ -181,11 +180,14 @@ export default {
       postTitle: '',
       postDetail: null,
       list: [],
+      similarity: [],
       total: null,
+      similarityTotal: null,
       banurl: null,
       banBtn: false,
       listLoading: true,
       tableKey: 0,
+      thread: null,
       massList: [],
       listQuery: {
         page: 1,
@@ -194,7 +196,11 @@ export default {
         userType: 0,
         date: this.getCreateYMDTime()
       },
-      validity: [new Date(), new Date()],
+      similarityQuery: {
+        page: 1,
+        limit: 5
+      },
+      validity: [new Date().getTime() - 3600 * 1000 * 24 * 1, new Date()],
       state: {
         currentState: 2,
         humanReview: 1,
@@ -202,7 +208,7 @@ export default {
         indentifyType: 0,
         recognitionType: 0,
         colourdataType: 0,
-        timeHourpick: '0000',
+        timeHourpick: '0024',
         timeDayPick: this.getNowDay()
       },
       seachSel: [
@@ -365,19 +371,17 @@ export default {
         this.mainLoading = false;
       });
     },
+    GetDateStr(AddDayCount) {
+      const dd = new Date();
+      dd.setDate(dd.getDate() + AddDayCount);// 获取AddDayCount天后的日期 
+      const y = dd.getFullYear();
+      const m = dd.getMonth() + 1;// 获取当前月份的日期 
+      const d = dd.getDate();
+      return y + '-' + m + '-' + d;
+    },
     getCreateYMDTime() {
-      const date = new Date();
-      const seperator1 = '-';
-      const seperator2 = ':';
-      let month = date.getMonth() + 1;
-      let strDate = date.getDate();
-      if (month >= 1 && month <= 9) {
-        month = '0' + month;
-      }
-      if (strDate >= 0 && strDate <= 9) {
-        strDate = '0' + strDate;
-      }
-      return date.getFullYear() + seperator1 + month + seperator1 + strDate + ' - ' + date.getFullYear() + seperator1 + month + seperator1 + strDate;
+      console.log(this.GetDateStr(-1) + ' - ' + this.GetDateStr(0))
+      return this.GetDateStr(-1) + ' - ' + this.GetDateStr(0);
     },
     handleSizeChange(val) {
       this.listQuery.limit = val;
@@ -388,6 +392,16 @@ export default {
       this.listQuery.page = val;
       console.log('页数的条数变了，load一次list');
       this.getList();
+    },
+    handleSimilaritySizeChange(val) {
+      this.similarityQuery.limit = val;
+      console.log('一页展示的条数变了，load一次list');
+      this.getSimilarityList(this.thread);
+    },
+    handleSimilarityCurrentChange(val) {
+      this.similarityQuery.page = val;
+      console.log('一页展示的条数变了，load一次list');
+      this.getSimilarityList(this.thread);
     },
     changeState(state) {
       if (state === 0) {
@@ -483,6 +497,7 @@ export default {
       const username = [];
       row.userstate = 1;
       username.push(row.username);
+      let url = '';
       bannedAndSubmit(username).then(response => {
         url = response.data.result
         window.open(url);
@@ -495,13 +510,20 @@ export default {
       console.log(row)
       getPostList(row.authorid).then(response => {
         this.postDetail = response.data.items.map(v => {
-          getPostSimilarity(v.thread).then(response => {
-            this.$set(v, 'similarity', response.data.items);
-          })
+          this.$set(v, 'boxshow', false);
           return v
-        })
+        });
       })
       console.log(this.postDetail)
+    },
+    boxIsShow(row) {
+      const clickTarget = event.currentTarget;
+      if (row.boxshow) {
+        clickTarget.style.transform = 'rotate(90deg)';
+      } else {
+        clickTarget.style.transform = 'rotate(-90deg)';
+      }
+      row.boxshow = !row.boxshow
     }
   },
   watch: {

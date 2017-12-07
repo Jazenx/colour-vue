@@ -185,7 +185,7 @@
         <el-button type="danger" size="small" @click="bannedAndSubmit" :disabled="banBtn">封禁跳转提交</el-button>
       </div>
       <div v-show="!listLoading" class="pagination-container" style="  display: flex;justify-content: center;align-items: center;">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[20, 30 ,50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[20, 50 ,100]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
       </div>
       <back-to-top transitionName="fade" :customStyle="myBackToTopStyle" :visibilityHeight="300" :backPosition="50"></back-to-top>
@@ -220,7 +220,7 @@ export default {
       massList: [],
       listQuery: {
         page: 1,
-        limit: 50,
+        limit: 100,
         seachCondition: '用户IP',  //  查询种类 默认全部
         seachContent: this.$route.query.ip, //  查询详情 默认全部
         ip: null    // 用户ip
@@ -232,7 +232,7 @@ export default {
         indentifyType: 0,
         recognitionType: 0,
         colourdataType: 0,
-        timeHourpick: '0000',
+        timeHourpick: '0024',
         timeDayPick: this.getNowDay()
       },
       seachCondition: '',

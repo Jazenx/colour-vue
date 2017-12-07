@@ -469,7 +469,7 @@ export default {
     },
     dateChange(val) {
       console.log(val);
-      return this.temp.validity = val;
+      return this.form.validity = val;
     },
     filterTag(value, row) {
       console.log(value);

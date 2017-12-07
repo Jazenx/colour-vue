@@ -32,12 +32,12 @@ export function getPostList(userid) {
   })
 }
 
-export function getPostSimilarity(thread) {
+export function getPostSimilarity(query) {
   return fetch({
     url: 'review/WaterArmy/Similarity',
     method: 'post',
     data: {
-      thread
+      query
     }
   })
 }
