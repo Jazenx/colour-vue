@@ -14,7 +14,8 @@ const userMap = {
     token: 'editor',
     introduction: '我是编辑',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-    name: 'Normal Editor'
+    name: 'Normal Editor',
+    code: 88888    
   },
   developer: {
     role: ['develop'],
@@ -24,7 +25,6 @@ const userMap = {
     name: '工程师小王'
   }
 }
-
 export default {
   loginByEmail: config => {
     const { email } = JSON.parse(config.body);

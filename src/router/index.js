@@ -57,6 +57,12 @@ export const constantRouterMap = [{
     name: 'IP详情',
     component: _import('review/ipinfo'),
     hidden: true
+  },
+  {
+    path: '/waterarmyAn',
+    name: '水军分析',
+    component: _import('review/waterarmyAn'),
+    hidden: true
   }
 ]
 
@@ -96,7 +102,10 @@ export const asyncRouterMap = [{
         path: 'waterarmy',
         component: _import('review/waterarmy'),
         icon: 'fenxi',
-        name: '水军'
+        name: '水军',
+        meta: {
+          role: ['admin']
+        }
       }
       // ,
       // {

@@ -41,3 +41,23 @@ export function getPostSimilarity(query) {
     }
   })
 }
+
+export function getWaterArmyCommunityNodes(authorid) {
+  return fetch({
+    url: 'review/WaterArmy/getWaterArmyCommunityNodes',
+    method: 'post',
+    data: {
+      authorid
+    }
+  })
+}
+
+export function getWaterArmyCommunityEdges(authorid) {
+  return fetch({
+    url: 'review/WaterArmy/getWaterArmyCommunityEdges',
+    method: 'post',
+    data: {
+      authorid
+    }
+  })
+}

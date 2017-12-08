@@ -232,7 +232,7 @@ export default {
         indentifyType: 0,
         recognitionType: 0,
         colourdataType: 0,
-        timeHourpick: '0024',
+        timeHourpick: '0000',
         timeDayPick: this.getNowDay()
       },
       seachCondition: '用户ID',
