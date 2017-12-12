@@ -61,3 +61,28 @@ export function getWaterArmyCommunityEdges(authorid) {
     }
   })
 }
+
+
+export function getWaterArmyCommunityPosts(query, userid) {
+  return fetch({
+    url: 'review/WaterArmy/getWaterArmyCommunityPosts',
+    method: 'post',
+    data: {
+      query,
+      userid
+    }
+  })
+}
+
+
+export function getCommunityPostsDetail(query, threadid, userid) {
+  return fetch({
+    url: 'review/WaterArmy/getCommunityPostsDetail',
+    method: 'post',
+    data: {
+      query,
+      threadid,
+      userid
+    }
+  })
+}

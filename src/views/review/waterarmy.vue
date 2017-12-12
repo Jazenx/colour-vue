@@ -109,11 +109,11 @@
             <span style="color:#4682B4;cursor:pointer" @click="showPostDetails(scope.row)">{{scope.row.thread_suspicion}}</span>
           </template>
         </el-table-column>
-        <!-- <el-table-column align="center" label="异常行为">
+        <el-table-column align="center" label="异常行为">
           <template scope="scope">
             <router-link style="color:#4682B4;cursor:pointer"  :to="{ path: '/waterarmyAn', query: { authorid: scope.row.authorid }}">{{scope.row.behavior_suspicion}}</router-link>
           </template>
-        </el-table-column> -->
+        </el-table-column>
         <el-table-column align="center" label="目前状态">
           <template scope="scope">
             <el-tag :type="scope.row.userstate | statusFilter" close-transition>{{scope.row.userstate === 0 ? "正常" : "已封禁"}}</el-tag>

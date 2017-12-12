@@ -103,9 +103,12 @@ Mock.mock(/\/review\/content\/list/, 'post', contentAPI.getList);
 Mock.mock(/\/review\/WaterArmy\/list/, 'post', waterArmyAPI.getList);
 Mock.mock(/\/review\/WaterArmy\/post/, 'post', waterArmyAPI.getPostList);
 Mock.mock(/\/review\/WaterArmy\/Similarity/, 'post', waterArmyAPI.getPostList);
+Mock.mock(/\/review\/WaterArmy\/getWaterArmyCommunityPosts/, 'post', waterArmyAPI.getPostList);
+Mock.mock(/\/review\/WaterArmy\/getCommunityPostsDetail/, 'post', waterArmyAPI.getPostList);
 
 Mock.mock(/\/review\/WaterArmy\/getWaterArmyCommunityNodes/, 'post', waterArmyAPI.getNodes);
 Mock.mock(/\/review\/WaterArmy\/getWaterArmyCommunityEdges/, 'post', waterArmyAPI.getEdges);
+
 Mock.mock(/\/review\/content\/userlist/, 'get', contentAPI.getList);
 Mock.mock(/\/review\/content\/iplist/, 'get', contentAPI.getList);
 
