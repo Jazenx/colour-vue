@@ -18,10 +18,10 @@
         </el-row>
       </el-row>
     </div>
-    <div class="pagination-container" style="display: flex;justify-content: center;align-items: center;">
+    <!-- <div class="pagination-container" style="display: flex;justify-content: center;align-items: center;">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[10, 20 ,30]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
-    </div>
+    </div> -->
     <el-dialog :title="this.postTitle+'-贴子详情'" :visible.sync="dialogVisible" width="30%">
       <el-row v-if="showDetailRelation" style="display:flex;justify-content: center">
         <relationship :nodes="detailNodes" :edges="detailEdges" :userid="detailAuthotid">
