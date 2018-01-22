@@ -358,7 +358,7 @@ export default {
           row.validity = validity;
         }
         row.updatetime = this.getNowTime();
-        row.submitor = store.state.user.name;  // 之后获取当前用户
+        row.submitor = store.state.user.name; // 之后获取当前用户
         console.log(row.id, row.keyword, row.location, row.validity, row.submitor, row.updatetime)
         let tempLocation = '';
         for (const v of row.locations) {
@@ -402,7 +402,7 @@ export default {
           this.form.wordstate = '生效';
           this.form.submitor = store.state.user.name;
           this.dialogFormVisible = false;
-          // 获取当前时间 之后可抽出
+          // 获取当前时间之后可抽出
           const date = new Date();
           const seperator1 = '-';
           const seperator2 = ':';

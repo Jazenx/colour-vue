@@ -90,7 +90,7 @@ module.exports = {
         'no-lone-blocks': 'error',
 
         // disallow multiple spaces
-        'no-multi-spaces': 'error',
+        // 'no-multi-spaces': 'error',
 
         // disallow new operators with the String, Number, and Boolean objects
         'no-new-wrappers': 'error',
@@ -119,7 +119,7 @@ module.exports = {
         'no-useless-concat': 'error',
 
         // disallow unnecessary escape characters
-        // 'no-useless-escape': 'error',
+        'no-useless-escape': 'off',
 
         // disallow void operators
         'no-void': 'error',
@@ -130,6 +130,7 @@ module.exports = {
         // require or disallow “Yoda” conditions
         yoda: 'error',
 
+        'no-control-regex': 'off',
         /*
          * Variables
          */

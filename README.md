@@ -1,4 +1,4 @@
-# tiger-vue
+# colour-vue
 
 > this is a vue project
 

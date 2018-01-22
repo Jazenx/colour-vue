@@ -406,7 +406,7 @@ export default {
           this.form.wordstate = '生效';
           this.form.submitor = store.state.user.name;
           this.dialogFormVisible = false;
-          // 获取当前时间 之后可抽出
+          // 获取当前时间之后可抽出
           const date = new Date();
           const seperator1 = '-';
           const seperator2 = ':';

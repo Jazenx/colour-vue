@@ -5,7 +5,7 @@ import { getToken } from 'utils/auth';
 
 // 创建axios实例
 const service = axios.create({
-  timeout: 5000            // 请求超时时间
+  timeout: 5000 // 请求超时时间
 });
 
 // request拦截器
